@@ -30,7 +30,7 @@ véritable version du site), il vous faudra respecter les règles suivantes :
 
 1. **Commenter** le code
 2. **Tester** le code (en écrivant notamment des tests)
-3. Écrire des commits suivant la norme [**Conventional Commit**](https://www.conventionalcommits.org/en/v1.0.0/)
+3. Écrire des commits suivant la norme link:https://www.conventionalcommits.org/en/v1.0.0/[**Conventional Commit**]
 4. Votre branche doit **être à jour** par rapport à `main` (git pull, rebase et autre joyeuseté)
 5. Ouvrir une **Pull Request** (ou Merge Request), qui détaille les changements apportés (qui
 reprend généralement les commits)

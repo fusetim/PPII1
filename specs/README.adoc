@@ -1,4 +1,4 @@
-= Specs - Recette Éco
+= Specs
 
 Le dossier `specs` au sein du projet contient divers documents et réflexions liés à la conception et
 au fonctionnement de l'application.
