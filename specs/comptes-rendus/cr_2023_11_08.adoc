@@ -1,0 +1,93 @@
+= CR Réunion - 08/11/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de montage |TELECOM Nancy, 1.15 |08/11/2023 10h10-12h00
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Fixer le livrable attendu
+* Fixer au moins temporairement la technique souhaitée
+* Proposer une premiere répartition
+* Lancer les premiers objectifs
+
+== Échanges
+
+=== Fixer le livrable
+
+* Proprosition de Guillaume pour un autre type de projet : Calculateur du prix d'isolation d'une maison. -- Malheureusement refusée
+
+> Permettre à quiconque de calculer facilement le type de mur, d'isolation, etc afin de déterminer la cout installation comprise d'une isolation.
+
+* Proposition de Sacha-Timothée pour un projet de moteur de recherche de recette-bilan carbone.
+
+> Le projet est de faire un site web qui serait une sorte de moteur de recherche pour des plats/recettes, dont le bilan carbone est mis en avant !
+Ça comprend donc tout une partie : page de recette avec les différents ingrédients, temps de cuisson, type de cuisson etc qui nous permettent
+ensuite dee calculer un "bilan carbone" type de ce plat. (Éventuellement on peut être le raffiner en précisant les ingrédients locaux, etc).
+
+** En se renseignant sur la faisabilité, on a trouvé l'AGRIBALYSE qui pourrait nous fournir les données nécessaires à notre application.
+
+** Comment faire pour récupérer les recettes ? -> Fait-main ou autre
+ 
+
+** Risques : Incompétence
+
+=== Technique
+
+* Discussion autour des 2 méthodes techniques d'implémentation :
+** Méthode 1 : Single Web Page sous forme de Progressive Web App (aka la méthode tout en javascript)
+** Méthode 2 : Templating and SSR (aka la méthode tout en python)
+
+* Définition du backend/frontend
+
+== Décisions
+
+* La Proposition de Sacha-Timothée est retenue.
+
+* Création du repo Git : link:https://github.com/fusetim/PPII1/[]
+
+* Sacha prend la charge principale du front-end
+* Timothée prend la position de chef de projet
+* Guillaume s'occupera pour le moment de la BDD et des scripts d'import associés
+* Clément prend en charge la partie backend
+* Pour des raisons pratiques, on utilisera  link:https://m3.material.io/[Material Web Components]
+(cf link:https://github.com/material-components/material-web/blob/main/docs/quick-start.md[QuickStart])
+afin de limiter le CSS au minimum
+* Timothée prend la gestion du projet et du repo
+* **Commit : https://www.conventionalcommits.org/fr/v1.0.0/**
+
+== TODO-List
+
+[headers]
+|===
+|Description |Responsable |Délai |Livrable |Validé par
+
+| Proposer une première approche pour la BDD (schéma entité-relation complet) | Guillaume | 1sem. | BDD | Timothée (et le reste)
+| Script d'import de AGRIBALYSE vers Postgresql | Guillaume | 2sem. | BDD | Timothée
+| Proposer une première page d'accueil (et insuffler le début du design) | Sacha | 1sem. | Frontend | Timothée (et le reste)
+| Prendre en main Flask | Clément | 1sem. | Backend | Timothée
+| Écrire un serveur minimal (avec hello-world en page d'accueil et permettant au moins de servir des ressources statiques) | Clément | 1sem. | Backend | Timothée
+| Regarder un peu les outils pour le templating et les échanges BDD | Clément / Timothée | 1sem. | Backend | Timothée
+| Rédiger le compte-rendu | Timothée | 48h | Gestion | Tous
+| Mettre en place le repo git | Timothée | 48h |  Gestion | Timothée (et les autres)
+| Regarder les outils WEB pouvant être utiles | Timothée | 1sem. | Frontend | Timothée (et les autres)
+|===
+
+
+== Pour la suite
+
+Prochaine réunion : Lundi 13 novembre à 12h, fin prévu avant 13h.
+
+=== Annexes
+
+* link:https://agribalyse.ademe.fr/[AGRIBALYSE]
