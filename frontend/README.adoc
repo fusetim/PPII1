@@ -1,0 +1,43 @@
+= Frontend
+
+Le dossier `frontend` de ce projet est dédié à la partie client du site web.
+
+== Rôle du Frontend
+
+Le frontend est responsable de l'interface utilisateur, de l'affichage des recettes, de la gestion des
+interactions utilisateur et de la présentation des informations concernant le bilan carbone des recettes.
+
+== Choix Techniques
+
+=== Typescript
+
+Typescript est un langage très similaire à Javascript et à la particularité d'être transpilable en
+pur Javascript. Par rapport à soon cousin, il a cependant l'avantage de pouvoir contraindre
+l'utilisation de variables fortement typés, ce qui peut simplifier grandement notre aventure
+dans le monde du web.
+
+=== Material Web Components
+
+Nous avons choisi d'utiliser les Material Web Components, une implémentation des directives Material
+Design de Google, pour la conception de l'interface utilisateur. Ces composants prédéfinis facilitent
+la création d'une interface utilisateur cohérente, esthétique et responsive, en évitant la nécessité
+de créer un style CSS personnalisé pour chaque élément. Cela accélère le développement et garantit
+une expérience utilisateur harmonieuse.
+
+=== Suggestions pour le Futur
+
+À l'avenir, nous envisageons d'intégrer les librairies suivantes pour améliorer la conception des pages
+de notre application :
+
+1. **SvelteKit** : SvelteKit est un framework de développement d'applications web léger et performant.
+Il offre un modèle de composants réactifs et compile le code en JavaScript pur, ce qui améliore la
+vitesse de chargement et l'efficacité de l'application. Son utilisation pourrait permettre de créer
+des pages web plus rapidement. +
+IMPORTANT: SvelteKit peut fonctionner sous différent mode, il est important de se fixer des idées
+claires sur son mode d'utilisation. Dans notre nous nous limiterons aux modes `prerender` et
+`client-side render`.
+
+2. **Lit (lit.dev)** : Lit est une bibliothèque JavaScript pour la création de composants web
+réutilisables et interopérables. Il s'intègre bien avec les Web Components, ce qui en fait un choix
+judicieux pour créer des composants d'interface utilisateur personnalisés et réutilisables.
+

@@ -1,0 +1,29 @@
+= Backend
+
+Le dossier `backend` de ce projet a pour rôle de gérer toute la logique serveur de l'application. Il
+agit comme l'intermédiaire entre l'interface utilisateur (frontend) et la base de données.
+
+== Rôle du Backend
+
+Le backend assure plusieurs fonctions essentielles, notamment :
+
+1. **Gestion des Requêtes HTTP** : Il écoute les requêtes HTTP provenant du frontend, les traite et
+retourne les réponses appropriées. Selon la suite des opérations, il sera plus ou moins porté sur
+la création d'une API afin de permettre les différentes actions utilisables dans l'application.
+
+2. **Interaction avec la Base de Données** : Le backend communique avec la base de données pour
+récupérer et stocker les informations, y compris les recettes et bilans carbone associés. Dans ce
+projet, nous utilisons PostgreSQL (SQLite peut etre ?) comme système de gestion de base de données.
+
+3. **Calcul des Bilans Carbone** : Le backend effectue également la partie algorithmique de
+l'application, ce qui comprend le calcul pour attribuer un bilan carbone à chaque recette
+en fonction de ses ingrédients et de sa préparation, et également les futures fonctionnalités
+permettant de générer un menu de semaine en optimisant divers critères.
+
+== Choix Techniques
+
+Le backend est construit en utilisant **Python** :
+
+* le framework **Flask**, un framework de serveur web minimaliste et flexible
+* une library qui reste à déterminer pour intéragir avec la base de données
+* une library qui reste à trouver pour gérer le templating

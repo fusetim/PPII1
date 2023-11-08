@@ -1,0 +1,38 @@
+= Specs - Recette Éco
+
+Le dossier `specs` au sein du projet contient divers documents et réflexions liés à la conception et
+au fonctionnement de l'application.
+
+== Rôle de la Section "Specs"
+
+Le dossier "specs" joue un rôle central dans la formalisation des idées, la prise de décisions, et la
+documentation des réflexions autour de l'application. Il est un lieu de référence pour l'équipe de
+développement, où les concepts clés et les spécifications sont documentés de manière approfondie.
+
+== Contenu Actuel
+
+À l'heure actuelle, le dossier "specs" contient les éléments suivants :
+
+1. **Réflexions sur la Conception de l'Application** : Des documents décrivant les choix
+d'architecture, les fonctionnalités clés, et les défis de conception liés au projet.
+
+2. **Comptes-Rendus de Réunion** : Des rapports des réunions d'équipe, y compris les discussions, les
+décisions prises, et les actions à entreprendre.
+
+== Objectifs Futurs
+
+Pour l'avenir, nous prévoyons d'étendre le contenu du dossier "specs" en y ajoutant :
+
+1. **Spécifications des Fonctionnalités** (aka le cahier des charges): Des documents détaillés
+décrivant chaque fonctionnalité de l'application, y compris les exigences, les cas d'utilisation,
+et les interfaces utilisateur associées.
+
+2. **Diagrammes d'Architecture** : Des schémas et des diagrammes qui illustrent l'architecture
+logicielle de l'application, y compris les composants, les flux de données, et les interactions.
+__Il comprend notamment les diagrammes en lien avec la base de données.__
+
+3. **Planning de Développement** : Un calendrier détaillé des étapes de développement, des jalons,
+et des livraisons prévues pour le projet. (On utilisera peut-être les Github Korban pour cela?)
+
+4. **Stratégie de Test** : Des plans de test, y compris les scénarios de test, et les procédures de
+validation.

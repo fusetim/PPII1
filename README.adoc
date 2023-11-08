@@ -1,0 +1,36 @@
+= Projet PPII1 "Sans Nom"
+
+[abstract]
+--
+Projet visant à créer un site web dédié à la recherche de recettes culinaires, tout en mettant l'accent sur
+l'empreinte carbone de chaque recette.  Il vise à promouvoir une alimentation plus durable en permettant
+aux utilisateurs de trouver des recettes délicieuses tout en étant conscients de l'impact environnemental
+de leurs choix culinaires.
+--
+
+== Arborescence du Projet
+
+Le projet se divise en plusieurs composantes principales, chacune ayant un rôle spécifique dans le développement
+et le fonctionnement du site.
+
+* link:./backend[]: Cette section regroupe l'ensemble de la logique serveur de l'application. Le backend gère les requêtes, l'accès à la base de données etc.
+
+* link:./frontend[]: La partie client du site est regroupée ici, et elle comprend à la fois l'interface utilisateur et l'interface d'administration.
+
+* link:./scripts[]: Ce répertoire contient divers scripts utiles pour le développement, la maintenance et la gestion du projet.
+
+* link:./specs[]: Ici, vous trouverez les réflexions et documents liés à la conception de l'application, ainsi que les comptes-rendus des réunions. C'est l'endroit où les idées sont formalisées et les décisions prises.
+
+* link:./docs[]: Dans le futur, cette section sera dédiée à la documentation des différents modules de l'application, expliquant comment les installer et les utiliser.
+
+== Contributions
+
+Afin de participer au projet et de voir vos modifications ajoutées à la branche `main` (et donc la
+véritable version du site), il vous faudra respecter les règles suivantes :
+
+1. **Commenter** le code
+2. **Tester** le code (en écrivant notamment des tests)
+3. Écrire des commits suivant la norme [**Conventional Commit**](https://www.conventionalcommits.org/en/v1.0.0/)
+4. Votre branche doit **être à jour** par rapport à `main` (git pull, rebase et autre joyeuseté)
+5. Ouvrir une **Pull Request** (ou Merge Request), qui détaille les changements apportés (qui
+reprend généralement les commits)
