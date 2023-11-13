@@ -1,0 +1,52 @@
+= CR Réunion - 13/11/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de montage |TELECOM Nancy, 1.12 |13/11/2023 12h10-
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Point sur l'avancement des tâches
+
+== Échanges
+
+=== Avancements
+
+* Quelques réflexions sur la structure de base de données. +
+-> Notamment l'enregistrement d'un ingrédient.
+
+* Difficulté de la génération des menus.
+
+* Petite démonstration du serveur minimale en Flask avec support des templates.
+
+* Recherche de design sur la partie front +
+__Lorem Epsom__ 
+
+== Décisions
+
+* Utilisation de psycopg pour accèder à la BDD
+
+* Début de l'implémentation d'une API minimale
+
+* Recherche avec Levenshtein.
+
+
+== TODO-List
+
+Allez voir sur Github
+
+== Pour la suite
+
+Prochaine réunion : Lundi 20 novembre à 12h, fin prévu avant 13h.
+
+=== Annexes
