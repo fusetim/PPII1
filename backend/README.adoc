@@ -27,3 +27,32 @@ Le backend est construit en utilisant **Python** :
 * le framework **Flask**, un framework de serveur web minimaliste et flexible
 * une library qui reste à déterminer pour intéragir avec la base de données
 * une library qui reste à trouver pour gérer le templating
+
+== Utilisation (Développement)
+
+* Installer Python 3 bien sûr (avec pip)
+
+* Se déplacer dans ce répertoire `cd backend/`
+
+* Installer et activer l'environnement virtuel python
+```shell
+python3 -m venv .venv/
+source .venv/bin/activate
+```
+* Installer les dépendances
+```shell
+pip install -r requirements.txt
+```
+
+* Finalement lancer Flask
+```
+python -m flask run
+```
+
+[NOTE]
+--
+Pour mettre à jour la liste de dépendances, utilisez :
+```shell
+pip freeze > requirements.txt
+```
+--
