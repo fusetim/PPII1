@@ -1,26 +1,30 @@
 # Locality Sensitive Hash function implementation.
 #
-# Motivation for this implementation is to develop a quick search "engine" for 
+# Motivation for this implementation is to develop a quick search "engine" for
 # the recipes and the ingredients.
 
-def shringles(word: str, n: int):
+import hashlib
+
+def shringles(word: str, n: int) -> list[str]:
     """
     Produces the shringles set of a word.
 
-    Args: 
+    Args:
         - word (str): the given word
         - n (int): shringle length
 
     Return:
-        List of distinct shringles (order is not guaranteed)
+        List of distinct shringles (sorted in alphabetical order)
     """
     sh = set()
-    for i in range(0, len(word)-3):
-        sh.add(word[i:i+3])
-    return list(sh)
+    for i in range(0, len(word)-n):
+        sh.add(word[i:i+n].tolower())
+    shl = list(sh)
+    shl.sort()
+    return shl
 
 
-def minhash(wvec: list[int], permutations: list[list[int]]):
+def minhash(wvec: list[int], permutations: list[list[int]]) -> list[int]:
     """
     Minhash the word vector (wvec) based on the key permutations.
 
@@ -39,3 +43,61 @@ def minhash(wvec: list[int], permutations: list[list[int]]):
                 break
     return sig
         
+
+def lsh(sig: list[int], b: int) -> list[(int, str)]:
+    """
+    Locality Sensitive Hash function.
+
+    Args:
+        - sig (list[int]): signature vector
+        - b (int): number of bands
+
+    Return:
+        A list of tuples (band, digest) where band is the band number and digest is the corresponding hashed band.
+    """
+    hashes = []
+    r = len(sig) // b
+    # Implementation Note:
+    # LSH splits the signature in multiple bands of same length (row). Each band get a unique hash.
+    # The search is then done on the hashed bands and not the entire signature allowing to
+    # perform a quick search on similarities of words.
+    for i in range(b):
+        end_slice = min(len(sig), (i+1)*r)
+        digest = hashlib.sha256(sig[i*r:end_slice]).hexdigest()
+        hashes.append((i, digest))
+    return hashes
+
+
+def lsh_hash(word: str, k: int, b: int, permutations: list[list[int]], shringle_set: list[str]) -> list[(int, str)]:
+    """
+    Locality Sensitive Hash function.
+
+    Args:
+        - word (str): the given word
+        - k (int): shringle length
+        - b (int): number of bands
+        - permutations (list[list[int]]): key permutations to generate the dense vector
+        - shringle_set (list[str]): set of shringles (each shringle is unique) and sorted in alphabetical order.
+    Return:
+        A list of tuples (band, digest) where band is the band number and digest is the corresponding hashed band.
+
+    Important: k should be the same length used by the shringle_set. Shringles are always provided in lowercase.
+    """
+    sh = shringles(word, k)
+    # Preparing the word vector
+    i,j = 0,0
+    wvec = [0 for _ in range(len(shringle_set))]
+    while i < len(sh) and j < len(shringle_set):
+        if sh[i] == shringle_set[j]:
+            wvec[j] = 1
+            i+=1
+            j+=1
+        elif sh[i] < shringle_set[j]:
+            # In this case, the shringle sh[i] is not contained in the shringle_set (this can happen
+            # for sake of performance). Therefore, we skip it.
+            i+=1
+        else:
+            # In this case, the shringle shringle_set[j] is not part of the word. We can safely skip it.
+            j+=1
+    sig = minhash(wvec, permutations)
+    return lsh(sig, b)
