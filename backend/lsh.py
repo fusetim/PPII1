@@ -4,6 +4,26 @@
 # the recipes and the ingredients.
 
 import hashlib
+import unicodedata
+import unidecode
+
+def normalize_str(word: str) -> str:
+    """
+    Normalizse a string to a lowercase ASCII-only (using unicode transformations) string
+
+    Args:
+        - word (str): the string to normalize
+    
+    Return:
+        A normalize string (lowercase ASCII-only)
+    """
+    # Normalize the unicode string to the NFKC form (decompose and recompose 
+    # every char in mostly an unique form)
+    un = unicodedata.normalize("NFKC", word)
+    # Try to transliterate all unicode characters into an ascii-only form.
+    ud = unidecode.unidecode(un)
+    # Finally ignore all unicode 
+    return ud.encode('ascii', 'ignore')
 
 def shringles(word: str, n: int) -> list[str]:
     """
@@ -15,6 +35,8 @@ def shringles(word: str, n: int) -> list[str]:
 
     Return:
         List of distinct shringles (sorted in alphabetical order)
+
+    Note: word SHOULD preferably be normalized beforehand.
     """
     sh = set()
     for i in range(0, len(word)-n):
@@ -82,6 +104,8 @@ def lsh_hash(word: str, k: int, b: int, permutations: list[list[int]], shringle_
         A list of tuples (band, digest) where band is the band number and digest is the corresponding hashed band.
 
     Important: k should be the same length used by the shringle_set. Shringles are always provided in lowercase.
+
+    Note: word SHOULD preferably be normalized beforehand.
     """
     sh = shringles(word, k)
     # Preparing the word vector
@@ -101,3 +125,4 @@ def lsh_hash(word: str, k: int, b: int, permutations: list[list[int]], shringle_
             j+=1
     sig = minhash(wvec, permutations)
     return lsh(sig, b)
+
