@@ -7,8 +7,10 @@ the recipes and the ingredients.
 
 import hashlib
 import unicodedata
-import unidecode
+from array import array
+
 import pytest
+from unidecode import unidecode
 
 
 def normalize_str(word: str) -> str:
@@ -25,7 +27,7 @@ def normalize_str(word: str) -> str:
     # every char in mostly an unique form)
     un = unicodedata.normalize("NFKC", word)
     # Try to transliterate all unicode characters into an ascii-only form.
-    ud = unidecode.unidecode(un)
+    ud = unidecode(un)
     # Finally ignore all unicode and make every char lowercase.
     return ud.encode("ascii", "ignore").decode("ascii").lower()
 
@@ -38,8 +40,11 @@ def shringles(word: str, n: int) -> list[str]:
         - word (str): the given word
         - n (int): shringle length
 
-    Return:
+    Returns:
         List of distinct shringles (sorted in alphabetical order)
+
+    Raises:
+        - ValueError if n <= 0
 
     Note: word SHOULD preferably be normalized beforehand.
     """
@@ -59,11 +64,16 @@ def minhash(wvec: list[int], permutations: list[list[int]]) -> list[int]:
 
     Args:
         - wvec (list[int]): word vector (based on the shringles)
-        - permutations (list[list[int]]): key permutations to generate the dense vector
+        - permutations (list[list[int]]): key permutations (not-empty) to generate the dense vector
 
-    Return:
+    Returns:
         A signature vector (list[int]) produced by the word shringles and the key permutations.
+
+    Raises:
+        - ValueError if permutations is empty
     """
+    if len(permutations) == 0:
+        raise ValueError("permutations should not be empty")
     sig = [0 for _ in range(len(permutations))]
     for k in range(len(permutations)):
         for l in range(len(wvec)):
@@ -81,20 +91,25 @@ def lsh(sig: list[int], b: int) -> list[(int, str)]:
         - sig (list[int]): signature vector
         - b (int): number of bands
 
-    Return:
-        A list of tuples (band, digest) where band is the band number and digest
-        is the corresponding hashed band.
+    Returns:
+        A list of digests ordered by the reference band.
+
+    Raises:
+        - ValueError if b <= 0
     """
+    if b <= 0:
+        raise ValueError(f"got b={b}, expected: b > 0")
     hashes = []
     r = len(sig) // b
     # Implementation Note:
     # LSH splits the signature in multiple bands of same length (row). Each band get a unique hash.
     # The search is then done on the hashed bands and not the entire signature allowing to
     # perform a quick search on similarities of words.
+    sig_arr = array("L", sig)
     for i in range(b):
-        end_slice = min(len(sig), (i + 1) * r)
-        digest = hashlib.sha256(sig[i * r : end_slice]).hexdigest()
-        hashes.append((i, digest))
+        end_slice = min(len(sig_arr), (i + 1) * r)
+        digest = hashlib.sha256(sig_arr[i * r : end_slice]).hexdigest()
+        hashes.append(digest)
     return hashes
 
 
@@ -111,9 +126,12 @@ def lsh_hash(
         - permutations (list[list[int]]): key permutations to generate the dense vector
         - shringle_set (list[str]): set of shringles (each shringle is unique) and sorted
           in alphabetical order.
-    Return:
+    Returns:
         A list of tuples (band, digest) where band is the band number and digest is the
         corresponding hashed band.
+
+    Raises:
+        - ValueError if k <= 0, b <= 0 or permutations is empty
 
     Important: k should be the same length used by the shringle_set. Shringles are always
     provided in lowercase.
@@ -163,3 +181,34 @@ def test_negative_shringles():
     with pytest.raises(ValueError):
         shringles("", 0)
         shringles("", -1)
+
+
+def test_minhash():
+    wvec1 = [0, 0, 0, 1, 0, 1]
+    wvec2 = [1, 1, 0, 1, 0, 0]
+    wvec3 = [0, 0, 0, 0, 0, 0]
+    permutations1 = [[0, 1, 2, 3, 4, 5], [5, 4, 3, 2, 1, 0], [4, 2, 3, 5, 1, 0]]
+    permutations2 = [[0, 1, 2, 3, 4, 5], [4, 2, 3, 5, 1, 0], [5, 4, 3, 2, 1, 0]]
+    permutations3 = [[2, 5, 0, 1, 4, 3], [4, 2, 3, 5, 1, 0]]
+    assert minhash(wvec1, permutations1) == [3, 0, 2]
+    assert minhash(wvec2, permutations1) == [0, 2, 2]
+    assert minhash(wvec3, permutations1) == [0, 0, 0]
+    assert minhash(wvec1, permutations2) == [3, 2, 0]
+    assert minhash(wvec2, permutations2) == [0, 2, 2]
+    assert minhash(wvec3, permutations2) == [0, 0, 0]
+    assert minhash(wvec1, permutations3) == [1, 2]
+    assert minhash(wvec2, permutations3) == [2, 2]
+    assert minhash(wvec3, permutations3) == [0, 0]
+
+
+def test_empty_minhash():
+    with pytest.raises(ValueError):
+        minhash([0, 0, 0, 1, 0, 1], [])
+
+
+def test_lsh():
+    assert lsh([5, 2, 3, 4, 1, 2, 4, 5, 0], 3) == [
+        "8775a2d6c2e2cf59c5b5b21a065794bbc0a184d1641577dcd6324b73d51df074",
+        "148048b2ae0ca8f5a8285d3f0c3e0e8814b0df35cc5b5a580e814eb414dd70a1",
+        "fe6918fa5f7cd81f39dc1bb362376a52a541aad2645d6989c57148d287757117",
+    ]
