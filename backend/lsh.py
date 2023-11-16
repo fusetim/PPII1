@@ -6,6 +6,7 @@
 import hashlib
 import unicodedata
 import unidecode
+import pytest
 
 def normalize_str(word: str) -> str:
     """
@@ -22,8 +23,8 @@ def normalize_str(word: str) -> str:
     un = unicodedata.normalize("NFKC", word)
     # Try to transliterate all unicode characters into an ascii-only form.
     ud = unidecode.unidecode(un)
-    # Finally ignore all unicode 
-    return ud.encode('ascii', 'ignore')
+    # Finally ignore all unicode and make every char lowercase.
+    return ud.encode('ascii', 'ignore').decode('ascii').lower()
 
 def shringles(word: str, n: int) -> list[str]:
     """
@@ -38,9 +39,11 @@ def shringles(word: str, n: int) -> list[str]:
 
     Note: word SHOULD preferably be normalized beforehand.
     """
+    if n <= 0:
+        raise ValueError(f"got n: {n}, expected: n > 0")
     sh = set()
-    for i in range(0, len(word)-n):
-        sh.add(word[i:i+n].tolower())
+    for i in range(0, len(word)-n+1):
+        sh.add(word[i:i+n].lower())
     shl = list(sh)
     shl.sort()
     return shl
@@ -126,3 +129,22 @@ def lsh_hash(word: str, k: int, b: int, permutations: list[list[int]], shringle_
     sig = minhash(wvec, permutations)
     return lsh(sig, b)
 
+
+def test_normalize():
+    assert(normalize_str("à la pêche aux moules") == "a la peche aux moules")
+    assert(normalize_str("peche") == "peche")
+    assert(normalize_str("Pêche") == "peche")
+    assert(normalize_str("Cœur") == "coeur")
+    assert(normalize_str("ひらがな") == "hiragana")
+    assert(normalize_str("平仮名") == "ping jia ming ")
+
+def test_shringles():
+    assert(shringles("peche", 2) == sorted(["pe", "ec", "ch", "he"]))
+    assert(shringles("peche", 3) == sorted(["pec", "ech", "che"]))
+    assert(shringles("a la peche", 2) == sorted(["a ", " l", "la", " p", "pe", "ec", "ch", "he"]))
+    assert(shringles("", 2) == [])
+    
+def test_negative_shringles():
+    with pytest.raises(ValueError):
+        shringles("", 0)
+        shringles("", -1)
