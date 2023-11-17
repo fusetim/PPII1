@@ -1,0 +1,12 @@
+{
+    "include": ["src/**/*"],
+    "compilerOptions": {
+        "allowArbitraryExtensions": true,
+        "moduleResolution": "nodenext",
+        "module": "nodenext",
+        "experimentalDecorators": true,
+        "jsxImportSource": "preact",
+        "target": "es2021",
+        "strict": true
+    }
+}
