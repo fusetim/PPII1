@@ -1,0 +1,23 @@
+{
+    "name": "frontend",
+    "version": "0.1.0",
+    "private": true,
+    "source": "src/index.html",
+    "scripts": {
+        "start": "parcel --open",
+        "build": "parcel build",
+        "test": "jest",
+        "lint": "eslint",
+        "check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@material/web": "^1.0.1",
+        "lit-element": "^4.0.2",
+        "parcel": "^2.10.3",
+        "sass": "^1.26.5",
+        "typescript": "^5.2.2"
+    },
+    "devDependencies": {
+        "@parcel/transformer-sass": "^2.10.3"
+    }
+}

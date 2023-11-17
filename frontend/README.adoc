@@ -41,3 +41,22 @@ claires sur son mode d'utilisation. Dans notre nous nous limiterons aux modes `p
 réutilisables et interopérables. Il s'intègre bien avec les Web Components, ce qui en fait un choix
 judicieux pour créer des composants d'interface utilisateur personnalisés et réutilisables.
 
+== Utilisation (Développement)
+
+* Première chose, installez NodeJS (~v20) avec NPM.
+
+* Déplacez vous dans le dossier `frontend` si ce n'est pas déjà le cas.
+
+* Installez ensuite toutes les dépendances du projet.
+
+```shell
+npm install
+```
+
+* Vous avez désormais tous les outils pour développer convenablement :
+** La commande `npm run start` lance un serveur web de développement (avec "hot-reloading").
+** La commande `npm run build` vous permet de compiler une fois en entier tout le projet (parfait pour +
+déployer le front).
+** La commande `npm run check` vous permet de lancer le linter typescript qui vous permettra de corriger
+des erreurs courantes et de suivre les bonnes pratiques.
+** Finalement la commande `npm run test` vous permet de lancer les tests en utilisant `jest`.
