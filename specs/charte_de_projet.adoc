@@ -52,8 +52,8 @@ avec une base de données.
 
 * Une base de données contenant les informations sur les recettes et les ingrédients.
 
-* Une interface web permettant à l'utilisateur, permettant entre autre de consulter
-et rechercher des recettes et d'obtenir leur bilan carbone.
+* Une interface web permettant entre autre de consulter et rechercher des recettes et
+d'obtenir leur bilan carbone.
 
 ==== Critères de validation
 
@@ -104,7 +104,10 @@ accessible sur un sous-domaine de link:fusetim.tk[].
 
 * L'ensemble du projet sera disponible sur GitHub (dans un dépôt privé).
 
-* Les réunions auront lieu chaque lundi pendant la pause de midi.
+* Les réunions auront lieu chaque lundi pendant la pause de midi. +
+-> Les comptes-rendus seront disponibles sur GitHub, dans le dossier `specs/comptes-rendus`. +
+-> L'organisation des réunions et notamment l'ordre du jour de chacune seront effectués
+à travers les GitHub Discussions du projet.
 
 * Les tâches et leurs répartitions seront disponibles sur GitHub (dans un "projet" privé).
 
