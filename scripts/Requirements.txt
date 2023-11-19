@@ -1,0 +1,6 @@
+'''
+Requis pour l importation de données :
+
+psycopg2 
+
+'''
