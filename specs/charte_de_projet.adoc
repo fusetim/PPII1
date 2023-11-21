@@ -1,0 +1,133 @@
+= Charte de Projet
+
+|===
+|Nom | Responsable| Date de modification
+
+|PPII1 | T. BRILLAUD | 2023-11-19 par T. BRILLAUD
+|===
+
+But et objectifs : Mise en place d'une plateforme web permettant au plus grand
+nombre de s'informer rapidement sur le bilan carbone de ce qu'il cuisine.
+Promouvoir ainsi des recettes plus respectueuses de l'environnement.
+
+== Cadrage
+
+=== Contexte
+
+La crise écologique est une crise qui touche tout le monde, pas forcément directement
+mais dans lequel tout le monde est acteur et doit se sentir concerné. L'alimentation
+est l'un des pôles qui est à la fois facile à changer et dont l'impact est
+suffisamment significatif pour avoir un réel impact sur l'environnement.
+
+Notre solution numérique prévoit ainsi de permettre à tout un chacun de pouvoir
+s'informer sur le bilan carbone de ce qu'il cuisine, et ainsi de participer à
+sa manière à l'effort collectif pour la planète.
+
+Il est à noter qu'aucun autre service ne semble proposer le même service que nous.
+Le plus proche est l'application Yuka qui permet de scanner des produits alimentaires
+pour en connaitre la composition et les effets sur la santé, et depuis peu leur bilan
+carbone. Cependant, cette application ne permet pas de connaitre le bilan carbone
+d'une recette entière, et ne permet pas de comparer les recettes entre elles.
+
+=== Finalité
+
+Servir de source d'information sur l'alimentation et son impact sur l'environnement
+et indirectement de changer les modes de consommation alimentaire.
+
+=== Business Case
+
+Aucun bénéfice n'est attendu de ce projet, il s'agit d'un projet à but non lucratif.
+
+Il est même plutôt probable qu'il nous coute, ne serait-ce que pour l'hébergement
+des bases de données et du serveurs web.
+
+=== Livrables attendus
+
+==== Livrables
+
+Les livrables contiennent les éléments suivants :
+
+* Un serveur web permettant l'accès à la plateforme web et permettant des échanges
+avec une base de données.
+
+* Une base de données contenant les informations sur les recettes et les ingrédients.
+
+* Une interface web permettant entre autre de consulter et rechercher des recettes et
+d'obtenir leur bilan carbone.
+
+==== Critères de validation
+
+Les critères de validation sont les suivants :
+
+* Au minimum :
+** L'application web est fonctionnelle : on peut rechercher des recettes afin
+d'en prendre connaissance et d'obtenir leur bilan carbone.
+** L'application web peut être utilisée de façon convenable sur un ordinateur +
+-> Pas forcément sur un téléphone portable.
+** Il existe un certain nombre de recettes dans la base de données dont le
+calcul du bilan carbone est fonctionnel.
+
+* De façon convenable :
+** L'application web peut être utilisée sur un téléphone portable.
+** Un système de favoris (ou de notation) est mis en place.
+** Une interface administrateur permet d'ajouter/modifier/supprimer des recettes.
+** La recherche de recettes peut se faire par ingrédient.
+** La recherche d'ingrédient permet d'obtenir leur bilan carbone.
+
+* Au mieux (si le temps le permet) :
+** Un système de compte est mis en place.
+** Les utilisateurs peuvent noter les recettes
+** Les utilisateurs peuvent ajouter des recettes (et calculer efficacement leur
+bilan carbone).
+** L'UX du panel admin est améliorée.
+** L'application peut être installée sur un téléphone portable (cf Progressive Web App).
+** L'application peut être utilisée hors-ligne, en partie (cf Progressive Web App).
+
+
+== Déroulement
+
+=== Ressources
+
+* **Ressources humaines** limitées à 4 personnes pendant environ 100h chacune. +
+__Toutes les personnes n'ont pas forcément d'expérience dans la création d'application
+web -> #Risques et difficultés#__
+
+* **Deadline** fixée au #2024-01-07#.
+
+* Aucune autre ressource directe +
+-> L'hébergement sera réalisé temporairement sur un serveur personnel,
+accessible sur un sous-domaine de link:fusetim.tk[].
+
+=== Organisation
+
+* Par son expérience, #T. BRILLAUD hérite de la responsabilité du projet#.
+
+* L'ensemble du projet sera disponible sur GitHub (dans un dépôt privé).
+
+* Les réunions auront lieu chaque lundi pendant la pause de midi. +
+-> Les comptes-rendus seront disponibles sur GitHub, dans le dossier `specs/comptes-rendus`. +
+-> L'organisation des réunions et notamment l'ordre du jour de chacune seront effectués
+à travers les GitHub Discussions du projet.
+
+* Les tâches et leurs répartitions seront disponibles sur GitHub (dans un "projet" privé).
+
+* Une première version utilisable est attendue pour le 2023-12-10.
+
+=== Risques et opportunités
+
+==== Risques
+
+* Incompétences des membres
+
+* Mauvaise gestion des ressources
+
+* Mauvaise communication
+
+* Mauvais choix technologiques
+
+* Difficultés liées à des facteurs externes : +
+__ex: Module WEB tardif__
+
+==== Opportunités
+
+* Un des membres est plutôt à l'aise avec tous les concepts du projet.
