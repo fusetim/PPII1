@@ -8,6 +8,7 @@ instance/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 backend/__pycache__/
+scripts/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -42,6 +43,19 @@ backend/sdist/
 backend/var/
 backend/wheels/
 backend/share/python-wheels/
+scripts/build/
+scripts/develop-eggs/
+scripts/dist/
+scripts/downloads/
+scripts/eggs/
+scripts/.eggs/
+scripts/lib/
+scripts/lib64/
+scripts/parts/
+scripts/sdist/
+scripts/var/
+scripts/wheels/
+scripts/share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -58,6 +72,8 @@ pip-log.txt
 pip-delete-this-directory.txt
 backend/pip-log.txt
 backend/pip-delete-this-directory.txt
+scripts/pip-log.txt
+scripts/pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
@@ -113,6 +129,13 @@ backend/venv/
 backend/ENV/
 backend/env.bak/
 backend/venv.bak/
+scripts/.env
+scripts/.venv
+scripts/env/
+scripts/venv/
+scripts/ENV/
+scripts/env.bak/
+scripts/venv.bak/
 
 ## FRONT-END
 
