@@ -1,0 +1,29 @@
+table.drawer{
+    background-color: #e5d2ca;
+    empty-cells: show;
+    white-space: 1;
+    font-family:'impact';
+    width:20%;
+    border:"0";
+    position:fixed;
+}
+body{
+    background-color: #fef3ed;
+}
+td.actuel{
+    background-color: #caafaa;
+}
+td.onglet{
+    color:#373b54;
+    font-size:60px;
+    text-align:right;
+}
+td.titre{
+    font-size:100px;
+    color:#e08a71;
+    background-color: #caafaa;
+    text-align:center;
+}
+p{
+    font-size:30px;
+}
