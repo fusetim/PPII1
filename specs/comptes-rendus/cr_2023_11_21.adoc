@@ -1,0 +1,50 @@
+= CR Réunion - 21/11/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi |TELECOM Nancy, 1.12 |21/11/2023 12h00-12h40
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Point sur l'avancement des tâches
+
+== Échanges
+
+=== Avancements
+
+* Point sur le script d'importation qui a été fini.
+
+* Point sur le Design/Partie front
+** Problèmes avec Github pour publier mais ça arrive
+
+* Point sur le backend
+** Besoin de direction
+
+* Point sur l'implémentation algo LSH -> finalisé.
+
+
+== Décisions
+
+* Besoin d'une branche de test avec le frontend au moins temporaire au plus vite
+
+* La charte de projet est validée
+
+== TODO-List
+
+Allez voir sur Github
+
+== Pour la suite
+
+Prochaine réunion : Lundi 27 novembre à 12h, fin prévu avant 13h.
+
+=== Annexes
