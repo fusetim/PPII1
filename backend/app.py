@@ -3,8 +3,8 @@ from flask import Flask
 import tomllib
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models.ingredient import Ingredient
-
+import models
+from flask import g
 
 # Entrypoint for the Flask app.
 app = Flask(__name__)
@@ -16,6 +16,10 @@ app.config.from_file("config.toml", load=tomllib.load, text=False)
 db = SQLAlchemy(app)
 # Initialize the migration engine (for database migrations)
 migrate = Migrate(app, db)
+
+with app.app_context():
+    g.db = db
+    g.models = models
 
 # By default, Flask already routes the static directory :)
 # No need for a dedicated route.

@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask import g
 
 # Creates the ingredients "router" (aka blueprint in Flask)
 bp = Blueprint("ingredients", __name__)
@@ -9,23 +10,11 @@ bp = Blueprint("ingredients", __name__)
 @bp.route("/<string:code>")
 def get_ingredient(code):
     """Get an ingredient data from its code."""
-    # Waiting for DB
-    # Note: Tests are not implemented yet, because this solution is obviously temporary.
-    if code == "tomate":
-        return {
-            "code": code,
-            "name": "Tomate",
-            "carbon_equivalent": 0.5,
-        }
-    elif code == "pomme-de-terre":
-        return {
-            "code": code,
-            "name": "Pomme de Terre",
-            "carbon_equivalent": 0.3,
-        }
-    else:
-        # When all cases are exhausted, raise the NotFound exception, defined later.
-        raise IngredientNotFound("Not in DB")
+    try:
+        ingredient = g.db.session.execute(g.db.select(g.models.ingredient.Ingredient).filter_by(coode=code)).scalar_one()
+    except Exception as e:
+        raise e
+        raise IngredientNotFound(context="Not in DB.", payload={"code": code, "err": str(e)})
 
 
 class IngredientNotFound(Exception):
