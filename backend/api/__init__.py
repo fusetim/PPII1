@@ -1,6 +1,7 @@
 from flask import Blueprint
 from . import ingredients
 
+
 # Creates the API "router" (aka blueprint in Flask)
 api = Blueprint("api", __name__)
 # Registers the ingredients blueprint, with a prefix of /ingredients.

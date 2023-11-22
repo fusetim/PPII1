@@ -5,6 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import models
 from flask import g
+import os
+import sys
+
+# Add the root directory to the PYTHONPATH
+p = os.path.abspath(".")
+sys.path.insert(1, p)
 
 # Entrypoint for the Flask app.
 app = Flask(__name__)
@@ -16,10 +22,6 @@ app.config.from_file("config.toml", load=tomllib.load, text=False)
 db = SQLAlchemy(app)
 # Initialize the migration engine (for database migrations)
 migrate = Migrate(app, db)
-
-with app.app_context():
-    g.db = db
-    g.models = models
 
 # By default, Flask already routes the static directory :)
 # No need for a dedicated route.

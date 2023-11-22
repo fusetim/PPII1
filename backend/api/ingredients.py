@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask import g
+from flask_sqlalchemy import SQLAlchemy
+from models.ingredient import Ingredient
 
 # Creates the ingredients "router" (aka blueprint in Flask)
 bp = Blueprint("ingredients", __name__)
@@ -11,7 +13,7 @@ bp = Blueprint("ingredients", __name__)
 def get_ingredient(code):
     """Get an ingredient data from its code."""
     try:
-        ingredient = g.db.session.execute(g.db.select(g.models.ingredient.Ingredient).filter_by(coode=code)).scalar_one()
+        ingredient = get_db().session.execute(get_db().select(Ingredient).filter_by(code=code)).scalar_one()
     except Exception as e:
         raise e
         raise IngredientNotFound(context="Not in DB.", payload={"code": code, "err": str(e)})
@@ -41,3 +43,9 @@ class IngredientNotFound(Exception):
 def not_found(e):
     """Route handling the IngredientNotFound exception."""
     return jsonify(e.to_dict()), e.status_code
+
+
+def get_db():
+    if 'db' not in g:
+        db = g.db = SQLAlchemy(bp)
+    return db
