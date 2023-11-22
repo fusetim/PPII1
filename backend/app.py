@@ -7,6 +7,7 @@ import models
 from flask import g
 import os
 import sys
+from db import db
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -19,7 +20,7 @@ app.register_blueprint(api, url_prefix="/api")
 # Load the config file
 app.config.from_file("config.toml", load=tomllib.load, text=False)
 # Initialize the database
-db = SQLAlchemy(app)
+db.init_app(app)
 # Initialize the migration engine (for database migrations)
 migrate = Migrate(app, db)
 
