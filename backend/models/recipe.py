@@ -9,9 +9,13 @@ class Recipe(db.Model):
     Recipe data model.
 
     Attributes:
-        code: The ingredient unique identifier.
-        name: The ingredient name.
-        co2: The equivalent Co2 emission per kilogram.
+        recipe_uid: The recipe unique identifier.
+        name: The recipe name.
+        short_description: A short description of the recipe, displayed when browsing recipes.
+        description: A longer description of the recipe, displayed when viewing the recipe. It must include
+            the actual recipe instructions.
+        type: The type of recipe. This is a string that can be used to categorize recipes.
+        author: The author of the recipe. This is a UUID that can be used to link to the author's profile.
     """
     __tablename__ = "recipes"
     recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
