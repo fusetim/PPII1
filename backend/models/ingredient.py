@@ -14,8 +14,8 @@ class Ingredient(db.Model):
     """
     __tablename__ = "ingredients"
     code: Mapped[str] = mapped_column(String(length=10), primary_key=True)
-    name: Mapped[str] = mapped_column(Text)
-    co2: Mapped[float] = mapped_column(Float)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    co2: Mapped[float] = mapped_column(Float, nullable=False)
 
 
     def to_dict(self):

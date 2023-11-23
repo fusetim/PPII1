@@ -1,0 +1,45 @@
+= Base de données
+
+__Ce document a été mis à jour le 23/11/2023.__
+
+Ce document relate de la structure de la base de données du projet. Il est très probable que celle-ci
+évolue au cours du projet.
+
+== Tables et relations
+
+image:assets/DB_2023_11_23.png[]
+
+Au niveau de la base de données, nous avons 2 tables principales :
+
+* `recipes` qui contient les recettes et les informations qui leur sont liées (nom, description, auteur, ...)
+
+* `ingredients` qui contient les ingrédients, en majorité fournis par link:https://agribalyse.ademe.fr/[AGRIBALYSE]
+
+Ces deux tables sont liées par une table de relation `ingredient_links` qui contient les liaisons ingrédients-recettes,
+et les informations de quantités (et d'unités).
+
+Une dernière table `quantity_types` contient les types de quantités (masse en gramme, volume en litre, cuillère à café, ...)
+et permet de faire les conversions principales entre l'unité associée et une masse en kilogramme. Ainsi on peut afficher
+de joli quantité avec des unités de mesures arbitraires, tout en faisant les calculs (notamment l'équivalent Carbone)
+avec des kilogrammes.
+
+== Utilisation d'un serveur de base de données
+
+Notre projet utilise une base de données PostgreSQL, il est possible qu'une base de données SQLite fonctionne également
+mais celle-ci n'a pas été testée. Il est nécessaire de foournir les informations de connexion à cette base dans le fichier
+de configuration `/backend/config.toml`, en remplissant le champ `SQLALCHEMY_DATABASE_URI`.
+
+Un format d'URI valide est `postgresql://user:password@localhost:5432/dbname`.
+
+Afin de créer votre propre base de données nous vous conseillons d'utiliser Flask-Migrate, en utilisant la commande :
+
+```shell
+python -m flask db upgrade
+```
+
+Cette commande permet de mettre à jour directement la base de données avec les dernières migrations, et d'avoir les
+mêmes schémas que le serveur.
+
+Pour peupler vos tables, nous vous conseillons d'utiliser le script `/scripts/Script_ingredients.py` qui permet
+de récupérer les données d'AGRIBALYSE et de les insérer dans la table `ingredients`, il ne vous manque alors plus que
+des recettes :)
