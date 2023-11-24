@@ -8,9 +8,12 @@ the recipes and the ingredients.
 import hashlib
 import unicodedata
 from array import array
-
+import pickle
 import pytest
 from unidecode import unidecode
+from collections.abc import Iterable
+from collections import Counter
+import random
 
 
 def normalize_str(word: str) -> str:
@@ -157,6 +160,170 @@ def lsh_hash(
             j += 1
     sig = minhash(wvec, permutations)
     return lsh(sig, b)
+
+
+## LSH Table ##
+
+ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+TWO_LETTER_SHRINGLES = [x + y for x in ALPHABET for y in ALPHABET]
+
+
+def generate_permutations(n: int, m: int) -> list[list[int]]:
+    """
+    Generate m permutations of n elements.
+
+    Args:
+        - n (int): number of elements
+        - m (int): number of permutations
+
+    Returns:
+        A list of permutations (list[int]) of length m.
+
+    Raises:
+        - ValueError if n <= 0 or m <= 0
+    """
+    if n <= 0:
+        raise ValueError(f"got n={n}, expected: n > 0")
+    if m <= 0:
+        raise ValueError(f"got m={m}, expected: m > 0")
+    perms = []
+    for _ in range(m):
+        perm = [i for i in range(n)]
+        for i in range(n):
+            j = i + int(random.random() * (n - i))
+            perm[i], perm[j] = perm[j], perm[i]
+        perms.append(perm)
+    return perms
+
+
+class LSHTable(object):
+    k = 2
+    b = 3
+    permutations = []
+    shringle_set = []
+    inner_table = dict()
+
+    def __init__(
+        self, k: int, b: int, permutations: list[list[int]], shringle_set: list[str]
+    ):
+        if k <= 0:
+            raise ValueError(f"got k={k}, expected: k > 0")
+        if b <= 0:
+            raise ValueError(f"got b={b}, expected: b > 0")
+        if len(permutations) == 0:
+            raise ValueError("permutations should not be empty")
+        self.k = k
+        self.b = b
+        self.permutations = permutations
+        self.shringle_set = shringle_set
+
+    def get(self, word: str, k: int) -> list[str]:
+        """
+        Get the k most similar words to the given word.
+
+        Args:
+            - word (str): the given word
+            - k (int): the number of similar words to return
+
+        Returns:
+            A list of at most k similar words (based on the LSH table).
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        c = Counter()
+        for h in hashes:
+            c.update(self.inner_table.get(h, []))
+        return [x[0] for x in c.most_common(k)]
+
+    def insert(self, word: str):
+        """
+        Insert a word into the LSH table.
+
+        Args:
+            - word (str): the word to insert
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        for h in hashes:
+            self.inner_table.setdefault(h, []).append(word)
+
+    def update(self, word_iter: Iterable[str]):
+        """
+        Update the LSH table with the given words.
+
+        Args:
+            - word_iter (Iterable[str]): an iterable of words
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        for word in word_iter:
+            self.insert(word)
+
+    def remove(self, word: str):
+        """
+        Remove a word from the LSH table.
+
+        Args:
+            - word (str): the word to remove
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        for h in hashes:
+            self.inner_table.setdefault(h, []).remove(word)
+
+    def save(self, path: str):
+        """
+        Save the LSH table into a file.
+
+        Args:
+            - path (str): the path to the file
+
+        Raises:
+            - OSError if the file cannot be opened
+            - PickleError if the LSH table cannot be serialized
+        """
+        with open(path, "wb") as f:
+            pickle.dump(self, f)
+
+    def load(self, path: str):
+        """
+        Load the LSH table from a file.
+
+        Args:
+            - path (str): the path to the file
+
+        Raises:
+            - OSError if the file cannot be opened
+            - PickleError if the LSH table cannot be deserialized
+        """
+        with open(path, "rb") as f:
+            self = pickle.load(f)
+        return self
+
+
+def load_lsh_table(path: str) -> LSHTable:
+    """
+    Load the LSH table from a file.
+
+    Args:
+        - path (str): the path to the file
+
+    Raises:
+        - OSError if the file cannot be opened
+        - PickleError if the LSH table cannot be deserialized
+    """
+    with open(path, "rb") as f:
+        return pickle.load(f)
+
+
+## Tests ##
 
 
 def test_normalize():
