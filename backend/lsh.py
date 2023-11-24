@@ -204,7 +204,13 @@ class LSHTable(object):
     inner_table = dict()
 
     def __init__(
-        self, k: int, b: int, permutations: list[list[int]], shringle_set: list[str]
+        self,
+        k: int = 2,
+        b: int = 3,
+        permutations: list[list[int]] = generate_permutations(
+            len(TWO_LETTER_SHRINGLES), 16
+        ),
+        shringle_set: list[str] = TWO_LETTER_SHRINGLES,
     ):
         if k <= 0:
             raise ValueError(f"got k={k}, expected: k > 0")
@@ -217,16 +223,16 @@ class LSHTable(object):
         self.permutations = permutations
         self.shringle_set = shringle_set
 
-    def get(self, word: str, k: int) -> list[str]:
+    def get(self, word: str, k: int = None) -> list[str]:
         """
         Get the k most similar words to the given word.
 
         Args:
             - word (str): the given word
-            - k (int): the number of similar words to return
+            - k (int): the number of similar words to return. If None, return all similar words.
 
         Returns:
-            A list of at most k similar words (based on the LSH table).
+            Returns the value helds by the LSH table for the (at most k) most similar words.
 
         Raises:
             - ValueError if the LSH table is not correctly initialized.
@@ -237,46 +243,55 @@ class LSHTable(object):
             c.update(self.inner_table.get(h, []))
         return [x[0] for x in c.most_common(k)]
 
-    def insert(self, word: str):
+    def insert(self, word: str, value: any):
         """
         Insert a word into the LSH table.
 
         Args:
             - word (str): the word to insert
-
+            - value (any): the value to associate with the word. If None, use the
+              word as a value.
         Raises:
             - ValueError if the LSH table is not correctly initialized.
         """
         hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        val = word
+        if value is not None:
+            val = value
         for h in hashes:
-            self.inner_table.setdefault(h, []).append(word)
+            self.inner_table.setdefault(h, []).append(val)
 
-    def update(self, word_iter: Iterable[str]):
+    def update(self, iterable: Iterable[(str, any)]):
         """
         Update the LSH table with the given words.
 
         Args:
-            - word_iter (Iterable[str]): an iterable of words
+            - iterable (Iterable[(str, any)]): an iterable of (key word, value) to insert
 
         Raises:
             - ValueError if the LSH table is not correctly initialized.
         """
-        for word in word_iter:
-            self.insert(word)
+        for (key, value) in iterable:
+            self.insert(key, value)
 
-    def remove(self, word: str):
+    def remove(self, word: str, value: any):
         """
-        Remove a word from the LSH table.
+        Remove a key-value pair from the LSH table.
+
+        Caution: One value must be tied to the word key to remove it properly.
+        DO NOT use this function if the values might be shared by multiple key words.
 
         Args:
             - word (str): the word to remove
+            - value (any): the value to remove
 
         Raises:
-            - ValueError if the LSH table is not correctly initialized.
+            - ValueError if the LSH table is not correctly initialized, or the LSH table
+            is not coherent (i.e one value shared multiple key words).
         """
         hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
         for h in hashes:
-            self.inner_table.setdefault(h, []).remove(word)
+            self.inner_table.setdefault(h, []).remove(value)
 
     def save(self, path: str):
         """
