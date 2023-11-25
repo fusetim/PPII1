@@ -164,7 +164,7 @@ def lsh_hash(
 
 ## LSH Table ##
 
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+ALPHABET = "abcdefghijklmnopqrstuvwxyz "
 TWO_LETTER_SHRINGLES = [x + y for x in ALPHABET for y in ALPHABET]
 
 
@@ -208,7 +208,7 @@ class LSHTable(object):
         k: int = 2,
         b: int = 3,
         permutations: list[list[int]] = generate_permutations(
-            len(TWO_LETTER_SHRINGLES), 16
+            len(TWO_LETTER_SHRINGLES), 64
         ),
         shringle_set: list[str] = TWO_LETTER_SHRINGLES,
     ):

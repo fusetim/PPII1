@@ -8,6 +8,7 @@ from flask import g
 import os
 import sys
 from db import db
+from search_table import save_ingredient_table
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -23,6 +24,9 @@ app.config.from_file("config.toml", load=tomllib.load, text=False)
 db.init_app(app)
 # Initialize the migration engine (for database migrations)
 migrate = Migrate(app, db)
+
+# On app teardown, save the LSH tables.
+app.teardown_appcontext(save_ingredient_table)
 
 # By default, Flask already routes the static directory :)
 # No need for a dedicated route.

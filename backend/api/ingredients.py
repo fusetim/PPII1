@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 from models.ingredient import Ingredient
 from db import db
+from search_table import get_ingredient_table, normalize_str
 
 # Creates the ingredients "router" (aka blueprint in Flask)
 bp = Blueprint("ingredients", __name__)
@@ -17,6 +18,19 @@ def get_ingredient(code):
     if ingredient is None:
         raise IngredientNotFound(context="Not in DB.", payload={"code": code})
     return jsonify(ingredient.to_dict())
+
+
+@bp.route("/search/<string:query>")
+def search_ingredient(query):
+    """Search for an ingredient based on a query string."""
+    table = get_ingredient_table()
+    codes = table.get(normalize_str(query), 10)
+    results = []
+    for code in codes:
+        ingredient = db.session.get(Ingredient, code)
+        if ingredient is not None:
+            results.append(ingredient.to_dict())
+    return jsonify(results)
 
 
 class IngredientNotFound(Exception):
