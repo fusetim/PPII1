@@ -8,7 +8,7 @@ from flask import g
 import os
 import sys
 from db import db
-from search_table import save_ingredient_table
+from search_table import save_search_tables
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -26,7 +26,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # On app teardown, save the LSH tables.
-app.teardown_appcontext(save_ingredient_table)
+app.teardown_appcontext(save_search_tables)
 
 # By default, Flask already routes the static directory :)
 # No need for a dedicated route.
