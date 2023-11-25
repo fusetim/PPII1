@@ -23,16 +23,10 @@ def get_ingredient_table():
             g._ingr_lsht = load_lsh_table("tmp/ingr_lsht.pkl")
         else:
             ingrs = db.session.execute(db.select(Ingredient)).scalars().all()
-            # shr = Counter()
-            # for ingr in ingrs:
-            #     shr.update(shringles(normalize_str(ingr.name), 2))
-            # shr = [ x[0] for x in shr.most_common(500)]
-            # shr.sort()
-            # print(len(shr))
             shr = TWO_LETTER_SHRINGLES
             g._ingr_lsht = LSHTable(2, 10, generate_permutations(len(shr), 48), shr)
             for ingr in ingrs:
-                g._ingr_lsht.insert(normalize_str(ingr.name), ingr.code)
+                g._ingr_lsht.insert(ingr.normalized_name, ingr.code)
     return g._ingr_lsht
 
 

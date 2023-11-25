@@ -11,6 +11,7 @@ class Recipe(db.Model):
     Attributes:
         recipe_uid: The recipe unique identifier.
         name: The recipe name.
+        normalized_name: The normalized recipe name.
         short_description: A short description of the recipe, displayed when browsing recipes.
         description: A longer description of the recipe, displayed when viewing the recipe. It must include
             the actual recipe instructions.
@@ -20,6 +21,7 @@ class Recipe(db.Model):
     __tablename__ = "recipes"
     recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    normalized_name: Mapped[str] = mapped_column(Text, nullable=False)
     short_description : Mapped[str] = mapped_column(Text, nullable=False)
     description: Mapped[str] = mapped_column(Text)
     type: Mapped[str] = mapped_column(String(length = 30))
