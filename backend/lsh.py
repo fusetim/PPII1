@@ -305,22 +305,7 @@ class LSHTable(object):
             - PickleError if the LSH table cannot be serialized
         """
         with open(path, "wb") as f:
-            pickle.dump(self, f)
-
-    def load(self, path: str):
-        """
-        Load the LSH table from a file.
-
-        Args:
-            - path (str): the path to the file
-
-        Raises:
-            - OSError if the file cannot be opened
-            - PickleError if the LSH table cannot be deserialized
-        """
-        with open(path, "rb") as f:
-            self = pickle.load(f)
-        return self
+            pickle.dump((self.k, self.b, self.permutations, self.shringle_set, self.inner_table), f)
 
 
 def load_lsh_table(path: str) -> LSHTable:
@@ -335,7 +320,10 @@ def load_lsh_table(path: str) -> LSHTable:
         - PickleError if the LSH table cannot be deserialized
     """
     with open(path, "rb") as f:
-        return pickle.load(f)
+        (k, b, perms, sset, tbl) = pickle.load(f)
+        obj = LSHTable(k, b, perms, sset)
+        obj.inner_table = tbl
+        return obj
 
 
 ## Tests ##

@@ -37,7 +37,7 @@ def get_ingredient_table():
     Returns the ingredient LSH table.
     """
     if "_ingr_lsht" not in g:
-        if False and path_exists("tmp/ingr_lsht.pkl"):
+        if path_exists("tmp/ingr_lsht.pkl"):
             g._ingr_lsht = load_lsh_table("tmp/ingr_lsht.pkl")
         else:
             ingrs = db.session.execute(db.select(Ingredient)).scalars().all()
@@ -53,7 +53,7 @@ def get_recipe_table():
     Returns the recipe LSH table.
     """
     if "_recipe_lsht" not in g:
-        if False and path_exists("tmp/recipe_lsht.pkl"):
+        if path_exists("tmp/recipe_lsht.pkl"):
             g._recipe_lsht = load_lsh_table("tmp/recipe_lsht.pkl")
         else:
             recs = db.session.execute(db.select(Recipe)).scalars().all()
