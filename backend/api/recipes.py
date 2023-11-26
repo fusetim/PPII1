@@ -2,7 +2,8 @@ from flask import Blueprint, jsonify
 from sqlalchemy import select
 from models.recipe import Recipe
 from db import db
-from search_table import get_recipe_table, normalize_str
+from search_table import get_recipe_table
+from lsh import normalize_str
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
