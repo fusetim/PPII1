@@ -1,6 +1,4 @@
-from flask import Blueprint, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import NoResultFound, MultipleResultsFound
+from flask import Blueprint, jsonify
 from sqlalchemy import select
 from models.ingredient import Ingredient
 from db import db

@@ -1,6 +1,4 @@
-from flask import Blueprint, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import NoResultFound, MultipleResultsFound
+from flask import Blueprint, jsonify
 from sqlalchemy import select
 from models.recipe import Recipe
 from db import db
@@ -8,6 +6,7 @@ from search_table import get_recipe_table, normalize_str
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
+
 
 @bp.route("/search/<string:query>")
 def search_recipe(query):
