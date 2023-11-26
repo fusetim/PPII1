@@ -8,9 +8,12 @@ the recipes and the ingredients.
 import hashlib
 import unicodedata
 from array import array
-
+import pickle
 import pytest
 from unidecode import unidecode
+from collections.abc import Iterable
+from collections import Counter
+import random
 
 
 def normalize_str(word: str) -> str:
@@ -157,6 +160,173 @@ def lsh_hash(
             j += 1
     sig = minhash(wvec, permutations)
     return lsh(sig, b)
+
+
+## LSH Table ##
+
+ALPHABET = "abcdefghijklmnopqrstuvwxyz "
+TWO_LETTER_SHRINGLES = [x + y for x in ALPHABET for y in ALPHABET]
+
+
+def generate_permutations(n: int, m: int) -> list[list[int]]:
+    """
+    Generate m permutations of n elements.
+
+    Args:
+        - n (int): number of elements
+        - m (int): number of permutations
+
+    Returns:
+        A list of permutations (list[int]) of length m.
+
+    Raises:
+        - ValueError if n <= 0 or m <= 0
+    """
+    if n <= 0:
+        raise ValueError(f"got n={n}, expected: n > 0")
+    if m <= 0:
+        raise ValueError(f"got m={m}, expected: m > 0")
+    perms = []
+    for _ in range(m):
+        perm = [i for i in range(n)]
+        for i in range(n):
+            j = i + int(random.random() * (n - i))
+            perm[i], perm[j] = perm[j], perm[i]
+        perms.append(perm)
+    return perms
+
+
+class LSHTable(object):
+    k = 2
+    b = 3
+    permutations = []
+    shringle_set = []
+    inner_table = dict()
+
+    def __init__(
+        self,
+        k: int = 2,
+        b: int = 3,
+        permutations: list[list[int]] = generate_permutations(
+            len(TWO_LETTER_SHRINGLES), 64
+        ),
+        shringle_set: list[str] = TWO_LETTER_SHRINGLES,
+    ):
+        if k <= 0:
+            raise ValueError(f"got k={k}, expected: k > 0")
+        if b <= 0:
+            raise ValueError(f"got b={b}, expected: b > 0")
+        if len(permutations) == 0:
+            raise ValueError("permutations should not be empty")
+        self.k = k
+        self.b = b
+        self.permutations = permutations
+        self.shringle_set = shringle_set
+
+    def get(self, word: str, k: int = None) -> list[str]:
+        """
+        Get the k most similar words to the given word.
+
+        Args:
+            - word (str): the given word
+            - k (int): the number of similar words to return. If None, return all similar words.
+
+        Returns:
+            Returns the value helds by the LSH table for the (at most k) most similar words.
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        c = Counter()
+        for h in hashes:
+            c.update(self.inner_table.get(h, []))
+        return [x[0] for x in c.most_common(k)]
+
+    def insert(self, word: str, value: any):
+        """
+        Insert a word into the LSH table.
+
+        Args:
+            - word (str): the word to insert
+            - value (any): the value to associate with the word. If None, use the
+              word as a value.
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        val = word
+        if value is not None:
+            val = value
+        for h in hashes:
+            self.inner_table.setdefault(h, []).append(val)
+
+    def update(self, iterable: Iterable[(str, any)]):
+        """
+        Update the LSH table with the given words.
+
+        Args:
+            - iterable (Iterable[(str, any)]): an iterable of (key word, value) to insert
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized.
+        """
+        for (key, value) in iterable:
+            self.insert(key, value)
+
+    def remove(self, word: str, value: any):
+        """
+        Remove a key-value pair from the LSH table.
+
+        Caution: One value must be tied to the word key to remove it properly.
+        DO NOT use this function if the values might be shared by multiple key words.
+
+        Args:
+            - word (str): the word to remove
+            - value (any): the value to remove
+
+        Raises:
+            - ValueError if the LSH table is not correctly initialized, or the LSH table
+            is not coherent (i.e one value shared multiple key words).
+        """
+        hashes = lsh_hash(word, self.k, self.b, self.permutations, self.shringle_set)
+        for h in hashes:
+            self.inner_table.setdefault(h, []).remove(value)
+
+    def save(self, path: str):
+        """
+        Save the LSH table into a file.
+
+        Args:
+            - path (str): the path to the file
+
+        Raises:
+            - OSError if the file cannot be opened
+            - PickleError if the LSH table cannot be serialized
+        """
+        with open(path, "wb") as f:
+            pickle.dump((self.k, self.b, self.permutations, self.shringle_set, self.inner_table), f)
+
+
+def load_lsh_table(path: str) -> LSHTable:
+    """
+    Load the LSH table from a file.
+
+    Args:
+        - path (str): the path to the file
+
+    Raises:
+        - OSError if the file cannot be opened
+        - PickleError if the LSH table cannot be deserialized
+    """
+    with open(path, "rb") as f:
+        (k, b, perms, sset, tbl) = pickle.load(f)
+        obj = LSHTable(k, b, perms, sset)
+        obj.inner_table = tbl
+        return obj
+
+
+## Tests ##
 
 
 def test_normalize():

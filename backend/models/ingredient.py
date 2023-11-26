@@ -10,11 +10,13 @@ class Ingredient(db.Model):
     Attributes:
         code: The ingredient unique identifier.
         name: The ingredient name.
+        normalized_name: The normalized ingredient name.
         co2: The equivalent Co2 emission per kilogram.
     """
     __tablename__ = "ingredients"
     code: Mapped[str] = mapped_column(String(length=10), primary_key=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    normalized_name: Mapped[str] = mapped_column(Text, nullable=False)
     co2: Mapped[float] = mapped_column(Float, nullable=False)
 
 
