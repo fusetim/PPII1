@@ -15,10 +15,38 @@ def recipe_info(id):
     the recipe with UUID = id."""
     recipe = db.session.get(Recipe, id)
     if recipe is None:
-        # raise IngredientNotFound(context="Not in DB.", payload={"code": code})
-        pass
+        raise RecipeNotFound(context="Not in DB.", payload={"code": id})
     return jsonify(
         name=recipe.name,
         short_description=recipe.short_description,
         description=recipe.description,
     )
+
+
+class RecipeNotFound(Exception):
+    """
+    Exception raised when a recipe is not found in the database.
+    """
+
+    status_code = 404
+
+    def __init__(self, context, status_code=None, payload=None):
+        super().__init__()
+        self.context = context
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv[
+            "reason"
+        ] = "Recipe not found, it might not be in the database, or have been deleted."
+        rv["context"] = self.context
+        return rv
+
+
+@bp.errorhandler(RecipeNotFound)
+def not_found(e):
+    """Route handling the RecipeNotFound exception."""
+    return jsonify(e.to_dict()), e.status_code
