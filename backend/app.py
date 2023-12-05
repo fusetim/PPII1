@@ -39,6 +39,7 @@ def hello_world():
 @app.route("/accueil", methods=("GET", "POST"))
 def accueil():
     if request.method == "POST":
-        return request.form["search"]
+        search = request.form["search"]
+        return search
     if request.method == "GET":
         return render_template("accueil.html")
