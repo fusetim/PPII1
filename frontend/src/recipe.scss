@@ -69,9 +69,11 @@ main {
     }
 
     .header h1 {
-        padding-top: 1em;
-        margin: 0.2em 0.5em;
+        padding-top: 0.8em;
+        margin: 0.2em 1em;
         user-select: all;
+        font-size: 2em;
+        text-indent: 0px;
     }
 
     .header .specs {
@@ -79,7 +81,7 @@ main {
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        margin: 0.2em 1em;
+        margin: 0.2em 2em;
         gap: 0.5em;
     }
 
@@ -104,12 +106,67 @@ main {
         user-select: none;
     }
 
+    section {
+        margin: 1em 2em;
+
+        h2 {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        h2 .comment {
+            font-size: 0.75em;
+            font-weight: 400;
+            font-family: sans-serif;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            margin-left: 0.5em;
+        }
+    }
+
     .ingredients {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         align-items: stretch;
         justify-content: flex-start;
         margin: 1em 0;
         padding: 0;
+        gap: 0.5em;
     }
+
+    .ingredients p {
+        margin: 0;
+        padding: 0;
+        border-radius: 99999px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        overflow: hidden;
+
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+    }
+
+    .ingredients span.quantity {
+        background-color: rgb(203, 238, 49);
+        padding: 0.5em 1em 0.5em 0.5em;
+    }
+
+    .ingredients p:hover span.quantity {
+        background-color: rgba(172, 201, 42, 0.815)
+    }
+
+    .ingredients span.name {
+        padding: 0.5em 0.5em 0.5em 1em;
+    }
+
+    .ingredients p:hover span.name {
+        background-color: #ddd;
+    }
+
 }
