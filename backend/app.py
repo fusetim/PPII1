@@ -1,5 +1,5 @@
 from api import api
-from flask import Flask
+from flask import Flask, render_template, request
 import tomllib
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -35,3 +35,10 @@ app.teardown_appcontext(save_search_tables)
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+
+@app.route("/accueil", methods=("GET", "POST"))
+def accueil():
+    if request.method == "POST":
+        return request.form["search"]
+    if request.method == "GET":
+        return render_template("accueil.html")
