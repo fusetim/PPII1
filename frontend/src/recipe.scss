@@ -147,18 +147,38 @@ main {
         align-items: center;
         overflow: hidden;
 
-        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 200ms;
+        box-shadow: 0em 0em 1em rgba(0, 0, 0, 0.2);
+
+        span {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+        }
     }
 
     .ingredients span.quantity {
-        background-color: rgb(203, 238, 49);
+        background-color: rgb(238, 235, 49);
         padding: 0.5em 1em 0.5em 0.5em;
     }
 
     .ingredients p:hover span.quantity {
-        background-color: rgba(172, 201, 42, 0.815)
+        background-color: rgba(182, 180, 44, 0.815)
+    }
+
+    .ingredients span.quantity.bad {
+        background-color: rgb(250, 82, 70);
+    }
+
+    .ingredients p:hover span.quantity.bad {
+        background-color: rgb(202, 51, 40);
+    }
+
+    .ingredients span.quantity.good {
+        background-color: rgb(91, 250, 70);
+    }
+
+    .ingredients p:hover span.quantity.good {
+        background-color: rgb(75, 201, 37);
     }
 
     .ingredients span.name {
