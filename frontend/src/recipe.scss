@@ -1,0 +1,115 @@
+@use "style";
+
+html, body, .root {
+    margin: 0;
+    padding: 0;
+    background-color: var(--var--color-background);
+    font-family: sans-serif;
+}
+
+.root {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
+// Navbar
+// The navbar is not expected to work there, it is just for testing
+// and experimentation purposes.
+nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 20%;
+    min-height: 100%;
+    overflow: hidden;
+    padding: 1em;
+    background-color: #111;
+    color: #fff;
+
+    a, a:visited {
+        color: #fff;
+    }
+
+    .brand-logo {
+        font-size: 1.25em;
+        font-weight: 700;
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        color: oklch(38.62% 0.075 55.38);
+        padding-bottom: 0.5em;
+        text-decoration: none;
+    }
+}
+
+main {
+    .header {
+        background-image: url("../assets/placeholders/la_pasta_from_unsplash.jpg");
+        background-size: cover;
+        background-position: center;
+        min-height: 8em;
+        height: 24em;
+        position: relative;
+        padding: 0;
+    }
+
+    .header .title {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: azure;
+        background: linear-gradient(rgba(0, 0, 0, 0.0), 40%, rgba(0, 0, 0, 1));
+        width: 100%;
+        min-height: 8em;
+    }
+
+    .header h1 {
+        padding-top: 1em;
+        margin: 0.2em 0.5em;
+        user-select: all;
+    }
+
+    .header .specs {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0.2em 1em;
+        gap: 0.5em;
+    }
+
+    .header .specs span {
+        font-size: 0.8em;
+        font-weight: 600;
+        font-family: sans-serif;
+        color: #fff;
+        border: #fff 0.15em solid;
+        border-radius: 99999px;
+        padding: 0.2em 0.6em;
+
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 500ms;
+    }
+
+    .header .specs span:hover {
+        background-color: #fff;
+        color: #111;
+        cursor: default;
+        user-select: none;
+    }
+
+    .ingredients {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        margin: 1em 0;
+        padding: 0;
+    }
+}
