@@ -1,5 +1,5 @@
 from api import api
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import tomllib
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -40,6 +40,8 @@ def hello_world():
 def accueil():
     if request.method == "POST":
         search = request.form["search"]
-        return search
+        return redirect("/api/ingredients/search/"+search)
     if request.method == "GET":
         return render_template("accueil.html")
+
+
