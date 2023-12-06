@@ -19,6 +19,10 @@ html, body, .root {
 // The navbar is not expected to work there, it is just for testing
 // and experimentation purposes.
 nav {
+    @media (orientation: portrait) {
+        display: none;
+    }
+
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -48,14 +52,35 @@ nav {
 }
 
 main {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .column {
+        @media (min-width: 1200px) {
+            max-width: 1000px;
+            border-radius: 2em 2em;
+            overflow: hidden;
+            margin: 2em;
+            box-shadow: 0em 0.2em 0.4em rgba(0,0,0,0.4)
+        }
+        background-color: oklch(95% 0.025 80.47);
+    }
+
     .header {
         background-image: url("../assets/placeholders/la_pasta_from_unsplash.jpg");
         background-size: cover;
         background-position: center;
+
         min-height: 8em;
-        height: 24em;
+        height: 350px;
+        @media (orientation: portrait) {
+            height: 450px;
+        }
+
         position: relative;
         padding: 0;
+        box-shadow: inset 0em 0em 2em rgba($color: #000000, $alpha: 0.4);
     }
 
     .header .title {
@@ -65,15 +90,20 @@ main {
         color: azure;
         background: linear-gradient(rgba(0, 0, 0, 0.0), 40%, rgba(0, 0, 0, 1));
         width: 100%;
-        min-height: 8em;
+        min-height: 130px;
     }
 
     .header h1 {
         padding-top: 0.8em;
         margin: 0.2em 1em;
         user-select: all;
-        font-size: 2em;
         text-indent: 0px;
+        font-size: 32px;
+
+        @media (orientation: portrait) {
+            margin: 0.2em 0.7em;
+            font-size: 48px;
+        }
     }
 
     .header .specs {
@@ -83,6 +113,7 @@ main {
         justify-content: flex-start;
         margin: 0.2em 2em;
         gap: 0.5em;
+        padding-bottom: 15px;
     }
 
     .header .specs span {
@@ -107,7 +138,7 @@ main {
     }
 
     section {
-        margin: 1em 2em;
+        margin: 2em 2em;
 
         h2 {
             display: flex;
@@ -147,7 +178,7 @@ main {
         align-items: center;
         overflow: hidden;
 
-        box-shadow: 0em 0em 1em rgba(0, 0, 0, 0.2);
+        box-shadow: 0em 0.1em 0.2em rgba(0, 0, 0, 0.4);
 
         span {
             transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
