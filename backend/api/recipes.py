@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from sqlalchemy import select
-from models.recipe import Recipe
+from models.recipe import Recipe, Ingredient
 from db import db
 from search_table import get_recipe_table
 
@@ -11,8 +11,10 @@ bp = Blueprint("recipes", __name__)
 
 @bp.route("/recipe_info/<uuid:id>")
 def recipe_info(id):
-    """Return the name, the short description and the description of
-    the recipe with UUID = id."""
+    """
+    Return the name, the short description and the description of
+    the recipe with UUID = id.
+    """
     recipe = db.session.get(Recipe, id)
     if recipe is None:
         raise RecipeNotFound(context="Not in DB.", payload={"code": id})
@@ -22,6 +24,22 @@ def recipe_info(id):
         description=recipe.description,
     )
 
+
+@bp.route("/recipe_ingredients/<uuid:id>")
+def recipe_ingredients(id):
+    """
+    Return the code, the name and the CO2 equivalent of the 
+    ingredients from recipe with UUID = id.
+    """
+    recipe = db.session.get(Recipe, id)
+    """
+    select ingredient.code, ingredient.name, ingredient.co2 
+    from Recipe 
+    join IngredientList 
+    on Recipe.recipe_uid = IngredientList.recipe_uid
+    join Ingredient
+    on Ingredient.code = IngredientLink.ingredient_code
+    """
 
 class RecipeNotFound(Exception):
     """
