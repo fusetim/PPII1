@@ -130,7 +130,7 @@ main {
         font-size: 12px;
         padding: 2px 8px;
         @media(orientation: portrait) {
-            font-size: 24px;
+            font-size: 28px;
             padding: 6px 20px;
             border: #fff 4px solid;
         }
@@ -155,6 +155,11 @@ main {
             display: flex;
             flex-direction: row;
             align-items: center;
+
+            font-size: 24px;
+            @media (orientation: portrait) {
+                font-size: 48px;
+            }
         }
 
         h2 .comment {
@@ -168,15 +173,39 @@ main {
         }
     }
 
+    h3 {
+        font-size: 18px;
+    }
+
+    hr {
+        margin-top: 48px;
+        margin-bottom: 36px;
+        width: 75%;
+        color: oklch(72.34% 0.0485 80.47);
+        border-radius: 9999px;
+        border: 2px solid;
+
+        @media (orientation: portrait) {
+            margin-top: 56px;
+            margin-bottom: 48px;
+            border: 3px solid;
+        }
+    }
+
     .ingredients {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         align-items: stretch;
         justify-content: flex-start;
-        margin: 1em 0;
+        margin-top: 10px;
         padding: 0;
-        gap: 0.5em;
+        gap: 10px;
+
+        @media (orientation: portrait) {
+            font-size: 32px;
+            gap: 20px;
+        }
     }
 
     .ingredients p {
@@ -231,4 +260,104 @@ main {
         background-color: #ddd;
     }
 
+    .carbon_impact {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 32px;
+        width: 100%;
+
+        @media (orientation: portrait) {
+            flex-direction: column;
+        }
+    }
+
+    .carbon_card {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        border-radius: 16px;
+        overflow: hidden;
+        padding: 24px;
+        box-shadow: 0em 0.2em 0.4em rgba(0,0,0,0.4);
+        background-color: #fff;
+
+        h4 {
+            padding: 0;
+            margin: 0;
+            font-size: 18px;
+
+            @media (orientation: portrait) {
+                font-size: 38px;
+            }
+        }
+
+        p {
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
+    .score_card {
+        span.score {
+            font-size: 64px;
+            font-weight: 600;
+            color: oklch(71.48% 0.1617 63.85);
+
+            @media (orientation: portrait) {
+                font-size: 144px;
+            }
+        }
+
+        span.unit {
+            @media (orientation: portrait) {
+                font-size: 32px;
+            }
+        }
+    }
+
+    .ingredient_card {
+        flex: 2;
+
+        h4 {
+            padding-bottom: 8px;
+        }
+
+        .ingredient_info {
+            width: 100%;
+            padding-bottom: 8px;
+        }
+        .label {
+            text-align: left;
+            font-weight: 700;
+            font-size: 14px;
+            padding-bottom: 2px;
+
+            @media (orientation: portrait) {
+                font-size: 32px;
+            }
+        }
+        .bar {
+            background-color: oklch(87.18% 0.0583 63.85);
+            width: 100%;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .bar_indicator {
+            background-color: oklch(71.48% 0.1617 63.85);
+            padding: 4px 24px;
+            text-align: right;
+            font-weight: 700;
+            overflow: visible;
+            white-space: nowrap;
+
+            @media (orientation: portrait) {
+                font-size: 32px;
+            }
+        }
+    }
 }
