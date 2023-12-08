@@ -1,4 +1,5 @@
 from os.path import exists as path_exists
+import os
 from db import db
 from flask import g
 from lsh import (
@@ -55,6 +56,8 @@ def save_search_tables(_err):
     """
     Saves the LSH tables.
     """
+    if not path_exists("tmp"):
+        os.mkdir("tmp")
     if "_ingr_lsht" in g:
         g._ingr_lsht.save("tmp/ingr_lsht.pkl")
     if "_recipe_lsht" in g:
