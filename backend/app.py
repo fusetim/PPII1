@@ -9,7 +9,7 @@ from flask import g
 import os
 import sys
 from db import db
-from search_table import save_search_tables, get_ingredient_table
+from search_table import save_search_tables, get_recipe_table, get_ingredient_table
 from lsh import normalize_str
 
 # Add the root directory to the PYTHONPATH
@@ -38,7 +38,7 @@ app.teardown_appcontext(save_search_tables)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/accueil", methods=("GET", "POST"))
+@app.route("/accueil", methods=("GET",))
 def accueil():
     if request.method == "POST":
         search = request.form["search"]
@@ -56,3 +56,40 @@ def accueil():
             return render_template("res_ingredients.html", data=data)
     if request.method == "GET":
         return render_template("accueil.html")
+
+@app.route("/search_ingredients")
+def search():
+    search = request.args.get("search")
+    table = get_ingredient_table()
+    normalized_query = normalize_str(search)
+    codes = table.get(normalized_query, 10)
+    data = []
+    if codes == []:
+        return render_template("aucun_res.html")
+    else:
+        for code in codes:
+            #.all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
+            ingr = db.session.execute(text("SELECT name, co2 FROM ingredients WHERE code = :c"), {'c' : code}).all()[0]
+            data.append(ingr)
+        return render_template("res_recettes.html", data=data)
+
+"""
+@app.route("/recettes", methods=("GET",))
+def recettes():
+    if request.method == "POST":
+        search = request.form["search"]
+        table = get_recipe_table()
+        normalized_query = normalize_str(search)
+        codes = table.get(normalized_query, 10)
+        data = []
+        if codes == []:
+            return render_template("aucun_res.html")
+        else:
+            for code in codes:
+                #.all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
+                ingr = db.session.execute(text("SELECT name, co2 FROM ingredients WHERE code = :c"), {'c' : code}).all()[0]
+                data.append(ingr)
+            return render_template("res_recettes.html", data=data)
+    if request.method == "GET":
+        return render_template("recettes.html")
+"""
