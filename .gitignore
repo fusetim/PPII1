@@ -206,3 +206,6 @@ frontend/.pnp.*
 # Custom
 backend/config.toml
 backend/tmp/
+
+# pour les connards sur Apple
+.DS_Store
