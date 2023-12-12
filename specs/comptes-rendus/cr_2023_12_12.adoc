@@ -1,0 +1,64 @@
+= CR Réunion - 12/12/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi |TELECOM Nancy, 1.15 |12/12/2023 11h00-11h50
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Avancements
+
+== Échanges
+
+=== Avancements & Mise au point
+
+* Front des pages accueil et recherche en cours, backend fait, CSS à faire (Sacha).
+
+* Pull request demandée pour la page d'accueil et la recherche dans l'état afin de merge +
+la page recette et l'intégrer.
+
+* Page recette faite et terminée. Plus qu'à intégrer avec la PR de sacha. À finir pour la semaine prochaine.
+
+* Clément toujours privé d'ordinateur personnelle. En train d'essayer de configurer des VM sur les PC
+de l'école.
+
+* Page admin, le minimum vital (sans les intéractions avec le backend) -- formulaires, et CSS minimal
+
+* Pas d'avancements sur le backend. A priori pas d'avancement avant la semaine prochaine de la part de Clément. Discussion sur une BDD de test partagée ?
+
+* Première version du diapo de soutenance (Timothée)
+
+* #IL reste **3 semaines** afin d'atteindre les objectifs fixés par le cahier des charges !!# +
+Il faut que tout le monde se mobilise pour mettre à bien le projet.
+
+== Décisions
+
+=== Avancements
+
+* Page recette à intégrer (Timothée)
+* CSS à finaliser sur les pages recherche/accueil (Sacha)
+* PR à faire avec les pages dans l'état actuel (Sacha)
+* Avancement sur les routes admin (Timothée)
+* Finalisation des pages admin (commencer à faire la recherche des ingrédients, js) - (Guillaume)
+* Accès BDD de test (Timothée)
+* Refaire la documentation (notamment installation) - (Timothée)
+
+== TODO-List
+
+Allez voir sur Github
+
+== Pour la suite
+
+Prochaine réunion : Mardi 18 décembre à 10h, fin prévu avant 11h.
+
+=== Annexes
