@@ -39,23 +39,8 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 @app.route("/home")
-def accueil():
-    if request.method == "POST":
-        search = request.form["search"]
-        table = get_ingredient_table()
-        normalized_query = normalize_str(search)
-        codes = table.get(normalized_query, 10)
-        data = []
-        if codes == []:
-            return render_template("aucun_res.html")
-        else:
-            for code in codes:
-                #.all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
-                ingr = db.session.execute(text("SELECT name, co2 FROM ingredients WHERE code = :c"), {'c' : code}).all()[0]
-                data.append(ingr)
-            return render_template("result_ingredients.html", data=data)
-    if request.method == "GET":
-        return render_template("home.html")
+def home():
+    return render_template("home.html")
 
 @app.route("/search_ingredients")
 def search():
