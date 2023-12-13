@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@material/web": "^1.0.1",
+        "@parcel/utils": "^2.10.3",
         "lit-element": "^4.0.2",
         "normalize-css": "^2.3.1",
         "parcel": "^2.10.3",
@@ -21,6 +22,18 @@
     },
     "devDependencies": {
         "@parcel/transformer-sass": "^2.10.3",
+        "parcel-namer-rewrite": "^2.10.3-rc.2",
         "posthtml-include": "^1.7.4"
+    },
+    "parcel-namer-rewrite": {
+        "chain": "@parcel/namer-default",
+        "hashing": "always",
+        "disable": false,
+        "rules": {
+            "(.*).css": "static/$1.{hash}.css",
+            "(.*).js": "static/$1.{hash}.js",
+            "(.*).html": "templates/$1.html",
+            "(.*).(jpg|jpeg|png|gif|webp|tiff|svg)": "static/assets/$1{~hash}.$2"
+        }
     }
 }
