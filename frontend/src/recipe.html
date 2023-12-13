@@ -18,22 +18,22 @@
             <div class="column">
                 <div class="header">
                     <div class="title">
-                        <h1>Pâte à la sauce bolognaise</h1>
-                        <p class="specs"><span>30 Minutes</span> <span>Facile</span> <span>Bon marché</span>
-                            <span>EcoScore
-                                Bon</span>
+                        <h1>{{title}}</h1>
+                        <p class="specs">
+                            <span>{{duration}} Minutes</span>
+                            <span>{{difficulty}}</span>
+                            {% for t in tags %}
+                            <span>{{t}}</span>
+                            {% endfor %}
                         </p>
                     </div>
                 </div>
                 <section>
                     <h2>Ingrédients <span class="comment">(pour 4 personnes)</span></h2>
                     <div class="ingredients">
-                        <p><span class="name">Sauce tomate</span><span class="quantity">400ml</span></p>
-                        <p><span class="name">Pâte de votre choix</span><span class="quantity">350g</span></p>
-                        <p><span class="name">Viande haché</span><span class="quantity bad">350g</span></p>
-                        <p><span class="name">Carottes</span><span class="quantity good">100g</span></p>
-                        <p><span class="name">Oignon</span><span class="quantity good">1 pièce</span></p>
-                        <p><span class="name">Courgette</span><span class="quantity good">100g</span></p>
+                        {% for ingr in ingredients %}
+                            <p><span class="name">{{ingr.name}}</span><span class="quantity">{{ingr.quantity}}{{ingr.unit}}</span></p>
+                        {% endfor %}
                     </div>
                 </section>
                 <section>
@@ -42,25 +42,21 @@
                         <div class="carbon_card score_card">
                             <h4>Score environnemental</h4>
                             <p>
-                                <span class="score">430g</span>
+                                <span class="score">{{carbon_score}}kg</span>
                                 <br>
                                 <span class="unit">g CO2 eq par personne</span>
                             </p>
                         </div>
                         <div class="carbon_card ingredient_card">
                             <h4>Impact par ingrédient</h4>
+                            {{ for ingr in ingredients }}
                             <div class="ingredient_info">
-                                <p class="label">Viande haché</p>
+                                <p class="label">{{ ingr.name }}</p>
                                 <div class="bar">
-                                    <div class="bar_indicator" style="width: 48%">48 %</div>
+                                    <div class="bar_indicator" {{ 'style="width: ' + ingr.carbon_part + '%"' }}>{{ ingr.carbon_part }} %</div>
                                 </div>
                             </div>
-                            <div class="ingredient_info">
-                                <p class="label">Sauce tomate</p>
-                                <div class="bar">
-                                    <div class="bar_indicator" style="width: 12%">12 %</div>
-                                </div>
-                            </div>
+                            {{ endfor }}
                         </div>
                     </div>
                 </section>
@@ -68,74 +64,7 @@
                 <section>
                     <h2>Recette</h2>
                     <div class="mk_render">
-                        <h1>h1 Heading 😎</h1>
-                        <h2>h2 Heading</h2>
-                        <h3>h3 Heading</h3>
-                        <h4>h4 Heading</h4>
-                        <h5>h5 Heading</h5>
-                        <h6>h6 Heading</h6>
-                        <p>Standard text</p>
-                        <h2>Horizontal Rules</h2>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <h2>Typographic replacements</h2>
-                        <p>Enable typographer option to see result.</p>
-                        <p>© © ® ® ™ ™ (p) (P) ±</p>
-                        <p>test… test… test… test?.. test!..</p>
-                        <p>!!! ??? , – —</p>
-                        <p>“Smartypants, double quotes” and ‘single quotes’</p>
-                        <h2>Emphasis</h2>
-                        <p><strong>This is bold text</strong></p>
-                        <p><strong>This is bold text</strong></p>
-                        <p><em>This is italic text</em></p>
-                        <p><em>This is italic text</em></p>
-                        <p><s>Strikethrough</s></p>
-                        <h2>Lists</h2>
-                        <p>Unordered</p>
-                        <ul>
-                            <li>Create a list by starting a line with <code>+</code>, <code>-</code>, or <code>*</code>
-                            </li>
-                            <li>Sub-lists are made by indenting 2 spaces:
-                                <ul>
-                                    <li>Marker character change forces new list start:
-                                        <ul>
-                                            <li>Ac tristique libero volutpat at</li>
-                                        </ul>
-                                        <ul>
-                                            <li>Facilisis in pretium nisl aliquet</li>
-                                        </ul>
-                                        <ul>
-                                            <li>Nulla volutpat aliquam velit</li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>Very easy!</li>
-                        </ul>
-                        <p>Ordered</p>
-                        <ol>
-                            <li>
-                                <p>Lorem ipsum dolor sit amet</p>
-                            </li>
-                            <li>
-                                <p>Consectetur adipiscing elit</p>
-                            </li>
-                            <li>
-                                <p>Integer molestie lorem at massa</p>
-                            </li>
-                            <li>
-                                <p>You can use sequential numbers…</p>
-                            </li>
-                            <li>
-                                <p>…or keep all the numbers as <code>1.</code></p>
-                            </li>
-                        </ol>
-                        <p>Start numbering with offset:</p>
-                        <ol start="57">
-                            <li>foo</li>
-                            <li>bar</li>
-                        </ol>
+                        {{ recipe }}
                     </div>
                 </section>
             </div>
