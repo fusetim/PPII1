@@ -1,0 +1,11 @@
+################################################################################
+#                              Flask configuration                             #
+################################################################################
+# IMPORTANT: you MUST rename this file `config.toml` for it to become effective.
+# DO NOT edit `config_dev.toml` with REAL CREDENTIALS, this file is tracked by git and public.
+
+# |--       GENERAL       --| #
+
+# The Database URI to which our flask application will connect to.
+# The format is the following : protocol://user:pass@host:port/db_name
+SQLALCHEMY_DATABASE_URI = "postgresql://ppii1@localhost:5432/ppii1"
