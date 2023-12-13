@@ -38,7 +38,7 @@ app.teardown_appcontext(save_search_tables)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/home", methods=("GET",))
+@app.route("/home")
 def accueil():
     if request.method == "POST":
         search = request.form["search"]
