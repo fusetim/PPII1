@@ -1,10 +1,17 @@
 @use "style";
 
-html, body, .root {
+@font-face {
+    font-family: "Open Sans";
+    src: url("https://fonts.googleapis.com/css?family=Open Sans");
+}
+
+html,
+body,
+.root {
     margin: 0;
     padding: 0;
     background-color: var(--var--color-background);
-    font-family: sans-serif;
+    font-family: "Open Sans";
 }
 
 .root {
@@ -34,7 +41,8 @@ nav {
     background-color: #111;
     color: #fff;
 
-    a, a:visited {
+    a,
+    a:visited {
         color: #fff;
     }
 
@@ -62,8 +70,9 @@ main {
             border-radius: 2em 2em;
             overflow: hidden;
             margin: 2em;
-            box-shadow: 0em 0.2em 0.4em rgba(0,0,0,0.4)
+            box-shadow: 0em 0.2em 0.4em rgba(0, 0, 0, 0.4)
         }
+
         background-color: oklch(95% 0.025 80.47);
     }
 
@@ -74,6 +83,7 @@ main {
 
         min-height: 8em;
         height: 350px;
+
         @media (orientation: portrait) {
             height: 450px;
         }
@@ -129,6 +139,7 @@ main {
         border: #fff 2px solid;
         font-size: 12px;
         padding: 2px 8px;
+
         @media(orientation: portrait) {
             font-size: 28px;
             padding: 6px 20px;
@@ -136,7 +147,12 @@ main {
         }
 
 
-        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+        transition-property: color,
+        background-color,
+        border-color,
+        text-decoration-color,
+        fill,
+        stroke;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         transition-duration: 500ms;
     }
@@ -157,8 +173,9 @@ main {
             align-items: center;
 
             font-size: 24px;
+
             @media (orientation: portrait) {
-                font-size: 48px;
+                font-size: 3rem;
             }
         }
 
@@ -171,10 +188,6 @@ main {
             padding: 0;
             margin-left: 0.5em;
         }
-    }
-
-    h3 {
-        font-size: 18px;
     }
 
     hr {
@@ -281,7 +294,7 @@ main {
         border-radius: 16px;
         overflow: hidden;
         padding: 24px;
-        box-shadow: 0em 0.2em 0.4em rgba(0,0,0,0.4);
+        box-shadow: 0em 0.2em 0.4em rgba(0, 0, 0, 0.4);
         background-color: #fff;
 
         h4 {
@@ -330,6 +343,7 @@ main {
             width: 100%;
             padding-bottom: 8px;
         }
+
         .label {
             text-align: left;
             font-weight: 700;
@@ -340,6 +354,7 @@ main {
                 font-size: 32px;
             }
         }
+
         .bar {
             background-color: oklch(87.18% 0.0583 63.85);
             width: 100%;
@@ -358,6 +373,84 @@ main {
             @media (orientation: portrait) {
                 font-size: 32px;
             }
+        }
+    }
+
+    section .mk_render {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            padding: 0;
+            margin: 16px 0;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+
+            @media (orientation: portrait) {
+                font-size: 3rem;
+            }
+        }
+
+        h2 {
+            font-size: 1.2rem;
+
+            @media (orientation: portrait) {
+                font-size: 2.8rem;
+            }
+        }
+
+        h3 {
+            font-size: 1.1rem;
+
+            @media (orientation: portrait) {
+                font-size: 2.5rem;
+            }
+        }
+
+        h4 {
+            font-size: 1rem;
+
+            @media (orientation: portrait) {
+                font-size: 2.2rem;
+            }
+        }
+
+        h5 {
+            font-size: 1rem;
+            font-weight: 500;
+
+            @media (orientation: portrait) {
+                font-size: 2.1rem;
+            }
+        }
+
+        h6 {
+            font-size: 1rem;
+            font-weight: 500;
+
+            @media (orientation: portrait) {
+                font-size: 2rem;
+            }
+        }
+
+        p,
+        li {
+            font-size: 1rem;
+            font-weight: 400;
+
+            @media (orientation: portrait) {
+                font-size: 1.2rem;
+            }
+        }
+
+        hr {
+            border-width: 1px;
         }
     }
 }
