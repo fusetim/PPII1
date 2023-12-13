@@ -32,7 +32,8 @@
                     <h2>Ingrédients <span class="comment">(pour 4 personnes)</span></h2>
                     <div class="ingredients">
                         {% for ingr in ingredients %}
-                            <p><span class="name">{{ingr.name}}</span><span class="quantity">{{ingr.quantity}}{{ingr.unit}}</span></p>
+                        <p><span class="name">{{ingr.name}}</span><span
+                                class="quantity">{{ingr.quantity}}{{ingr.unit}}</span></p>
                         {% endfor %}
                     </div>
                 </section>
@@ -44,21 +45,22 @@
                             <p>
                                 <span class="score">{{carbon_score}}kg</span>
                                 <br>
-                                <span class="unit">g CO2 eq par personne</span>
+                                <span class="unit">kg CO2 eq par personne</span>
                             </p>
                         </div>
                         <div class="carbon_card ingredient_card">
                             <h4>Impact par ingrédient</h4>
-                            {{ for ingr in ingredients }}
+                            {% for ingr in ingredients %}
                             <div class="ingredient_info">
                                 <p class="label">{{ ingr.name }}</p>
                                 <div class="bar">
-                                    <div class="bar_indicator" {{ 'style="width: ' + ingr.carbon_part + '%"' }}>{{ ingr.carbon_part }} %</div>
+                                    <div class="bar_indicator" {{ 'style="width: {}%"' .format(ingr.carbon_part)|safe}}>
+                                        {{ ingr.carbon_part }} %
+                                    </div>
                                 </div>
+                                {% endfor %}
                             </div>
-                            {{ endfor }}
                         </div>
-                    </div>
                 </section>
                 <hr>
                 <section>

@@ -1,7 +1,9 @@
 from db import db
-from sqlalchemy import String, Float, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Float, Text, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from .recipe import Recipe
+from .ingredient import Ingredient
 import uuid
 
 class IngredientLink(db.Model):
@@ -22,8 +24,11 @@ class IngredientLink(db.Model):
     """
     __tablename__ = "ingredient_links"
     link_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
-    ingredient_code: Mapped[str] = mapped_column(String(length=10), nullable=False)
+    recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("recipes.recipe_uid"))
+    ingredient_code: Mapped[str] = mapped_column(String(length=10), ForeignKey("ingredients.code"))
     quantity: Mapped[float] = mapped_column(Float, nullable=False)
     quantity_type_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     reference_quantity: Mapped[float] = mapped_column(Float, nullable=True)
+
+    recipe = relationship("Recipe")
+    ingredient = relationship("Ingredient")

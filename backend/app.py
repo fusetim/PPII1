@@ -8,6 +8,9 @@ import sys
 from db import db
 from search_table import save_search_tables, get_ingredient_table
 from lsh import normalize_str
+from models.recipe import Recipe
+from models.ingredient_link import IngredientLink
+from models.ingredient import Ingredient
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -73,3 +76,16 @@ def recipes():
     a page showing a search bar to question the "recipes" db
     """
     return render_template("recipes.html")
+
+
+@app.route("/recipe/<uuid:recipe_uid>")
+def get_recipe(recipe_uid):
+    """
+    a page displaying the recipe with the given id
+    """
+    recipe = db.session.get(Recipe, recipe_uid)
+    if recipe is None:
+        raise ("Recipe not found.", 404)
+    links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
+    ingr_info = [ {"name": l.ingredient.name, "quantity": l.reference_quantity, "unit": "g", "carbon_part": 10} for l in links]
+    return render_template("recipe.html", title=recipe.name, duration=0, difficulty="Facile", tags=[], ingredients=ingr_info, carbon_score=0, recipe=recipe.description)
