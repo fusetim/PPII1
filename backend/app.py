@@ -1,6 +1,6 @@
 from api import api
 from flask import Flask
-import tomllib
+import tomli
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import models
@@ -18,7 +18,7 @@ app = Flask(__name__)
 # Register the `/api` routes
 app.register_blueprint(api, url_prefix="/api")
 # Load the config file
-app.config.from_file("config.toml", load=tomllib.load, text=False)
+app.config.from_file("config.toml", load=tomli.load, text=False)
 # Initialize the database
 db.init_app(app)
 # Initialize the migration engine (for database migrations)
