@@ -1,12 +1,24 @@
 from flask import Blueprint, jsonify
 from sqlalchemy import select
-from models.recipe import Recipe, Ingredient
+#from models.recipe import Ingredient
+from models.recipe import Recipe
 from db import db
-from search_table import get_recipe_table
+#from search_table import get_recipe_table
 
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
+
+
+
+@bp.route("/")
+def test():
+    """
+    test route: return all recipes (json)
+    """
+    recipes = db.session.query.all()
+    recipe_list = [recipe.to_dict() for recipe in recipes]
+    return jsonify(recipe_list)
 
 
 @bp.route("/recipe_info/<uuid:id>")
@@ -40,6 +52,12 @@ def recipe_ingredients(id):
     join Ingredient
     on Ingredient.code = IngredientLink.ingredient_code
     """
+
+
+
+
+
+
 
 class RecipeNotFound(Exception):
     """
