@@ -85,13 +85,21 @@ def get_recipe(recipe_uid):
     """
     a page displaying the recipe with the given id
     """
+
+    # Looking for our recipe
     recipe = db.session.get(Recipe, recipe_uid)
     if recipe is None:
         raise ("Recipe not found.", 404)
+
+    # Looking for the ingredients
     links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
+
+    # Computing the carbon score
     carbon_score = sum(
         map(lambda l: l.reference_quantity * l.ingredient.co2 / 1000, links)
     )
+
+    # Building the ingredients list (and comuting the carbon part)
     ingr_info = [
         {
             "name": l.display_name,
@@ -104,16 +112,19 @@ def get_recipe(recipe_uid):
         }
         for l in links
     ]
-    tags_list = [tag.name for tag in recipe.tags]
     ingr_info.sort(key=lambda x: x["carbon_part"], reverse=True)
+
+    # Building the tags list to display
+    tags_list = [tag.name for tag in recipe.tags]
     return render_template(
         "recipe.html",
         title=recipe.name,
         duration=recipe.duration,
         tags=tags_list,
         ingredients=ingr_info,
-        carbon_score=floor(carbon_score * 100 / 4) / 100,
-        score_unit="kg",
+        carbon_score=floor(carbon_score * 100 / 4)
+        / 100,  # Normalize the score to 2 decimals and by person
+        score_unit="kg",  # TODO: Adapt the unit to the actual scale of the score
         recipe=markdown_render(recipe.description),
-        cover=url_for('static', filename=recipe.illustration),
+        cover=url_for("static", filename=recipe.illustration),
     )

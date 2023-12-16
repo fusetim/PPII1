@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
+
 class IngredientLink(db.Model):
     """
     IngredientLink data model.
@@ -21,12 +22,23 @@ class IngredientLink(db.Model):
         quantity_type (and use a conversion mechanism) and the quantity.
         display_name: The name of the ingredient as it should be displayed on the recipe page.
     """
+
     __tablename__ = "ingredient_links"
-    link_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("recipes.recipe_uid", ondelete="CASCADE"))
-    ingredient_code: Mapped[str] = mapped_column(String(length=10), ForeignKey("ingredients.code"))
+    link_uid: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    recipe_uid: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("recipes.recipe_uid", ondelete="CASCADE")
+    )
+    ingredient_code: Mapped[str] = mapped_column(
+        String(length=10), ForeignKey("ingredients.code")
+    )
     quantity: Mapped[float] = mapped_column(Float, nullable=False)
-    quantity_type_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("quantity_types.quantity_type_uid"), nullable=False)
+    quantity_type_uid: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("quantity_types.quantity_type_uid"),
+        nullable=False,
+    )
     reference_quantity: Mapped[float] = mapped_column(Float, nullable=True)
     display_name: Mapped[str] = mapped_column(Text, nullable=True)
 
