@@ -1,5 +1,5 @@
 from api import api
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 import tomllib
 from sqlalchemy import text
 from flask_migrate import Migrate
@@ -12,6 +12,7 @@ from models.recipe import Recipe
 from models.ingredient_link import IngredientLink
 from models.ingredient import Ingredient
 from math import floor
+from md_render import markdown_render
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -112,5 +113,6 @@ def get_recipe(recipe_uid):
         ingredients=ingr_info,
         carbon_score=floor(carbon_score * 100 / 4) / 100,
         score_unit="kg",
-        recipe=recipe.description,
+        recipe=markdown_render(recipe.description),
+        cover=url_for('static', filename=recipe.illustration),
     )

@@ -2,6 +2,7 @@
 
 <head>
     <link rel="stylesheet" href="recipe.scss">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -16,7 +17,7 @@
         </nav>
         <main>
             <div class="column">
-                <div class="header">
+                <div class="header" {{ 'style="background-image: url(\'{}\');"'.format(cover)|safe }}>
                     <div class="title">
                         <h1>{{title}}</h1>
                         <p class="specs">
@@ -63,7 +64,7 @@
                 </section>
                 <hr>
                 <section>
-                    <h2>Recette</h2>
+                    <h2>Instructions</h2>
                     <div class="mk_render">
                         {{ recipe|safe }}
                     </div>

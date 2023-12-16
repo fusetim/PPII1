@@ -12,7 +12,8 @@ body,
     margin: 0;
     padding: 0;
     background-color: var(--var--color-background);
-    font-family: "Open Sans";
+    font-family: sans-serif;
+    font-size: 16px;
 }
 
 .root {
@@ -78,7 +79,6 @@ main {
     }
 
     .header {
-        background-image: url("../assets/placeholders/la_pasta_from_unsplash.jpg");
         background-size: cover;
         background-position: center;
 
@@ -86,7 +86,7 @@ main {
         height: 350px;
 
         @media (orientation: portrait) {
-            height: 450px;
+            height: 200px;
         }
 
         position: relative;
@@ -101,7 +101,7 @@ main {
         color: azure;
         background: linear-gradient(rgba(0, 0, 0, 0.0), 40%, rgba(0, 0, 0, 1));
         width: 100%;
-        min-height: 130px;
+        padding-bottom: 10px;
     }
 
     .header h1 {
@@ -112,8 +112,8 @@ main {
         font-size: 32px;
 
         @media (orientation: portrait) {
-            margin: 10px 30px;
-            font-size: 64px;
+            font-size: 28px;
+            margin: 5px 10px;
         }
     }
 
@@ -122,12 +122,10 @@ main {
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        margin: 10px 30px;
+        margin: 5px 30px;
         gap: 10px;
-        padding-bottom: 15px;
-
         @media (orientation: portrait) {
-            gap: 20px;
+            margin: 2px 10px;
         }
     }
 
@@ -142,9 +140,8 @@ main {
         padding: 2px 8px;
 
         @media(orientation: portrait) {
-            font-size: 28px;
-            padding: 6px 20px;
-            border: #fff 4px solid;
+            font-size: 12px;
+            padding: 2px 10px;
         }
 
 
@@ -168,6 +165,10 @@ main {
     section {
         margin: 2em 2em;
 
+        @media (orientation: portrait) {
+            margin: 1em;
+        }
+
         h2 {
             display: flex;
             flex-direction: row;
@@ -176,12 +177,12 @@ main {
             font-size: 24px;
 
             @media (orientation: portrait) {
-                font-size: 3rem;
+                font-size: 24px;
             }
         }
 
         h2 .comment {
-            font-size: 0.75em;
+            font-size: 0.7em;
             font-weight: 400;
             font-family: sans-serif;
             color: #111;
@@ -200,9 +201,9 @@ main {
         border: 2px solid;
 
         @media (orientation: portrait) {
-            margin-top: 56px;
-            margin-bottom: 48px;
-            border: 3px solid;
+            margin-top: 36px;
+            margin-bottom: 24px;
+            border: 1.5px solid;
         }
     }
 
@@ -217,8 +218,8 @@ main {
         gap: 10px;
 
         @media (orientation: portrait) {
-            font-size: 32px;
-            gap: 20px;
+            font-size: 14px;
+            gap: 8px;
         }
     }
 
@@ -276,27 +277,24 @@ main {
 
     .carbon_impact {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-direction: column;
         align-items: stretch;
-        gap: 32px;
+        gap: 16px;
         width: 100%;
-
-        @media (orientation: portrait) {
-            flex-direction: column;
-        }
     }
 
     .carbon_card {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
         align-items: center;
         border-radius: 16px;
-        overflow: hidden;
         padding: 24px;
         box-shadow: 0em 0.2em 0.4em rgba(0, 0, 0, 0.4);
         background-color: #fff;
+
+        @media (orientation: portrait) {
+            padding: 16px;
+        }
 
         h4 {
             padding: 0;
@@ -304,7 +302,7 @@ main {
             font-size: 18px;
 
             @media (orientation: portrait) {
-                font-size: 40px;
+                font-size: 20px;
             }
         }
 
@@ -322,7 +320,7 @@ main {
             color: oklch(71.48% 0.1617 63.85);
 
             @media (orientation: portrait) {
-                font-size: 144px;
+                font-size: 64px;
             }
         }
 
@@ -332,21 +330,18 @@ main {
 
         span.unit {
             @media (orientation: portrait) {
-                font-size: 24px;
+                font-size: 14px;
             }
         }
     }
 
     .ingredient_card {
-        flex: 2;
-
         h4 {
             padding-bottom: 8px;
         }
 
         .ingredient_info {
             width: 100%;
-            padding-bottom: 8px;
         }
 
         .label {
@@ -354,10 +349,6 @@ main {
             font-weight: 500;
             font-size: 14px;
             padding-bottom: 2px;
-
-            @media (orientation: portrait) {
-                font-size: 32px;
-            }
         }
 
         .bar {
@@ -370,14 +361,14 @@ main {
 
         .bar_indicator {
             background-color: oklch(71.48% 0.1617 63.85);
-            padding: 4px 24px;
+            padding: 4px 4px;
             text-align: right;
-            font-weight: 700;
+            font-weight: 500;
             overflow: visible;
             white-space: nowrap;
 
             @media (orientation: portrait) {
-                font-size: 32px;
+                font-size: 14px;
             }
         }
     }
@@ -397,17 +388,13 @@ main {
 
         h1 {
             font-size: 1.4rem;
-
-            @media (orientation: portrait) {
-                font-size: 3rem;
-            }
         }
 
         h2 {
             font-size: 1.2rem;
 
             @media (orientation: portrait) {
-                font-size: 2.8rem;
+                font-size: 1.2rem;
             }
         }
 
@@ -415,7 +402,7 @@ main {
             font-size: 1.1rem;
 
             @media (orientation: portrait) {
-                font-size: 2.5rem;
+                font-size: 1.1rem;
             }
         }
 
@@ -423,7 +410,7 @@ main {
             font-size: 1rem;
 
             @media (orientation: portrait) {
-                font-size: 2.2rem;
+                font-size: 1rem;
             }
         }
 
@@ -432,7 +419,7 @@ main {
             font-weight: 500;
 
             @media (orientation: portrait) {
-                font-size: 2.1rem;
+                font-size: 1rem;
             }
         }
 
@@ -441,7 +428,7 @@ main {
             font-weight: 500;
 
             @media (orientation: portrait) {
-                font-size: 2rem;
+                font-size: 1rem;
             }
         }
 
@@ -451,7 +438,7 @@ main {
             font-weight: 400;
 
             @media (orientation: portrait) {
-                font-size: 1.8rem;
+                font-size: 1rem;
             }
         }
 
