@@ -1,6 +1,6 @@
 from db import db
 from sqlalchemy import String, Float, Text, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
@@ -17,6 +17,8 @@ class Recipe(db.Model):
             the actual recipe instructions.
         type: The type of recipe. This is a string that can be used to categorize recipes.
         author: The author of the recipe. This is a UUID that can be used to link to the author's profile.
+        duration: The preparation time required by this recipe in minutes.
+        illustration: A URI to an image that illustrates the recipe. The format of this one is `/assets/filename.ext`.
     """
     __tablename__ = "recipes"
     recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -28,6 +30,9 @@ class Recipe(db.Model):
     author: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=True)
     duration: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     illustration: Mapped[str] = mapped_column(Text, nullable=False)
+
+    ingredients = relationship("IngredientLink", back_populates="recipe")
+    tags : Mapped[list["RecipeTag"]] = relationship(secondary="recipe_tag_links", back_populates="recipes")
 
     def to_dict(self):
         rv = dict()

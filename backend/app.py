@@ -95,8 +95,8 @@ def get_recipe(recipe_uid):
     ingr_info = [
         {
             "name": l.display_name,
-            "quantity": l.reference_quantity,
-            "unit": "g",
+            "quantity": l.quantity,
+            "unit": l.quantity_type.unit,
             "carbon_part": floor(
                 l.reference_quantity * l.ingredient.co2 / carbon_score * 10
             )
@@ -104,12 +104,13 @@ def get_recipe(recipe_uid):
         }
         for l in links
     ]
+    tags_list = [tag.name for tag in recipe.tags]
     ingr_info.sort(key=lambda x: x["carbon_part"], reverse=True)
     return render_template(
         "recipe.html",
         title=recipe.name,
         duration=recipe.duration,
-        tags=[],
+        tags=tags_list,
         ingredients=ingr_info,
         carbon_score=floor(carbon_score * 100 / 4) / 100,
         score_unit="kg",
