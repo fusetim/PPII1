@@ -33,7 +33,7 @@
             "(.*).css": "static/$1.{hash}.css",
             "(.*).js": "static/$1.{hash}.js",
             "(.*).html": "templates/$1.html",
-            "(.*).(jpg|jpeg|png|gif|webp|tiff|svg)": "static/assets/$1{~hash}.$2"
+            "(.*).(jpg|jpeg|png|gif|webp|tiff|svg|ttf|woff|otf)": "static/assets/$1{~hash}.$2"
         }
     }
 }

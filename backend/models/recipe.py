@@ -1,5 +1,5 @@
 from db import db
-from sqlalchemy import String, Float, Text
+from sqlalchemy import String, Float, Text, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -26,16 +26,19 @@ class Recipe(db.Model):
     description: Mapped[str] = mapped_column(Text)
     type: Mapped[str] = mapped_column(String(length = 30))
     author: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=True)
-
+    duration: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    illustration: Mapped[str] = mapped_column(Text, nullable=False)
 
     def to_dict(self):
         rv = dict()
         rv['type'] = 'recipe'
-        rv['recipe_uid'] = self.recipe_uid 
-        rv['name'] = self.name 
+        rv['recipe_uid'] = self.recipe_uid
+        rv['name'] = self.name
         rv['short_description'] = self.short_description
         rv['description'] = self.description
         rv['type'] = self.type
         rv['author'] = self.author
+        rv['duration'] = self.duration
+        rv['illustration'] = self.illustration
         return rv
 

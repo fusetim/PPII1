@@ -29,6 +29,7 @@ class IngredientLink(db.Model):
     quantity: Mapped[float] = mapped_column(Float, nullable=False)
     quantity_type_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     reference_quantity: Mapped[float] = mapped_column(Float, nullable=True)
+    display_name: Mapped[str] = mapped_column(Text, nullable=True)
 
     recipe = relationship("Recipe")
     ingredient = relationship("Ingredient")

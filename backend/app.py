@@ -11,6 +11,7 @@ from lsh import normalize_str
 from models.recipe import Recipe
 from models.ingredient_link import IngredientLink
 from models.ingredient import Ingredient
+from math import floor
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -87,5 +88,29 @@ def get_recipe(recipe_uid):
     if recipe is None:
         raise ("Recipe not found.", 404)
     links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
-    ingr_info = [ {"name": l.ingredient.name, "quantity": l.reference_quantity, "unit": "g", "carbon_part": 10} for l in links]
-    return render_template("recipe.html", title=recipe.name, duration=0, difficulty="Facile", tags=[], ingredients=ingr_info, carbon_score=0, recipe=recipe.description)
+    carbon_score = sum(
+        map(lambda l: l.reference_quantity * l.ingredient.co2 / 1000, links)
+    )
+    ingr_info = [
+        {
+            "name": l.display_name,
+            "quantity": l.reference_quantity,
+            "unit": "g",
+            "carbon_part": floor(
+                l.reference_quantity * l.ingredient.co2 / carbon_score * 10
+            )
+            / 100,
+        }
+        for l in links
+    ]
+    ingr_info.sort(key=lambda x: x["carbon_part"], reverse=True)
+    return render_template(
+        "recipe.html",
+        title=recipe.name,
+        duration=recipe.duration,
+        tags=[],
+        ingredients=ingr_info,
+        carbon_score=floor(carbon_score * 100 / 4) / 100,
+        score_unit="kg",
+        recipe=recipe.description,
+    )

@@ -21,7 +21,6 @@
                         <h1>{{title}}</h1>
                         <p class="specs">
                             <span>{{duration}} Minutes</span>
-                            <span>{{difficulty}}</span>
                             {% for t in tags %}
                             <span>{{t}}</span>
                             {% endfor %}
@@ -38,14 +37,14 @@
                     </div>
                 </section>
                 <section>
-                    <h2>Bilan carbone <span class="comment">(pour 4 personnes)</span></h2>
+                    <h2>Bilan carbone</h2>
                     <div class="carbon_impact">
                         <div class="carbon_card score_card">
                             <h4>Score environnemental</h4>
                             <p>
-                                <span class="score">{{carbon_score}}kg</span>
+                                <span class="score">{{carbon_score}} <span class="score_unit">{{score_unit}}</span> </span>
                                 <br>
-                                <span class="unit">kg CO2 eq par personne</span>
+                                <span class="unit">{{score_unit}} CO2 équivalent par personne</span>
                             </p>
                         </div>
                         <div class="carbon_card ingredient_card">
@@ -66,7 +65,7 @@
                 <section>
                     <h2>Recette</h2>
                     <div class="mk_render">
-                        {{ recipe }}
+                        {{ recipe|safe }}
                     </div>
                 </section>
             </div>
