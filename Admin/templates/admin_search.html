@@ -1,94 +1,21 @@
 <!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <html>
-<style>
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-
-body{
-  background: #f2f2f2;
-  font-family: 'Open Sans', sans-serif;
-}
-
-.search {
-  width: 200%;
-  position: relative;
-  display: flex;
-}
-
-.searchTerm {
-  width: 100%;
-  border: 3px solid #00B4CC;
-  border-right: none;
-  padding: 5px;
-  height: 20px;
-  border-radius: 5px 0 0 5px;
-  outline: none;
-  color: #9DBFAF;
-}
-
-.searchTerm:focus{
-  color: #00B4CC;
-}
-
-.searchButton {
-  width: 40px;
-  height: 36px;
-  border: 1px solid #00B4CC;
-  background: #00B4CC;
-  text-align: center;
-  color: #fff;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  font-size: 20px;
-}
-
-/*Resize the wrap to see the search bar change!*/
-.wrap{
-  width: 30%;
-  position: absolute;
-  top: 20%;
-  left: 35%;
-  transform: translate(-50%, -50%);
-}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.topnav {
-  overflow: hidden;
-  background-color: #e9e9e9;
-}
-
-.topnav a {
-  float: left;
-  display: block;
-  color: black;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-.topnav a.active {
-  background-color: #2196F3;
-  color: white;
-}
-</style>
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css_admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css_admin_add.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='js_admin_add.js') }}">
+</head>
 
 <body>
 
-    <div class="topnav">
-      <a class="active" href="/">Home</a>
-      <a href="/admin/add">Add recipe</a>
-    </div>
+  <div class="topnav">
+    <a class="active" href="/">Home</a>
+    <a href="/admin">Return search</a>
+    <a href="/admin/add">Add recipe</a>
+  </div>
     
-    </body>
+</body>
 
 <div class="wrap">
     <div class="search">

@@ -22,3 +22,7 @@ def admin_add():
 @app.route("/admin/add", methods=['GET'])
 def admin_add_get():
     return render_template("admin_add.html")
+
+@app.route("/css_admin.css")
+def CSS():
+    return render_template("css_admin.css")
