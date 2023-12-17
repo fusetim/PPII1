@@ -1,0 +1,8 @@
+= Notes utiles pour l'écriture de l'API
+
+__Document mis à jour le 17/12/2023__
+
+== Équivalents syntaxiques Flask-SQLAlchemy :
+
+* `Recipe.query.all()` est un alias pour `db.session.query(Recipe).all()`.
+

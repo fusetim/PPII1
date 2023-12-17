@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from sqlalchemy import select
+from sqlalchemy import select, text
 #from models.recipe import Ingredient
 from models.recipe import Recipe
 from db import db
@@ -10,13 +10,12 @@ from db import db
 bp = Blueprint("recipes", __name__)
 
 
-
 @bp.route("/")
 def test():
     """
     test route: return all recipes (json)
     """
-    recipes = db.session.query.all()
+    recipes = Recipe.query.all()
     recipe_list = [recipe.to_dict() for recipe in recipes]
     return jsonify(recipe_list)
 
@@ -40,7 +39,7 @@ def recipe_info(id):
 @bp.route("/recipe_ingredients/<uuid:id>")
 def recipe_ingredients(id):
     """
-    Return the code, the name and the CO2 equivalent of the 
+    Return the code, the name and the CO2 equivalent of the
     ingredients from recipe with UUID = id.
     """
     recipe = db.session.get(Recipe, id)
@@ -52,11 +51,6 @@ def recipe_ingredients(id):
     join Ingredient
     on Ingredient.code = IngredientLink.ingredient_code
     """
-
-
-
-
-
 
 
 class RecipeNotFound(Exception):
