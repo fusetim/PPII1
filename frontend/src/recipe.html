@@ -17,11 +17,11 @@
         </nav>
         <main>
             <div class="column">
-                <div class="header" {{ 'style="background-image: url(\'{}\');"'.format(cover)|safe }}>
+                <div class="header" {{ 'style="background-image: url(\' {}\');"'.format(cover)|safe }}>
                     <div class="title">
                         <h1>{{title}}</h1>
                         <p class="specs">
-                            <span>{{duration}} Minutes</span>
+                            <span>{{duration}} de préparation</span>
                             {% for t in tags %}
                             <span>{{t}}</span>
                             {% endfor %}
@@ -33,7 +33,7 @@
                     <div class="ingredients">
                         {% for ingr in ingredients %}
                         <p><span class="name">{{ingr.name}}</span><span
-                                class="quantity">{{ingr.quantity}}{{ingr.unit}}</span></p>
+                                class="quantity">{{"{:4.4n}".format(ingr.quantity)}}{{ingr.unit}}</span></p>
                         {% endfor %}
                     </div>
                 </section>
@@ -43,7 +43,8 @@
                         <div class="carbon_card score_card">
                             <h4>Score environnemental</h4>
                             <p>
-                                <span class="score">{{carbon_score}} <span class="score_unit">{{score_unit}}</span> </span>
+                                <span class="score">{{"{:4.3n}".format(carbon_score)}} <span
+                                        class="score_unit">{{score_unit}}</span> </span>
                                 <br>
                                 <span class="unit">{{score_unit}} CO2 équivalent par personne</span>
                             </p>
@@ -55,7 +56,7 @@
                                 <p class="label">{{ ingr.name }}</p>
                                 <div class="bar">
                                     <div class="bar_indicator" {{ 'style="width: {}%"' .format(ingr.carbon_part)|safe}}>
-                                        {{ ingr.carbon_part }} %
+                                        {{ "{:4.2n}".format(ingr.carbon_part) }} %
                                     </div>
                                 </div>
                                 {% endfor %}

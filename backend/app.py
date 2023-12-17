@@ -13,6 +13,7 @@ from models.ingredient_link import IngredientLink
 from models.ingredient import Ingredient
 from math import floor
 from md_render import markdown_render
+from util.human_format import format_duration, format_mass
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -86,6 +87,18 @@ def get_recipe(recipe_uid):
     a page displaying the recipe with the given id
     """
 
+    def ingr_mass_equivalent(link: IngredientLink):
+        """
+        Compute the mass equivalent of an ingredient link.
+
+        If the link has a reference quantity, it is prefered, otherwise we fallbalk on an
+        equivalent based on the quantity type.
+        """
+        if link.reference_quantity is not None:
+            return link.reference_quantity
+        else:
+            return link.quantity_type.mass_equivalent * link.quantity
+
     # Looking for our recipe
     recipe = db.session.get(Recipe, recipe_uid)
     if recipe is None:
@@ -95,9 +108,7 @@ def get_recipe(recipe_uid):
     links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
 
     # Computing the carbon score
-    carbon_score = sum(
-        map(lambda l: l.reference_quantity * l.ingredient.co2 / 1000, links)
-    )
+    carbon_score = sum(map(lambda l: ingr_mass_equivalent(l) * l.ingredient.co2, links))
 
     # Building the ingredients list (and comuting the carbon part)
     ingr_info = [
@@ -105,10 +116,10 @@ def get_recipe(recipe_uid):
             "name": l.display_name,
             "quantity": l.quantity,
             "unit": l.quantity_type.unit,
-            "carbon_part": floor(
-                l.reference_quantity * l.ingredient.co2 / carbon_score * 10
-            )
-            / 100,
+            "carbon_part": ingr_mass_equivalent(l)
+            * l.ingredient.co2
+            / carbon_score
+            * 100,
         }
         for l in links
     ]
@@ -116,15 +127,17 @@ def get_recipe(recipe_uid):
 
     # Building the tags list to display
     tags_list = [tag.name for tag in recipe.tags]
+
+    # Format carbon_score
+    score, score_unit = format_mass(carbon_score / 4)
     return render_template(
         "recipe.html",
         title=recipe.name,
-        duration=recipe.duration,
+        duration=format_duration(recipe.duration * 60),
         tags=tags_list,
         ingredients=ingr_info,
-        carbon_score=floor(carbon_score * 100 / 4)
-        / 100,  # Normalize the score to 2 decimals and by person
-        score_unit="kg",  # TODO: Adapt the unit to the actual scale of the score
+        carbon_score=score,
+        score_unit=score_unit,
         recipe=markdown_render(recipe.description),
         cover=url_for("static", filename=recipe.illustration),
     )
