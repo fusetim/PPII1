@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="recipe.scss">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <section class="root">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="./index.html" class="brand-logo">CuliVert</a>
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <div class="column">
+                <div class="header" {{ 'style="background-image: url(\' {}\');"'.format(cover)|safe }}>
+                    <div class="title">
+                        <h1>{{title}}</h1>
+                        <p class="specs">
+                            <span>{{duration}} de préparation</span>
+                            {% for t in tags %}
+                            <span>{{t}}</span>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+                <section>
+                    <h2>Ingrédients <span class="comment">(pour 4 personnes)</span></h2>
+                    <div class="ingredients">
+                        {% for ingr in ingredients %}
+                        <p><span class="name">{{ingr.name}}</span><span
+                                class="quantity">{{"{:4.4n}".format(ingr.quantity)}}{{ingr.unit}}</span></p>
+                        {% endfor %}
+                    </div>
+                </section>
+                <section>
+                    <h2>Bilan carbone</h2>
+                    <div class="carbon_impact">
+                        <div class="carbon_card score_card">
+                            <h4>Score environnemental</h4>
+                            <p>
+                                <span class="score">{{"{:4.3n}".format(carbon_score)}} <span
+                                        class="score_unit">{{score_unit}}</span> </span>
+                                <br>
+                                <span class="unit">{{score_unit}} CO2 équivalent par personne</span>
+                            </p>
+                        </div>
+                        <div class="carbon_card ingredient_card">
+                            <h4>Impact par ingrédient</h4>
+                            {% for ingr in ingredients %}
+                            <div class="ingredient_info">
+                                <p class="label">{{ ingr.name }}</p>
+                                <div class="bar">
+                                    <div class="bar_indicator" {{ 'style="width: {}%"' .format(ingr.carbon_part)|safe}}>
+                                        {{ "{:4.2n}".format(ingr.carbon_part) }} %
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                </section>
+                <hr>
+                <section>
+                    <h2>Instructions</h2>
+                    <div class="mk_render">
+                        {{ recipe|safe }}
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="module" src="./index.ts"></script>
+</body>
+
+</html>
