@@ -1,3 +1,5 @@
+from flask import redirect, url_for, request, abort
+from http import HTTPStatus
 from flask_login import LoginManager, UserMixin
 from models.user import User
 from sqlalchemy import select
@@ -5,6 +7,13 @@ from uuid import UUID
 from db import db
 
 login_manager = LoginManager()
+login_manager.login_view = "views.accounts.login"
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    if request.blueprint == 'api':
+        abort(HTTPStatus.UNAUTHORIZED)
+    return redirect(url_for('views.accounts.login', next=request.url))
 
 
 @login_manager.user_loader

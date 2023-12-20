@@ -1,9 +1,9 @@
-from flask import Blueprint, request, render_template, redirect, url_for, jsonify
-from sqlalchemy import select
 from db import db
-from models.user import User
-from flask_login import login_user, logout_user, current_user, login_required
+from flask import Blueprint, jsonify, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
 from login import LoggedUser
+from models.user import User
+from sqlalchemy import select
 
 # Creates the account "router" (aka blueprint in Flask)
 bp = Blueprint("accounts", __name__)
@@ -80,6 +80,8 @@ def login():
             # retrace all the website used by a same person.
             return "Wrong credentials", 401
         login_user(LoggedUser(session_uid=user.session_uid))
+        if "next" in request.args:
+            return redirect(request.args["next"])
         return "Logged in", 200
 
     return render_template("login.html")
