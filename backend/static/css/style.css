@@ -13,7 +13,7 @@ input::placeholder{
 input[type=submit]{
     color: #fff;
     background-color: #db8e33;
-    font-size: 1em;
+    font-size: 30px;
     border: none;
     cursor:pointer;
     border-radius: 5px;
@@ -25,7 +25,8 @@ input[type=submit]:active{
     background-color: #815217;
 }
 input[type=text]{
-    font-size: 0.8em;
+    margin-bottom: 5px;
+    font-size: 30px;
     height: 1.5em;
     min-width: 60%;
     max-width: 100%;
@@ -66,6 +67,7 @@ body {
     background-color: #f5efdf;
 }
 .case{
+    min-width: 450px;
     font-size: 2em;
     display: flex;
     flex-direction: column;
@@ -81,6 +83,7 @@ nav {
     flex-direction: row;
     align-items: center;
     margin-bottom: 1em;
+    margin-bottom: 3em;
 }
 .tab {
     background-color: #fff;
@@ -92,17 +95,27 @@ nav {
     color: #4b3a24;
     text-decoration: none;
     box-shadow: 0px 5px 10px #b09066;
+    margin-right: 5px;
 }
-.current {
+.currenttab {
     background-color: #a39687;
+    height: 10vh;
+    font-size: 1.5em;
+    border-radius: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
     color: #eee7de;
+    text-decoration: none;
     box-shadow: none;
+    margin-right: 5px;
 }
 .about{
     color: #4b3a24;
+    font-size: 1em;
 }
 .header {
-    
+    font-size: 3em;
+    color: #4b3a24;
 }
 tr {
     width: 100%;
@@ -114,4 +127,5 @@ tr {
     color: #685a49;
     border-color: #b09066;
     box-shadow: 0px 5px 10px #b09066;
+    margin-bottom: 1em;
 }

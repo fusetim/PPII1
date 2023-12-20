@@ -56,15 +56,18 @@ def result_ingredients():
     codes = table.get(normalized_query, 10)
     data = []
     if codes == []:
-        return render_template("no_result.html")
+        if search != "":
+            return render_template("no_result_ingredients.html")
+        else:
+            return render_template("result_ingredients.html", data=data, search=search)
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
             ingr = db.session.execute(
-                text("SELECT name, co2 FROM ingredients WHERE code = :c"), {"c": code}
+                text("SELECT normalized_name, co2 FROM ingredients WHERE code = :c"), {"c": code}
             ).all()[0]
             data.append(ingr)
-        return render_template("result_ingredients.html", data=data)
+        return render_template("result_ingredients.html", data=data, search=search)
 
 
 @app.route("/recipes")

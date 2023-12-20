@@ -9,15 +9,15 @@
         <section class="structure">
             <nav>
                 <a class="logo" href="/home">CuliVert</h1>
-                <a class="current tab" href="/home">Accueil</a>
+                <a class="currenttab" href="/search_ingredients?search={{search}}">Ingrédients</a>
                 <a class="tab" href="/recipes">Recettes</a>
             </nav>
             <main>
+                <form class="search_ingredients" action="/search_ingredients" method="GET">
+                    <input type="text" value="{{search}}" placeholder="recherchez un produit..." name="search" required>
+                    <input type="submit" value="rechercher">
+                </form>
                 <table>
-                    <tr>
-                        <td class="header">name</td>
-                        <td class="header">co2</td>
-                    </tr>
                     {% for ingredient in data %}
                     <tr class="content">
                         <td>{{ingredient[0]}}</td> 
