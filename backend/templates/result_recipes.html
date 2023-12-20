@@ -1,20 +1,30 @@
 <html>
+    <title>CuliVert</title>
     <head>
+        <link rel="stylesheet" href="../static/css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
     </head>
     <body>
-    <table>
-        <tr>
-            <td>name</td>
-            <td>co2</td>
-        </tr>
-        <tr><td></td></tr>
-        {% for ingredient in data %}
-        <tr>
-            <td>{{ingredient[0]}}</td> 
-            <td>{{ingredient[1]}}</td>
-        </tr>
-        {%endfor%} 
-    </table>
+        <section class="structure">
+            <nav>
+                <a class="logo" href="/home">CuliVert</h1>
+                <a class="tab" href="/search_ingredients?search={{search}}">Ingrédients</a>
+                <a class="currenttab" href="/search_recipes?search={{search}}">Recettes</a>
+            </nav>
+            <main>
+                <form class="search_ingredients" action="/search_recipes" method="GET">
+                    <input type="text" value="{{search}}" placeholder="recherchez une recette..." name="search" required>
+                    <input type="submit" value="rechercher">
+                </form>
+                <table>
+                    {% for recette in data %}
+                    <tr class="content">
+                        <td>{{recette[0]}}</td> 
+                    </tr>
+                    {%endfor%} 
+                </table>
+            </main>
+        </section>
     </body>
 </html>
