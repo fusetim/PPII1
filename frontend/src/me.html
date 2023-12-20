@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon profil - CuliVert</title>
+</head>
+<body>
+    <h1>Mon profil</h1>
+    <p>Vous êtes connecté en tant que <strong>{{username}}</strong>.</p>
+    <div id="change_password">
+    <h2>Changer mon mot de passe</h2>
+        <form action="#change_password" method="post">
+            <input type="hidden" name="intent" value="change_password">
+            <label for="old_password">Ancien mot de passe</label>
+            <input type="password" name="old_password" id="old_password">
+            <label for="new_password">Nouveau mot de passe</label>
+            <input type="password" name="new_password" id="new_password">
+            <label for="new_password_repeat">Confimation du mot de passe</label>
+            <input type="password" name="new_password_repeat" id="new_password_repeat">
+            <input type="submit" value="Valider">
+        </form>
+    </div>
+    <a href="#./logout.html">Se déconnecter</a>
+</body>
+</html>
