@@ -1,17 +1,19 @@
 from flask import Blueprint, jsonify
 from sqlalchemy import select, text
-#from models.recipe import Ingredient
 from models.recipe import Recipe
+from models.ingredient import Ingredient
+from models.ingredient_link import IngredientLink
 from db import db
-#from search_table import get_recipe_table
+
+# from search_table import get_recipe_table
 
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
 
 
-@bp.route("/")
-def test():
+@bp.route("/recipes")
+def all_recipes():
     """
     test route: return all recipes (json)
     """
@@ -20,13 +22,23 @@ def test():
     return jsonify(recipe_list)
 
 
+@bp.route("/links")
+def all_links():
+    """
+    test route: return all links (json)
+    """
+    links = IngredientLink.query.all()
+    links_data = [link.to_dict() for link in links]
+    return jsonify(links_data)
+
+
 @bp.route("/recipe_info/<uuid:id>")
 def recipe_info(id):
     """
     Return the name, the short description and the description of
     the recipe with UUID = id.
     """
-    recipe = db.session.get(Recipe, id)
+    recipe = Recipe.query.get(id)
     if recipe is None:
         raise RecipeNotFound(context="Not in DB.", payload={"code": id})
     return jsonify(
@@ -42,15 +54,17 @@ def recipe_ingredients(id):
     Return the code, the name and the CO2 equivalent of the
     ingredients from recipe with UUID = id.
     """
-    recipe = db.session.get(Recipe, id)
+
     """
-    select ingredient.code, ingredient.name, ingredient.co2 
-    from Recipe 
-    join IngredientList 
-    on Recipe.recipe_uid = IngredientList.recipe_uid
-    join Ingredient
-    on Ingredient.code = IngredientLink.ingredient_code
+    equivalent to following SQL statement:
+    
+    SELECT i.code, i.name, i.co2 
+    FROM Ingredients AS i
+    JOIN Ingredient_Links AS il
+    ON i.code = il.ingredient_code
+    WHERE il.recipe_uid = id
     """
+
 
 
 class RecipeNotFound(Exception):
