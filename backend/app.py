@@ -1,4 +1,5 @@
 from api import api
+from views import views
 from flask import Flask, render_template, request, url_for
 import tomllib
 from sqlalchemy import text
@@ -21,8 +22,9 @@ sys.path.insert(1, p)
 
 # Entrypoint for the Flask app.
 app = Flask(__name__)
-# Register the `/api` routes
+# Register the `/api` & views routes
 app.register_blueprint(api, url_prefix="/api")
+app.register_blueprint(views, url_prefix="/")
 # Load the config file
 app.config.from_file("config.toml", load=tomllib.load, text=False)
 # Initialize the database

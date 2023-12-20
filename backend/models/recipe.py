@@ -1,5 +1,5 @@
 from db import db
-from sqlalchemy import String, Float, Text, Integer
+from sqlalchemy import String, Float, Text, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -31,7 +31,7 @@ class Recipe(db.Model):
     short_description: Mapped[str] = mapped_column(Text, nullable=False)
     description: Mapped[str] = mapped_column(Text)
     type: Mapped[str] = mapped_column(String(length=30))
-    author: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=True)
+    author: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.user_uid", ondelete="CASCADE"), nullable=True)
     duration: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     illustration: Mapped[str] = mapped_column(Text, nullable=False)
 
@@ -39,6 +39,7 @@ class Recipe(db.Model):
     tags: Mapped[list["RecipeTag"]] = relationship(
         secondary="recipe_tag_links", back_populates="recipes"
     )
+    author_account = relationship("User", back_populates="recipes")
 
     def to_dict(self):
         rv = dict()
