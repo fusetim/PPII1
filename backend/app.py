@@ -73,8 +73,9 @@ def result_ingredients():
         if search != "":
             for r in other:
                 if r not in data:
-                    data.append(r)
-        return render_template("result_ingredients.html", data=data[:20], search=search)
+                    #data.append(r)
+                    data.insert(0, r)
+        return render_template("result_ingredients.html", data=data[:30], search=search)
 
 
 @app.route("/search_recipes")
@@ -107,5 +108,6 @@ def recipes():
         if search != "":
             for r in other:
                 if r not in data:
-                    data.append(r)
-        return render_template("result_recipes.html", data=data[:20], search=search)
+                    #data.append(r)
+                    data.insert(0, r)
+        return render_template("result_recipes.html", data=data[:30], search=search)

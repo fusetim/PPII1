@@ -78,6 +78,7 @@ body {
     padding-top: 3em;
     color: #685a49;
     box-shadow: 0px 5px 10px #b09066;
+    align-items: center;
 }
 nav {
     display: flex;
@@ -87,6 +88,7 @@ nav {
     margin-bottom: 3em;
     height: 70px;
 }
+
 .tab {
     display: flex;
     background-color: #fff;
@@ -98,6 +100,20 @@ nav {
     color: #4b3a24;
     text-decoration: none;
     box-shadow: 0px 5px 10px #b09066;
+    margin-right: 5px;
+    align-items: center;
+}
+.tab:active{
+    display: flex;
+    background-color: #dcd2c8;
+    height: 100%;
+    font-size: 1.5em;
+    border-radius: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: #4b3a24;
+    text-decoration: none;
+    box-shadow: none;
     margin-right: 5px;
     align-items: center;
 }
@@ -115,6 +131,11 @@ nav {
     margin-right: 5px;
     align-items: center;
 
+}
+.noresult {
+    font-size: 3em;
+    color: #907553;
+    text-align: center;
 }
 p {
     color: #4b3a24;
