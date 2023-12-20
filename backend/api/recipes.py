@@ -64,7 +64,18 @@ def recipe_ingredients(id):
     ON i.code = il.ingredient_code
     WHERE il.recipe_uid = id
     """
+    ingredients = (
+        db.session.query(Ingredient.code, Ingredient.name, Ingredient.co2)
+        .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
+        .filter(IngredientLink.recipe_uid == id)
+        .all()
+    )
 
+    # dictionary list
+    ingredients_data = [
+        {"code": code, "name": name, "co2": co2} for code, name, co2 in ingredients
+    ]
+    return jsonify(ingredients_data)
 
 
 class RecipeNotFound(Exception):

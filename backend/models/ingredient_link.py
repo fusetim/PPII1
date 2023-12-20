@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
+
 class IngredientLink(db.Model):
     """
     IngredientLink data model.
@@ -20,10 +21,24 @@ class IngredientLink(db.Model):
         equivalent Co2 emission. If NULL, the reference quantity should be computed using the
         quantity_type (and use a conversion mechanism) and the quantity.
     """
+
     __tablename__ = "ingredient_links"
-    link_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    link_uid: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     recipe_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     ingredient_code: Mapped[str] = mapped_column(String(length=10), nullable=False)
     quantity: Mapped[float] = mapped_column(Float, nullable=False)
     quantity_type_uid: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     reference_quantity: Mapped[float] = mapped_column(Float, nullable=True)
+
+    def to_dict(self):
+        rv = dict()
+        rv["type"] = "ingredient_link"
+        rv["link_uid"] = self.link_uid
+        rv["recipe_uid"] = self.recipe_uid
+        rv["ingredient_code"] = self.ingredient_code
+        rv["quantity"] = self.quantity
+        rv["quantity_type_uid"] = self.quantity_type_uid
+        rv["reference_quantity"] = self.reference_quantity
+        return rv

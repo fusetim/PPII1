@@ -4,5 +4,8 @@ __Document mis à jour le 17/12/2023__
 
 == Équivalents syntaxiques Flask-SQLAlchemy :
 
-* `Recipe.query.all()` est un alias pour `db.session.query(Recipe).all()`.
+* *Récupération de tous les tuples :*
+`Recipe.query.all()` est un alias pour `db.session.query(Recipe).all()`.
 
+* *Récupération par clé primaire :*
+`Recipe.query.get(id)` est un alias pour `db.session.get(Recipe, id)`.
