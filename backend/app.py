@@ -15,6 +15,7 @@ from models.ingredient import Ingredient
 from math import floor
 from md_render import markdown_render
 from util.human_format import format_duration, format_mass
+from login import login_manager
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -31,6 +32,8 @@ app.config.from_file("config.toml", load=tomllib.load, text=False)
 db.init_app(app)
 # Initialize the migration engine (for database migrations)
 migrate = Migrate(app, db)
+# Initialize the login manager
+login_manager.init_app(app)
 
 # On app teardown, save the LSH tables.
 app.teardown_appcontext(save_search_tables)

@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import datetime
 from argon2 import PasswordHasher
 
+
 class User(db.Model):
     """
     User data model.
@@ -18,19 +19,27 @@ class User(db.Model):
         creation_date (DateTime): The date of the account creation.
         deletion_date (DateTime): The date of the account deletion. If NULL the account is active.
     """
+
     __tablename__ = "users"
     user_uid: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-    username: Mapped[str] = mapped_column(String(length=50), nullable=False, unique=True)
+    username: Mapped[str] = mapped_column(
+        String(length=50), nullable=False, unique=True
+    )
     password: Mapped[str] = mapped_column(String(length=256), nullable=False)
     bio: Mapped[str] = mapped_column(Text, nullable=True)
-    creation_date: Mapped[DateTime] = mapped_column(DateTime, nullable=False, default=datetime.datetime.utcnow)
+    creation_date: Mapped[DateTime] = mapped_column(
+        DateTime, nullable=False, default=datetime.datetime.utcnow
+    )
     deletion_date: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
-    
 
-    recipes : Mapped[list["Recipe"]] = relationship("Recipe", back_populates="author_account", cascade="all, delete", passive_deletes=True)
-
+    recipes: Mapped[list["Recipe"]] = relationship(
+        "Recipe",
+        back_populates="author_account",
+        cascade="all, delete",
+        passive_deletes=True,
+    )
 
     def hash_password(password: str):
         """
@@ -45,14 +54,14 @@ class User(db.Model):
         ph = PasswordHasher()
         return ph.hash(password)
 
-
-    def verify_password(self, password: str):
+    def verify_password(user, password: str):
         """
         Verify a password against the user's password.
         If the password is correct, it might rehash it if the
         hash parameters changed.
 
         Args:
+            user (User): The user to verify the password against.
             password (str): The password to verify.
 
         Returns:
@@ -60,9 +69,9 @@ class User(db.Model):
         """
         ph = PasswordHasher()
         try:
-            ph.verify(self.password, password)
-            if ph.check_needs_rehash(self.password):
-                self.password = ph.hash(password)
+            ph.verify(user.password, password)
+            if ph.check_needs_rehash(user.password):
+                user.password = ph.hash(password)
                 db.session.commit()
             return True
         except:

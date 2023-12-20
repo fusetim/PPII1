@@ -1,10 +1,13 @@
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, jsonify
 from sqlalchemy import select
 from db import db
 from models.user import User
+from flask_login import login_user, logout_user, current_user, login_required
+from login import LoggedUser
 
 # Creates the account "router" (aka blueprint in Flask)
 bp = Blueprint("accounts", __name__)
+
 
 @bp.route("/register", methods=("GET", "POST"))
 @bp.route("/register.html", methods=("GET", "POST"))
@@ -31,7 +34,10 @@ def register():
         if len(username) > 50:
             return ("Username too long (50 max)", 400)
         # Check if the username is already taken
-        if db.session.execute(select(User).filter(User.username == username)).first() is not None:
+        if (
+            db.session.execute(select(User).filter(User.username == username)).first()
+            is not None
+        ):
             return ("Username already taken", 400)
         db.session.close()
         # Create the user
@@ -47,3 +53,55 @@ def register():
             db.session.commit()
             return ("User created", 201)
     return render_template("register.html")
+
+
+@bp.route("/login", methods=("GET", "POST"))
+@bp.route("/login.html", methods=("GET", "POST"))
+def login():
+    """
+    Handle the login page, with the form to login.
+
+    It handles the authentication and the session creation.
+    """
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        if username is None or password is None:
+            return ("Missing username or password", 400)
+        user = (
+            db.session.execute(select(User).filter(User.username == username))
+            .scalars()
+            .first()
+        )
+        if user is None or (not User.verify_password(user, password)):
+            # For security reasons, a website should not tell the
+            # user if the username exists or not, otherwise an attacker
+            # could use this to find valid usernames, or try to
+            # retrace all the website used by a same person.
+            return "Wrong credentials", 401
+        login_user(LoggedUser(user.user_uid))
+        return ("Logged in", 200)
+
+    return render_template("login.html")
+
+
+@bp.route("/logout")
+@bp.route("/logout.html")
+def logout():
+    """
+    Logout page.
+    """
+    if current_user.is_authenticated:
+        logout_user()
+    return redirect(url_for("views.accounts.login"))
+
+
+@bp.route("/me")
+@bp.route("/me.html")
+@login_required
+def profile_me():
+    """
+    Profile page for the current user.
+    """
+    cu = current_user.get_user()
+    return render_template("me.html", username=cu.username, bio=cu.bio)

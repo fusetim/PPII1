@@ -31,7 +31,11 @@ class Recipe(db.Model):
     short_description: Mapped[str] = mapped_column(Text, nullable=False)
     description: Mapped[str] = mapped_column(Text)
     type: Mapped[str] = mapped_column(String(length=30))
-    author: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.user_uid", ondelete="CASCADE"), nullable=True)
+    author: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.user_uid", ondelete="CASCADE"),
+        nullable=True,
+    )
     duration: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     illustration: Mapped[str] = mapped_column(Text, nullable=False)
 
