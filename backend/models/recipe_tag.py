@@ -1,7 +1,7 @@
 from db import db
 from sqlalchemy import String, Text, ForeignKey, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import Uuid
 import uuid
 
 
@@ -17,8 +17,8 @@ class RecipeTag(db.Model):
     """
 
     __tablename__ = "recipe_tags"
-    recipe_tag_uid: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    recipe_tag_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     name: Mapped[str] = mapped_column(String(length=30), nullable=False)
     normalized_name: Mapped[str] = mapped_column(Text, nullable=False)
@@ -34,13 +34,13 @@ recipe_tag_association = Table(
     db.metadata,
     Column(
         "recipe_uid",
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("recipes.recipe_uid", ondelete="CASCADE"),
         primary_key=True,
     ),
     Column(
         "recipe_tag_uid",
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         ForeignKey("recipe_tags.recipe_tag_uid", ondelete="CASCADE"),
         primary_key=True,
     ),

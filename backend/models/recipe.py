@@ -1,7 +1,7 @@
 from db import db
 from sqlalchemy import String, Float, Text, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import Uuid
 import uuid
 
 
@@ -23,16 +23,16 @@ class Recipe(db.Model):
     """
 
     __tablename__ = "recipes"
-    recipe_uid: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    recipe_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     name: Mapped[str] = mapped_column(Text, nullable=False)
     normalized_name: Mapped[str] = mapped_column(Text, nullable=False)
     short_description: Mapped[str] = mapped_column(Text, nullable=False)
     description: Mapped[str] = mapped_column(Text)
     type: Mapped[str] = mapped_column(String(length=30))
-    author: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
+    author: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True),
         ForeignKey("users.user_uid", ondelete="CASCADE"),
         nullable=True,
     )

@@ -79,8 +79,8 @@ def login():
             # could use this to find valid usernames, or try to
             # retrace all the website used by a same person.
             return "Wrong credentials", 401
-        login_user(LoggedUser(user.user_uid))
-        return ("Logged in", 200)
+        login_user(LoggedUser(session_uid=user.session_uid))
+        return "Logged in", 200
 
     return render_template("login.html")
 
@@ -93,7 +93,7 @@ def logout():
     """
     if current_user.is_authenticated:
         logout_user()
-    return redirect(url_for("views.accounts.login"))
+    return "Logged out", 200
 
 
 @bp.route("/me")

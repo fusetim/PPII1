@@ -2,7 +2,7 @@ from db import db
 from sqlalchemy import String, Float, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import uuid
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import Uuid
 import datetime
 from argon2 import PasswordHasher
 
@@ -18,11 +18,13 @@ class User(db.Model):
         bio (String): The user bio.
         creation_date (DateTime): The date of the account creation.
         deletion_date (DateTime): The date of the account deletion. If NULL the account is active.
+        session_uid (UUID): The session id of the user. It is used to identify the user's session, and
+            allows to log in automatically and log out from every device.
     """
 
     __tablename__ = "users"
-    user_uid: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    user_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     username: Mapped[str] = mapped_column(
         String(length=50), nullable=False, unique=True
@@ -33,6 +35,9 @@ class User(db.Model):
         DateTime, nullable=False, default=datetime.datetime.utcnow
     )
     deletion_date: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
+    session_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True), unique=True, default=uuid.uuid4
+    )
 
     recipes: Mapped[list["Recipe"]] = relationship(
         "Recipe",

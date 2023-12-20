@@ -1,7 +1,7 @@
 from db import db
 from sqlalchemy import String, Float, Text
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import Uuid
 import uuid
 
 
@@ -19,8 +19,8 @@ class QuantityType(db.Model):
     """
 
     __tablename__ = "quantity_types"
-    quantity_type_uid: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    quantity_type_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     name: Mapped[str] = mapped_column(Text, nullable=False)
     localized_key: Mapped[str] = mapped_column(String(length=100), nullable=True)
