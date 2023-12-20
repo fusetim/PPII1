@@ -99,7 +99,7 @@ def recipes():
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
             recipe = db.session.execute(
-                text("SELECT name FROM recipes WHERE receipe_uid = :c"), {"c": code}
+                text("SELECT name FROM recipes WHERE recipe_uid = :c"), {"c": code}
             ).all()[0]
             # on veut maintenant chercher les resultats contenant search
             data.append(recipe)
