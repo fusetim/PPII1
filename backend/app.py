@@ -60,7 +60,7 @@ def result_ingredients():
             ).all()
     if codes == [] and other == []:
         if search != "":
-            return render_template("no_result_ingredients.html")
+            return render_template("no_result_ingredients.html", search=search)
         else:
             return render_template("result_ingredients.html", data=data, search=search)
     else:
@@ -92,7 +92,7 @@ def recipes():
             ).all()
     if codes == [] and other == []:
         if search != "":
-            return render_template("no_result_recipes.html")
+            return render_template("no_result_recipes.html", search=search)
         else:
             return render_template("result_recipes.html", data=data, search=search)
     else:
