@@ -30,4 +30,4 @@ migrate = Migrate(app, db)
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return "<p>Backend up and running</p>"
