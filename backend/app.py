@@ -1,5 +1,5 @@
 from api import api
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import tomllib
 from sqlalchemy import text
 from flask_migrate import Migrate
@@ -69,10 +69,14 @@ def result_ingredients():
             ingr = db.session.execute(
                 text("SELECT name, co2 FROM ingredients WHERE code = :c"), {"c": code}
             ).all()[0]
+            # on arondit le score co2
+            ingr = (ingr[0], round(ingr[1], 2))
             data.append(ingr)
         if search != "":
             for r in other:
                 if r not in data:
+                    # on arondit le score co2
+                    r = (r[0], round(r[1], 2))
                     #data.append(r)
                     data.insert(0, r)
         return render_template("result_ingredients.html", data=data[:30], search=search)
