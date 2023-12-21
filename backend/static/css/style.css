@@ -3,9 +3,9 @@
     font-family: 'Arial';
     display: flex;
     flex-direction: column;
+    align-self: center;
     width: 70%;
     margin-left: 15%;
-    align-items: stretch;
 }
 input::placeholder{
     color: #c9b9a6;
@@ -17,7 +17,7 @@ input[type=submit]{
     border: none;
     cursor:pointer;
     border-radius: 5px;
-    padding: 0.1em;
+    padding: 0.2em;
     padding-left: 0.5em;
     padding-right: 0.4em;
 }
@@ -26,6 +26,7 @@ input[type=submit]:active{
 }
 input[type=text]{
     margin-bottom: 5px;
+    margin-right: 0.2em;
     font-size: 30px;
     height: 1.5em;
     min-width: 60%;
@@ -80,12 +81,57 @@ body {
     box-shadow: 0px 5px 10px #b09066;
     align-items: center;
 }
+.affichage{
+    display: flex;
+    flex-direction: column;
+}
+.row_ingredient{
+    display: flex;
+    flex-direction: row;
+}
+.ingredient_name{
+    width: 88%;
+    font-size: 2em;
+    display: flex;
+    border-radius: 20px;
+    padding: 0.8em 1em 0.8em 1em;
+    color: #685a49;
+    box-shadow: 0px 5px 10px #b09066;
+    background-color: #fff;
+    margin-bottom: 1em;
+}
+.score{
+    width: 10%;
+    margin-left: 2%;
+    font-size: 2em;
+    display: flex;
+    border-radius: 20px;
+    padding: 0.8em 1em 0.8em 1em;
+    color: #685a49;
+    box-shadow: 0px 5px 10px #b09066;
+    background-color: #fff;
+    margin-bottom: 1em;
+}
+.row_recipe{
+    font-size: 2em;
+    display: flex;
+    border-radius: 20px;
+    padding: 0.8em 1em 0.8em 1em;
+    color: #685a49;
+    box-shadow: 0px 5px 10px #b09066;
+    background-color: #fff;
+    margin-bottom: 1em;
+}
+.row_recipe:active{
+    background-color: #dcd2c8;
+    box-shadow: none;
+}
 nav {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 1em;
-    margin-bottom: 3em;
+    padding-top: 2em;
+    padding-bottom: 2em;
     height: 70px;
 }
 
@@ -136,24 +182,13 @@ nav {
     font-size: 3em;
     color: #907553;
     text-align: center;
+    margin-top: 3em;
 }
-p {
+.about {
     color: #4b3a24;
-    font-size: 1em;
+    font-size: 1.5em;
 }
 .header {
     font-size: 3em;
     color: #4b3a24;
-}
-tr {
-    width: 100%;
-    font-size: 2em;
-    display: flex;
-    border-radius: 9999px;
-    padding-left: 1em;
-    padding-right: 1em;
-    color: #685a49;
-    border-color: #b09066;
-    box-shadow: 0px 5px 10px #b09066;
-    margin-bottom: 1em;
 }

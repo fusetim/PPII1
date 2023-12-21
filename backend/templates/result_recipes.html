@@ -17,13 +17,12 @@
                     <input type="text" value="{{search}}" placeholder="recherchez une recette..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
-                <table>
-                    {% for recette in data %}
-                    <tr class="content">
-                        <td>{{recette[0]}}</td> 
-                    </tr>
-                    {%endfor%} 
-                </table>
+                <br><br>
+                {% for recette in data %}
+                <div class="affichage">
+                    <div class="row_recipe">{{recette[0]}}</div> 
+                </div>
+                {%endfor%}
             </main>
         </section>
     </body>
