@@ -20,3 +20,12 @@ class QuantityType(db.Model):
     name: Mapped[str] = mapped_column(Text, nullable=False)
     localized_key: Mapped[str] = mapped_column(String(length=100), nullable=True)
     mass_equivalent: Mapped[float] = mapped_column(Float, nullable=False)
+
+    def to_dict(self):
+        rv = dict()
+        rv["type"] = "quantity_type"
+        rv["quantity_type_uid"] = self.quantity_type_uid
+        rv["name"] = self.name
+        rv["localized_key"] = self.localized_key
+        rv["mass_equivalent"] = self.mass_equivalent        
+        return rv
