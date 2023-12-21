@@ -14,11 +14,12 @@
     </header>
     <div class="card">
         <h1 class="card_title">Connexion</h1>
-        {% for message in messages %}
-        <div class="message {% if message.is_error %} error {% endif %}">
-            <p>{{message.content}}</p>
+        <div class="message">
+            <p>Vous devez être connecté pour accéder à cette page.</p>
         </div>
-        {% endfor %}
+        <div class="message error">
+            <p>Le champ "mot de passe" ne peut pas être vide !</p>
+        </div>
         <form method="post">
             <label for="username">Nom d'utilisateur</label>
             <input type="text" name="username" id="username">
@@ -26,7 +27,7 @@
             <input type="password" name="password" id="password">
             <input type="submit" value="Se connecter">
         </form>
-        <a href="./register.html">Pas encore inscrit ?</a>
+        <a href="./register-demo.html">Pas encore inscrit ?</a>
     </div>
 </body>
 
