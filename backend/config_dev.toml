@@ -18,3 +18,15 @@ SQLALCHEMY_DATABASE_URI = "postgresql://ppii1@localhost:5432/ppii1"
 # `$ python -c 'import secrets; print(secrets.token_hex())'`
 # In PRODUCTION, you MUST generate this key like that.
 SECRET_KEY = "DEBUG_SECRET"
+
+# Allowed extensions for user uploads
+# Other extensions will be implicitly banned and not allowed to be upload on the server.
+ALLOWED_EXTENSIONS = ["png", "webp", "jpg"]
+
+# The standard folder used by user uploads.
+# Note: it must be in static to be provided automatically by Flask
+UPLOAD_FOLDER = "./static/media/"
+
+# The Max content length of a request, over it Flask will close the connection or return PAYLOAD TOO LARGE.
+# It is essential to not be abused by some users who might be tempted to upload a TB file.
+MAX_CONTENT_LENGTH = 8000000
