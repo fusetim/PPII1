@@ -15,7 +15,11 @@
     <div class="card">
         <h1 class="card_title">Inscription</h1>
         {% for message in messages %}
-        <div class="message {% if message.is_error %} error {% endif %}">
+        {% if message.is_error %}
+        <div class="message error">
+        {% else %}
+        <div class="message">
+        {% endif %}
             <p>{{message.content}}</p>
         </div>
         {% endfor %}
@@ -26,9 +30,9 @@
             <input type="password" name="password" id="password">
             <label for="password_repeat">Confirmation de mot de passe</label>
             <input type="password" name="password_repeat" id="password_repeat">
-            <input type="submit" value="S'inscrire">
+            <input type="submit" name="register" value="S'inscrire">
         </form>
-        <a {{ "href='{}'".format(url_for('views.accounts.login')) }}>Déjà inscrit ?</a>
+        <a {{ 'href="{}"'.format(url_for('views.accounts.login'))|safe }}>Déjà inscrit ?</a>
     </div>
 </body>
 

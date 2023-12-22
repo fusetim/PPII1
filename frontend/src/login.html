@@ -15,7 +15,11 @@
     <div class="card">
         <h1 class="card_title">Connexion</h1>
         {% for message in messages %}
-        <div class="message {% if message.is_error %} error {% endif %}">
+        {% if message.is_error %}
+        <div class="message error">
+        {% else %}
+        <div class="message">
+        {% endif %}
             <p>{{message.content}}</p>
         </div>
         {% endfor %}
@@ -24,9 +28,9 @@
             <input type="text" name="username" id="username">
             <label for="password">Mot de passe</label>
             <input type="password" name="password" id="password">
-            <input type="submit" value="Se connecter">
+            <input type="submit" name="login" value="Se connecter">
         </form>
-        <a {{ "href='{}'".format(url_for('views.accounts.register')) }}>Pas encore inscrit ?</a>
+        <a {{ 'href="{}"'.format(url_for('views.accounts.register'))|safe }}>Pas encore inscrit ?</a>
     </div>
 </body>
 
