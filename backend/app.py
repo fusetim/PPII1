@@ -59,7 +59,7 @@ def result_ingredients():
                 text(f"SELECT name, co2 FROM ingredients WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
     if search == "":
-        return render_template("result_ingredients.html", data=data, search=search, message=" ")
+        return render_template("result_ingredients.html", data=data, search=search, m1="", m2="")
     
     elif codes == [] and other == []:
         return render_template("no_result_ingredients.html", search=search)
@@ -81,7 +81,7 @@ def result_ingredients():
                     data.insert(0, r)
         data.sort()
 
-        return render_template("result_ingredients.html", data=data[:30], search=search, message="équivalent co2 :")
+        return render_template("result_ingredients.html", data=data[:30], search=search, m1="équivalent co2 :", m2="(par kg de produit)")
 
 
 @app.route("/search_recipes")

@@ -17,17 +17,17 @@
                     <input type="text" value="{{search}}" placeholder="recherchez un produit..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
-                <br><br>
+                
                 <!-- message est soit "" soit "equivalent co2" (sert à effacer  le message si on a aucune recherche en cours)-->
-                <p>{{message}}</p>
+                <div class="message">
+                    <p class=m1>{{m1}}</p>
+                    <p class="m2">{{m2}}</p>
+                </div>
                 {% for ingredient in data %}
                 <div class="affichage">
                     <div class="row_ingredient">
                         <div class="ingredient_name">{{ingredient[0]}}</div>
-                        <div class="score_ingredient">
-                            <div class="score">{{ingredient[1]}} kg</div>
-                            <div>par kg de produit</div>
-                        </div>
+                        <div class="score_ingredient">{{ingredient[1]}} kg</div>
                     </div> 
                 </div>
                 {%endfor%} 
