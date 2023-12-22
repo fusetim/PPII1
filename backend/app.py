@@ -58,11 +58,11 @@ def result_ingredients():
     other = db.session.execute(
                 text(f"SELECT name, co2 FROM ingredients WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
-    if codes == [] and other == []:
-        if search != "":
-            return render_template("no_result_ingredients.html", search=search)
-        else:
-            return render_template("result_ingredients.html", data=data, search=search)
+    if search == "":
+        return render_template("result_ingredients.html", data=data, search=search, message=" ")
+    
+    elif codes == [] and other == []:
+        return render_template("no_result_ingredients.html", search=search)
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
@@ -79,7 +79,9 @@ def result_ingredients():
                     r = (r[0], round(r[1], 2))
                     #data.append(r)
                     data.insert(0, r)
-        return render_template("result_ingredients.html", data=data[:30], search=search)
+        data.sort()
+
+        return render_template("result_ingredients.html", data=data[:30], search=search, message="équivalent co2 :")
 
 
 @app.route("/search_recipes")

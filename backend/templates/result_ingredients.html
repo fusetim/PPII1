@@ -18,6 +18,8 @@
                     <input type="submit" value="rechercher">
                 </form>
                 <br><br>
+                <!-- message est soit "" soit "equivalent co2" (sert à effacer  le message si on a aucune recherche en cours)-->
+                <p>{{message}}</p>
                 {% for ingredient in data %}
                 <div class="affichage">
                     <div class="row_ingredient">
