@@ -1,6 +1,7 @@
-from os.path import splitext
+from os.path import splitext, normpath
 from multiformats import multicodec, multibase, multihash, multiaddr, CID
 from flask import current_app
+from models.upload import Upload
 
 def allowed_file(filename):
     """
@@ -73,3 +74,11 @@ def get_upload_dir():
         str: The upload directory.
     """
     return current_app.config["UPLOAD_FOLDER"]
+
+def get_upload_url(upload, default=None):
+    """
+    Gets the URL of an upload.
+    """
+    if upload is None:
+        return default
+    return normpath("/{}/{}.{}".format(get_upload_dir(), upload.content_id, upload.extension))

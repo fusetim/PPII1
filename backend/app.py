@@ -15,6 +15,7 @@ from models.ingredient import Ingredient
 from math import floor
 from md_render import markdown_render
 from util.human_format import format_duration, format_mass
+from util.upload_helper import get_upload_url
 from login import login_manager
 
 # Add the root directory to the PYTHONPATH
@@ -144,5 +145,5 @@ def get_recipe(recipe_uid):
         carbon_score=score,
         score_unit=score_unit,
         recipe=markdown_render(recipe.description),
-        cover=url_for("static", filename=recipe.illustration),
+        cover=get_upload_url(recipe.illustration),
     )
