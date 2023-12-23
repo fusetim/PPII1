@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon compte - CuliVert</title>
+    <link rel="stylesheet" href="my-profile.scss">
+</head>
+
+<body>
+    <header>
+        <p>Future navigation bar</p>
+    </header>
+    <div class="card">
+        <h1 class="card_title">Mon compte</h1>
+        <div class="message error">
+            <p>Les mots de passes ne correspondent pas. Votre mot de passe n'a pas été modifié.</p>
+        </div>
+        <details open>
+            <summary>Mes informations</summary>
+            <form method="post">
+                <label for="display_name">Nom affiché</label>
+                <input type="text" name="display_name" id="display_name" value="FuseTim" maxlength="50" minlength="3">
+                <label for="bio">Bio</label>
+                <textarea name="bio" id="bio" cols="30" rows="5" maxlength="500"
+                    minlength="10">Développeur de CuliVert</textarea>
+                <input type="submit" value="Enregistrer">
+                <input type="submit" name="change_profile" value="Enregistrer">
+            </form>
+        </details>
+        <details>
+            <summary>Modifier mon mot de passe</summary>
+            <form method="post">
+                <form action="#change_password" method="post">
+                    <label for="old_password">Ancien mot de passe</label>
+                    <input type="password" name="old_password" id="old_password">
+                    <label for="new_password">Nouveau mot de passe</label>
+                    <input type="password" name="new_password" id="new_password">
+                    <label for="new_password_repeat">Confimation du mot de passe</label>
+                    <input type="password" name="new_password_repeat" id="new_password_repeat">
+                    <div class="message">
+                        <p>Changer votre mot de passe déconnectera tous vos appareils.</p>
+                    </div>
+                    <input type="submit" name="change_password" value="Valider">
+                </form>
+        </details>
+    </div>
+</body>
+
+</html>

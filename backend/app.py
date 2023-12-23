@@ -1,4 +1,5 @@
 from api import api
+from views import views
 from flask import Flask, render_template, request, url_for
 import tomllib
 from sqlalchemy import text
@@ -14,6 +15,7 @@ from models.ingredient import Ingredient
 from math import floor
 from md_render import markdown_render
 from util.human_format import format_duration, format_mass
+from login import login_manager
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -21,14 +23,17 @@ sys.path.insert(1, p)
 
 # Entrypoint for the Flask app.
 app = Flask(__name__)
-# Register the `/api` routes
+# Register the `/api` & views routes
 app.register_blueprint(api, url_prefix="/api")
+app.register_blueprint(views, url_prefix="/")
 # Load the config file
 app.config.from_file("config.toml", load=tomllib.load, text=False)
 # Initialize the database
 db.init_app(app)
 # Initialize the migration engine (for database migrations)
 migrate = Migrate(app, db)
+# Initialize the login manager
+login_manager.init_app(app)
 
 # On app teardown, save the LSH tables.
 app.teardown_appcontext(save_search_tables)

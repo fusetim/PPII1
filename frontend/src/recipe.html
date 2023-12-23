@@ -1,8 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 
 <head>
-    <link rel="stylesheet" href="recipe.scss">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="recipe.scss">
+    <title>{{title}} - CuliVert</title>
 </head>
 
 <body>
@@ -17,7 +20,7 @@
         </nav>
         <main>
             <div class="column">
-                <div class="header" {{ 'style="background-image: url(\' {}\');"'.format(cover)|safe }}>
+                <div class="header" {{'style="background-image: url(\' {}\');"'.format(cover)|safe}}>
                     <div class="title">
                         <h1>{{title}}</h1>
                         <p class="specs">
@@ -59,8 +62,8 @@
                                         {{ "{:4.2n}".format(ingr.carbon_part) }} %
                                     </div>
                                 </div>
-                                {% endfor %}
                             </div>
+                            {% endfor %}
                         </div>
                 </section>
                 <hr>
@@ -72,7 +75,8 @@
                 </section>
             </div>
         </main>
-        <script type="module" src="./index.ts"></script>
+    </section>
+    <script type="module" src="./index.ts"></script>
 </body>
 
 </html>
