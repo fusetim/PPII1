@@ -155,14 +155,19 @@ def recipe_full_data(id):
     recipe{recipe_uid, name, co2, ingredients[
             ingredient{code, name, co2, quantity, quantity_type}
         ], description}
+    with ingredient[co2] already taking the quantity into account,
+    ingredient[quantity] being the value that must be displayed,
+    and ingredient[quantity_type] ()= QuantityType.name) being the unit of quantity
     """
-    ingredients = (
+    qry = (
         db.session.query(
             Ingredient.code,
             Ingredient.name,
-            Ingredient.co2,
+            Ingredient.co2,  # per kg
             IngredientLink.quantity,
+            IngredientLink.reference_quantity,
             QuantityType.name,
+            QuantityType.mass_equivalent
         )
         .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
         .join(
@@ -171,26 +176,41 @@ def recipe_full_data(id):
         )
         .filter(IngredientLink.recipe_uid == id)
     )
-    ingredients_data = [
-        {
-            "code": code,
-            "name": name,
-            "co2": co2_per_kg * quantity,
-            "quantity": quantity,
-            "quantity_type": quantity_type,
-        }
-        for code, name, co2_per_kg, quantity, quantity_type in ingredients
-    ]
+    ingredients = []
+    for (
+        code,
+        name,
+        co2_per_kg,
+        quantity,  # in quantity_type
+        reference_quantity,  # in kg, can be None
+        quantity_type,
+        mass_equivalent
+    ) in qry:
+
+        if reference_quantity is not None:
+            co2 = co2_per_kg * reference_quantity
+        else:
+            co2 = co2_per_kg * quantity * mass_equivalent
+
+        ingredients.append(
+            {
+                "code": code,
+                "name": name,
+                "co2": co2,
+                "quantity": quantity,
+                "quantity_type": quantity_type,
+            }
+        )
 
     # total CO2 amount for the recipe
-    recipe_co2 = sum([ing["co2"] for ing in ingredients_data])
+    recipe_co2 = sum([ing["co2"] for ing in ingredients])
 
     recipe = Recipe.query.get(id)
     recipe_data = {
         "recipe_uid": recipe.recipe_uid,
         "name": recipe.name,
         "co2": recipe_co2,
-        "ingredients": ingredients_data,
+        "ingredients": ingredients,
         "description": recipe.description,
     }
     return jsonify(recipe_data)
