@@ -98,8 +98,8 @@ def recipe_ingredients_amount(id):
     the recipe with UUID = id, formatted as json:
     ingredient{code, name, co2, quantity, quantity_type}
     with co2 already taking the quantity into account,
-    quantity the value that must be displayed,
-    and quantity_type = QuantityType.name
+    quantity being the value that must be displayed,
+    and quantity_type ()= QuantityType.name) being the unit of quantity
 
     eg: "The recipe contains {quantity} {quantity_type} of {name}."
     """
