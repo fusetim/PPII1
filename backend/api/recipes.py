@@ -152,7 +152,13 @@ def recipe_full_data(id):
         .filter(IngredientLink.recipe_uid == id)
     )
     ingredients_data = [
-        {"code": code, "name": name, "co2": co2_per_quantity * quantity}
+        {
+            "code": code,
+            "name": name,
+            "co2": co2_per_quantity * quantity,
+            "quantity": quantity,
+            "quantity_type": quantity_type,
+        }
         for code, name, co2_per_quantity, quantity, quantity_type in ingredients
     ]
 
