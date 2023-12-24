@@ -97,16 +97,21 @@ def recipe_ingredients_amount(id):
     Return info about the amount of ingredients in
     the recipe with UUID = id, formatted as json:
     ingredient{code, name, co2, quantity, quantity_type}
-    with co2 already taking the quantity into account
+    with co2 already taking the quantity into account,
+    quantity the value that must be displayed,
     and quantity_type = QuantityType.name
+
+    eg: "The recipe contains {quantity} {quantity_type} of {name}."
     """
-    ingredients = (
+    qry = (
         db.session.query(
             Ingredient.code,
             Ingredient.name,
-            Ingredient.co2,
+            Ingredient.co2,  # per kg
             IngredientLink.quantity,
+            IngredientLink.reference_quantity,
             QuantityType.name,
+            QuantityType.mass_equivalent
         )
         .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
         .join(
@@ -115,17 +120,32 @@ def recipe_ingredients_amount(id):
         )
         .filter(IngredientLink.recipe_uid == id)
     )
-    ingredients_data = [
-        {
-            "code": code,
-            "name": name,
-            "co2": co2_per_quantity * quantity,
-            "quantity": quantity,
-            "quantity_type": quantity_type,
-        }
-        for code, name, co2_per_quantity, quantity, quantity_type in ingredients
-    ]
-    return jsonify(ingredients_data)
+    ingredients = []
+    for (
+        code,
+        name,
+        co2_per_kg,
+        quantity,  # in quantity_type
+        reference_quantity,  # in kg, can be None
+        quantity_type,
+        mass_equivalent
+    ) in qry:
+
+        if reference_quantity is not None:
+            co2 = co2_per_kg * reference_quantity
+        else:
+            co2 = co2_per_kg * quantity * mass_equivalent
+
+        ingredients.append(
+            {
+                "code": code,
+                "name": name,
+                "co2": co2,
+                "quantity": quantity,
+                "quantity_type": quantity_type,
+            }
+        )
+    return jsonify(ingredients)
 
 
 @bp.route("recipe_full_data/<uuid:id>")
@@ -155,11 +175,11 @@ def recipe_full_data(id):
         {
             "code": code,
             "name": name,
-            "co2": co2_per_quantity * quantity,
+            "co2": co2_per_kg * quantity,
             "quantity": quantity,
             "quantity_type": quantity_type,
         }
-        for code, name, co2_per_quantity, quantity, quantity_type in ingredients
+        for code, name, co2_per_kg, quantity, quantity_type in ingredients
     ]
 
     # total CO2 amount for the recipe
