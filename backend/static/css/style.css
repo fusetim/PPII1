@@ -131,6 +131,13 @@ body {
 .m2{
     margin: 0;
 }
+.signature{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5em;
+    color: #a39687;
+    margin-top: 1em;
+}
 .row_recipe{
     font-size: 2em;
     display: flex;
@@ -210,6 +217,10 @@ nav {
     text-align: justify;
 }
 .header {
-    font-size: 3em;
+    font-size: 4em;
+    color: #4b3a24;
+}
+.subhead {
+    font-size: 2.5em;
     color: #4b3a24;
 }
