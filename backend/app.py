@@ -81,7 +81,7 @@ def result_ingredients():
                     data.insert(0, r)
         data.sort()
 
-        return render_template("result_ingredients.html", data=data[:20], search=search, m1="équivalent co2 :", m2="(par kg de produit)")
+        return render_template("result_ingredients.html", data=data[:20], search=search, m1="équivalent co2 :", m2="par kg de produit")
 
 
 @app.route("/search_recipes")

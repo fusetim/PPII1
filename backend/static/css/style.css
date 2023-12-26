@@ -232,4 +232,12 @@ nav {
 }
 .link{
     margin-left: 5%;
+    color: #db8e33;
+}
+
+.link:visited{
+    color: #a39687;
+}
+.link:active{
+    color: #4b3a24;
 }
