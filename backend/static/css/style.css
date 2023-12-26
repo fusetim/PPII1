@@ -136,7 +136,7 @@ body {
     flex-direction: column;
     margin-bottom: 0.5em;
     color: #a39687;
-    margin-top: 1em;
+    margin-top: 4em;
 }
 .row_recipe{
     font-size: 2em;
@@ -223,4 +223,13 @@ nav {
 .subhead {
     font-size: 2.5em;
     color: #4b3a24;
+}
+.links{
+    display: flex;
+    flex-direction: column;
+    color: #4b3a24;
+    font-size: 1.5em;
+}
+.link{
+    margin-left: 5%;
 }
