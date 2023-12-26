@@ -120,4 +120,4 @@ def recipes():
 
 @app.route("/account")
 def account():
-    return "WiP"
+    return render_template("account.html")
