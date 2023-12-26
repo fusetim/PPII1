@@ -1,5 +1,5 @@
 from db import db
-from sqlalchemy import String, Float, Text, DateTime
+from sqlalchemy import String, Float, Text, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import uuid
 from sqlalchemy.types import Uuid
@@ -14,12 +14,14 @@ class User(db.Model):
     Attributes:
         user_uid (UUID): The user unique identifier.
         username (String): The user name.
+        display_name (String): The user display name.
         password (String): The user hashed password (argon2id hash).
         bio (String): The user bio.
         creation_date (DateTime): The date of the account creation.
         deletion_date (DateTime): The date of the account deletion. If NULL the account is active.
         session_uid (UUID): The session id of the user. It is used to identify the user's session, and
             allows to log in automatically and log out from every device.
+        avatar_uid (UUID): The upload unique identifier to use as an avatar.
     """
 
     __tablename__ = "users"
@@ -28,6 +30,9 @@ class User(db.Model):
     )
     username: Mapped[str] = mapped_column(
         String(length=50), nullable=False, unique=True
+    )
+    display_name: Mapped[str] = mapped_column(
+        String(length=50), nullable=True
     )
     password: Mapped[str] = mapped_column(String(length=256), nullable=False)
     bio: Mapped[str] = mapped_column(Text, nullable=True)
@@ -38,6 +43,7 @@ class User(db.Model):
     session_uid: Mapped[Uuid] = mapped_column(
         Uuid(as_uuid=True), unique=True, default=uuid.uuid4
     )
+    avatar_uid: Mapped[Uuid] = mapped_column(Uuid(as_uuid=True), nullable=True)
 
     recipes: Mapped[list["Recipe"]] = relationship(
         "Recipe",
@@ -46,6 +52,12 @@ class User(db.Model):
         passive_deletes=True,
     )
 
+    uploads: Mapped[list["Upload"]] = relationship(
+        "Upload",
+        back_populates="author",
+        cascade="all, delete",
+        passive_deletes=True
+    )
     def hash_password(password: str):
         """
         Hash a password using argon2id.

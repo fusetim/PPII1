@@ -37,13 +37,14 @@ class Recipe(db.Model):
         nullable=True,
     )
     duration: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    illustration: Mapped[str] = mapped_column(Text, nullable=False)
+    illustration_uid: Mapped[Uuid] = mapped_column(Uuid(as_uuid=True), ForeignKey("user_uploads.upload_uid", ondelete="SET NULL"), nullable=True)
 
     ingredients = relationship("IngredientLink", back_populates="recipe")
     tags: Mapped[list["RecipeTag"]] = relationship(
         secondary="recipe_tag_links", back_populates="recipes"
     )
     author_account = relationship("User", back_populates="recipes")
+    illustration = relationship("Upload")
 
     def to_dict(self):
         rv = dict()
