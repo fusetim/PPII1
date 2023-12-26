@@ -117,3 +117,7 @@ def recipes():
                     #data.append(r)
                     data.insert(0, r)
         return render_template("result_recipes.html", data=data[:30], search=search)
+
+@app.route("/account")
+def account():
+    return "WiP"
