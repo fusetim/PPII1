@@ -99,7 +99,7 @@ def recipe_ingredients_amount(id):
     ingredient{code, name, co2, quantity, quantity_type}
     with co2 already taking the quantity into account,
     quantity being the value that must be displayed,
-    and quantity_type ()= QuantityType.name) being the unit of quantity
+    and quantity_type ()= QuantityType.name) being the unit of quantity.
 
     eg: "The recipe contains {quantity} {quantity_type} of {name}."
     """
@@ -111,7 +111,7 @@ def recipe_ingredients_amount(id):
             IngredientLink.quantity,
             IngredientLink.reference_quantity,
             QuantityType.name,
-            QuantityType.mass_equivalent
+            QuantityType.mass_equivalent,
         )
         .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
         .join(
@@ -128,9 +128,8 @@ def recipe_ingredients_amount(id):
         quantity,  # in quantity_type
         reference_quantity,  # in kg, can be None
         quantity_type,
-        mass_equivalent
+        mass_equivalent,
     ) in qry:
-
         if reference_quantity is not None:
             co2 = co2_per_kg * reference_quantity
         else:
@@ -157,7 +156,7 @@ def recipe_full_data(id):
         ], description}
     with ingredient[co2] already taking the quantity into account,
     ingredient[quantity] being the value that must be displayed,
-    and ingredient[quantity_type] ()= QuantityType.name) being the unit of quantity
+    and ingredient[quantity_type] ()= QuantityType.name) being the unit of quantity.
     """
     qry = (
         db.session.query(
@@ -167,7 +166,7 @@ def recipe_full_data(id):
             IngredientLink.quantity,
             IngredientLink.reference_quantity,
             QuantityType.name,
-            QuantityType.mass_equivalent
+            QuantityType.mass_equivalent,
         )
         .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
         .join(
@@ -184,9 +183,8 @@ def recipe_full_data(id):
         quantity,  # in quantity_type
         reference_quantity,  # in kg, can be None
         quantity_type,
-        mass_equivalent
+        mass_equivalent,
     ) in qry:
-
         if reference_quantity is not None:
             co2 = co2_per_kg * reference_quantity
         else:
