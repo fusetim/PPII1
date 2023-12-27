@@ -12,6 +12,13 @@ from recipes import RecipeNotFound, not_found
 bp = Blueprint("recipes", __name__)
 
 
+
+@bp.route("/add", methods=["POST"])
+def add():
+    pass    
+
+
+
 @bp.route("/delete/<uuid:id>", methods=["DELETE"])
 def delete_recipe(id):
     """
