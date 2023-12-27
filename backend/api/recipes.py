@@ -4,6 +4,8 @@ from models.recipe import Recipe
 from models.ingredient import Ingredient
 from models.ingredient_link import IngredientLink
 from models.quantity_type import QuantityType
+from models.recipe_tag import RecipeTag, recipe_tag_association
+from models.upload import Upload
 from db import db
 from search_table import get_recipe_table
 from lsh import normalize_str
@@ -42,7 +44,6 @@ def search_recipe(query):
             results.append(data)
             uid_set.add(recipe.recipe_uid)
     return jsonify(results)
-    
 
 
 @bp.route("/recipes")
@@ -50,8 +51,22 @@ def all_recipes():
     """
     test route: return all recipes (json)
     """
-    recipes = Recipe.query.all()
-    recipe_list = [recipe.to_dict() for recipe in recipes]
+    recipes = Recipe.query.options().all()
+    recipe_list = [
+        {
+            "type": "recipe",
+            "recipe_uid": recipe.recipe_uid,
+            "name": recipe.name,
+            "short_description": recipe.short_description,
+            "description": recipe.description,
+            "type": recipe.type,
+            "author": recipe.author,
+            "duration": recipe.duration,
+            # broken for some reason:
+            # "illustration": recipe.illustration,
+        }
+        for recipe in recipes
+    ]
     return jsonify(recipe_list)
 
 
@@ -77,10 +92,7 @@ def all_quantities():
 
 @bp.route("/recipe_info/<uuid:id>")
 def recipe_info(id):
-    """
-    Return the name, the short description and the description of
-    the recipe with UUID = id.
-    """
+    """Return the name, description & short_desc of the recipe with UUID = id."""
     recipe = Recipe.query.get(id)
     if recipe is None:
         raise RecipeNotFound(context="Not in DB.", payload={"code": id})
@@ -95,19 +107,10 @@ def recipe_info(id):
 @bp.route("/recipe_ingredients/<uuid:id>")
 def recipe_ingredients(id):
     """
-    Return the code, the name and the CO2 equivalent of the
-    ingredients from recipe with UUID = id.
-    They are formatted as json: ingredients{ingredient{code, name, co2}}
-    """
+    Return the code, name & CO2 equivalent of the ingredients from recipe
+    with UUID = id.
 
-    """
-    equivalent to following SQL statement:
-    
-    SELECT i.code, i.name, i.co2 
-    FROM ingredients AS i
-    JOIN ingredient_links AS il
-    ON i.code = il.ingredient_code
-    WHERE il.recipe_uid = id
+    They are formatted as json: ingredients{ingredient{code, name, co2}}
     """
     ingredients = (
         db.session.query(Ingredient.code, Ingredient.name, Ingredient.co2)
@@ -126,8 +129,9 @@ def recipe_ingredients(id):
 @bp.route("recipe_ingredients_amount/<uuid:id>")
 def recipe_ingredients_amount(id):
     """
-    Return info about the amount of ingredients in
-    the recipe with UUID = id, formatted as json:
+    Return info about the amount of ingredients in the recipe with UUID = id.
+
+    It is formatted as json:
     ingredient{code, name, co2, quantity, quantity_type}
     with co2 already taking the quantity into account,
     quantity being the value that must be displayed,
@@ -183,7 +187,7 @@ def recipe_ingredients_amount(id):
 def recipe_full_data(id):
     """
     Return most of the data about the recipe with UUID = id.
-    
+
     The result is formatted as json:
     recipe{recipe_uid, name, normalized_name, co2, ingredients{...}, description,
         duration, illustration, tags{...}
@@ -241,10 +245,14 @@ def recipe_full_data(id):
     # total CO2 amount for the recipe
     recipe_co2 = sum([ing["co2"] for ing in ingredients])
 
-    tag_qry = db.session.query(RecipeTag.recipe_tag_uid)
-
-    tags = 
-
+    # tags of the recipe
+    tag_qry = (
+        db.session.query(RecipeTag)
+        .join(RecipeTag.recipes)
+        .filter(Recipe.recipe_uid == id)
+        .all()
+    )
+    tags = [tag.to_dict() for tag in tag_qry]
 
     recipe = Recipe.query.get(id)
     recipe_data = {
@@ -255,16 +263,15 @@ def recipe_full_data(id):
         "ingredients": ingredients,
         "description": recipe.description,
         "duration": recipe.duration,
-        "illustration": recipe.illustration,
+        # broken for some reason
+        # "illustration": recipe.illustration,
         "tags": tags,
     }
     return jsonify(recipe_data)
 
 
 class RecipeNotFound(Exception):
-    """
-    Exception raised when a recipe is not found in the database.
-    """
+    """Exception raised when a recipe is not found in the database."""
 
     status_code = 404
 

@@ -27,6 +27,15 @@ class RecipeTag(db.Model):
         secondary="recipe_tag_links", back_populates="tags"
     )
 
+    def to_dict(self):
+        rv = {
+            "type": "recipe_tag",
+            "recipe_tag_uid": self.recipe_tag_uid,
+            "name": self.name,
+            "normalized_name": self.normalized_name,
+        }
+        return rv
+
 
 # Association table between recipes and tags
 recipe_tag_association = Table(
