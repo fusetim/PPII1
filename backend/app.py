@@ -59,7 +59,7 @@ def result_ingredients():
                 text(f"SELECT name, co2 FROM ingredients WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
     if search == "":
-        return render_template("result_ingredients.html", data=data, search=search, m1="", m2="")
+        return render_template("result_ingredients.html", data=data, search=search)
     
     elif codes == [] and other == []:
         return render_template("no_result_ingredients.html", search=search)
@@ -80,8 +80,73 @@ def result_ingredients():
                     #data.append(r)
                     data.insert(0, r)
         data.sort()
+        # nbres : nb de resultats affichés sur une meme page
+        nbres=10
 
-        return render_template("result_ingredients.html", data=data[:20], search=search, m1="équivalent co2 :", m2="par kg de produit")
+        if len(data)<=nbres:
+            arrows = """<section class="arrows">1 sur 1</section>"""
+            return render_template("result_ingredients.html", 
+                                   data=data, search=search, 
+                                   m1="équivalent co2 :", 
+                                   m2="par kg de produit", 
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1="", 
+                                   cf1="nolink", 
+                                   lf2="", 
+                                   cf2="nolink", 
+                                   numero="1", 
+                                   n_total="1")
+        else:
+            page = request.args.get("page")
+            if page == None:
+                page = 1
+            else : 
+                page = int(page)
+
+            if page == 1:
+                return render_template("result_ingredients.html", 
+                                   data=data[:nbres], search=search, 
+                                   m1="équivalent co2 :", 
+                                   m2="par kg de produit", 
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1="", 
+                                   cf1="nolink", 
+                                   lf2=f"/search_ingredients?search={search}&page={page+1}", 
+                                   cf2="arrow", 
+                                   numero=str(page), 
+                                   n_total=str(len(data)//nbres+1))
+            elif page >= len(data)//nbres+1 :
+                return render_template("result_ingredients.html", 
+                                   data=data[(len(data)//nbres)*nbres:], search=search, 
+                                   m1="équivalent co2 :", 
+                                   m2="par kg de produit", 
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1=f"/search_ingredients?search={search}&page={page-1}", 
+                                   cf1="arrow", 
+                                   lf2="", 
+                                   cf2="nolink", 
+                                   numero=str(len(data)//nbres+1),
+                                   n_total=str(len(data)//nbres+1))
+            else :
+                return render_template("result_ingredients.html", 
+                                   data=data[(page-1)*nbres:(page)*nbres], search=search, 
+                                   m1="équivalent co2 :", 
+                                   m2="par kg de produit", 
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1=f"/search_ingredients?search={search}&page={page-1}", 
+                                   cf1="arrow", 
+                                   lf2=f"/search_ingredients?search={search}&page={page+1}", 
+                                   cf2="arrow", 
+                                   numero=str(page), 
+                                   n_total=str(len(data)//nbres+1))
 
 
 @app.route("/search_recipes")
@@ -116,7 +181,7 @@ def recipes():
                 if r not in data:
                     #data.append(r)
                     data.insert(0, r)
-        return render_template("result_recipes.html", data=data[:30], search=search)
+        return render_template("result_recipes.html", data=data[:20], search=search)
 
 @app.route("/account")
 def account():

@@ -241,3 +241,11 @@ nav {
 .link:active{
     color: #4b3a24;
 }
+.arrows{
+    display: flex;
+    flex-direction: row;
+    font-size: 0.8em;
+}
+.nolink{
+    color: #a39687;
+}

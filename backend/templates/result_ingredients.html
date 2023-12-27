@@ -9,12 +9,12 @@
         <section class="structure">
             <nav>
                 <a class="logo" href="/home">CuliVert</h1>
-                <a class="currenttab" href="/search_ingredients?search={{search}}">Ingrédients</a>
-                <a class="tab" href="/search_recipes?search={{search}}">Recettes</a>
+                <a class="currenttab" href="/search_ingredients?search={{search}}&page=1">Ingrédients</a>
+                <a class="tab" href="/search_recipes?search={{search}}&page=1">Recettes</a>
                 <a class="tab" href="/account">Compte</a>
             </nav>
             <main>
-                <form class="search_ingredients" action="/search_ingredients" method="GET">
+                <form class="search_ingredients" action="/search_ingredients?page=1" method="GET">
                     <input type="text" value="{{search}}" placeholder="recherchez un produit..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
@@ -32,6 +32,12 @@
                     </div> 
                 </div>
                 {%endfor%} 
+                <!-- affichage des pages -->
+                <section class="arrows">
+                    <a class="{{cf1}}" href="{{lf1}}">{{f1}}</a>
+                    <p>{{numero}} {{sur}} {{n_total}}</p>
+                    <a class="{{cf2}}" href="{{lf2}}">{{f2}}</a>
+                </section>
             </main>
         </section>
     </body>
