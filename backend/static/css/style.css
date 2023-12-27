@@ -117,10 +117,14 @@ body {
     margin-bottom: 1em;
     font-size: 2em;
 }
+.produit{
+    width: 77%;
+    font-size: 1.4em; 
+    color: #a39687;
+}
 .message{
     display: flex;
     flex-direction: column;
-    margin-left: 77%;
     margin-bottom: 1em;
     color: #a39687;
 }
@@ -249,4 +253,10 @@ nav {
 }
 .nolink{
     color: #a39687;
+}
+.numero{
+    font-size: 1em;
+    color: #685a49;
+    margin-left: 1em;
+    margin-right: 1em;
 }

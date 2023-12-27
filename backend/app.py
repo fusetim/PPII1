@@ -79,16 +79,34 @@ def result_ingredients():
                     r = (r[0], round(r[1], 2))
                     #data.append(r)
                     data.insert(0, r)
-        data.sort()
+        sort_type = request.args.get("sort_type")
+        if sort_type in (None, ""):
+            sort_type = 0
+        else:
+            sort_type = int(sort_type)
+        
+        # on trie data comme voulu (0 : par nom ; 1 par co2 croissant ; 2 par co2 decroissant)
+        if sort_type == 0:
+            data.sort(key= lambda a:a[0])
+            co2sort = 2
+        elif sort_type == 1:
+            data.sort(key=lambda a:a[1], reverse=False)
+            co2sort = 2
+        else :
+            data.sort(key=lambda a:a[1], reverse=True)
+            co2sort = 1
         # nbres : nb de resultats affichés sur une meme page
         nbres=10
 
         if len(data)<=nbres:
             arrows = """<section class="arrows">1 sur 1</section>"""
             return render_template("result_ingredients.html", 
-                                   data=data, search=search, 
+                                   data=data, search=search,
+                                   produit="Produit", 
                                    m1="équivalent co2 :", 
                                    m2="par kg de produit", 
+                                   co2sort=co2sort,
+                                   sort_type=sort_type,
                                    f1="<",
                                    f2=">",
                                    sur="sur",
@@ -116,26 +134,32 @@ def result_ingredients():
             if page == 1:
                 return render_template("result_ingredients.html", 
                                    data=data[:nbres], search=search, query=query,
-                                   m1="équivalent co2 :", 
+                                   produit="Produit",
+                                   m1="équivalent co2", 
                                    m2="par kg de produit", 
+                                   co2sort=co2sort,
+                                   sort_type=sort_type,
                                    f1="<",
                                    f2=">",
                                    sur="sur",
                                    lf1="#", 
                                    cf1="nolink", 
-                                   lf2=f"/search_ingredients?search={query}&page={page+1}", 
+                                   lf2=f"/search_ingredients?search={query}&page={page+1}&sort_type={sort_type}", 
                                    cf2="arrow", 
                                    numero=str(page), 
                                    n_total=str(len(data)//nbres+1))
             elif page >= len(data)//nbres+1 :
                 return render_template("result_ingredients.html", 
                                    data=data[(len(data)//nbres)*nbres:], search=search, query=query,
-                                   m1="équivalent co2 :", 
+                                   produit="Produit",
+                                   m1="équivalent co2", 
                                    m2="par kg de produit", 
+                                   co2sort=co2sort,
+                                   sort_type=sort_type,
                                    f1="<",
                                    f2=">",
                                    sur="sur",
-                                   lf1=f"/search_ingredients?search={query}&page={page-1}", 
+                                   lf1=f"/search_ingredients?search={query}&page={page-1}&sort_type={sort_type}", 
                                    cf1="arrow", 
                                    lf2="#", 
                                    cf2="nolink", 
@@ -144,14 +168,17 @@ def result_ingredients():
             else :
                 return render_template("result_ingredients.html", 
                                    data=data[(page-1)*nbres:(page)*nbres], search=search, query=query,
-                                   m1="équivalent co2 :", 
+                                   produit="Produit",
+                                   m1="équivalent co2", 
                                    m2="par kg de produit", 
+                                   co2sort=co2sort,
+                                   sort_type=sort_type,
                                    f1="<",
                                    f2=">",
                                    sur="sur",
-                                   lf1=f"/search_ingredients?search={query}&page={page-1}", 
+                                   lf1=f"/search_ingredients?search={query}&page={page-1}&sort_type={sort_type}", 
                                    cf1="arrow", 
-                                   lf2=f"/search_ingredients?search={query}&page={page+1}", 
+                                   lf2=f"/search_ingredients?search={query}&page={page+1}&sort_type={sort_type}", 
                                    cf2="arrow", 
                                    numero=str(page), 
                                    n_total=str(len(data)//nbres+1))

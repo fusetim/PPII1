@@ -18,12 +18,17 @@
                     <input type="text" value="{{search}}" placeholder="recherchez un produit..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
+                <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
                 
                 <!-- message est soit "" soit "equivalent co2" (sert à effacer  le message si on a aucune recherche en cours)-->
-                <div class="message">
-                    <p class=m1>{{m1}}</p>
-                    <p class="m2">{{m2}}</p>
+                <div class="row_ingredient">
+                    <a href="/search_ingredients?search={{search}}&page=1" class="produit">{{produit}}</a>
+                    <a href="/search_ingredients?search={{search}}&page=1&sort_type={{co2sort}}" class="message">
+                        <p class=m1>{{m1}}</p>
+                        <p class="m2">{{m2}}</p>
+                    </a>
                 </div>
+
                 {% for ingredient in data %}
                 <div class="affichage">
                     <div class="row_ingredient">
@@ -35,7 +40,7 @@
                 <!-- affichage des pages -->
                 <section class="arrows">
                     <a class="{{cf1}}" href={{lf1}}>{{f1}}</a>
-                    <p>{{numero}} {{sur}} {{n_total}}</p>
+                    <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
                     <a class="{{cf2}}" href={{lf2}}>{{f2}}</a>
                 </section>
             </main>
