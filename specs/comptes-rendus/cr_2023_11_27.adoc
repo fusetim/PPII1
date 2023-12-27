@@ -1,0 +1,82 @@
+= CR Réunion - 27/11/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi |TELECOM Nancy, 1.12 |27/11/2023 12h10-13h
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Point sur l'avancement des tâches
+
+* Point sur la gestion d'ENACTUS
+** Points sur les réunions à venir
+** Points sur les documents à remplir pour ENACTUS (et leur deadline).
+
+* Nommer le projet
+
+== Échanges
+
+=== Avancements
+
+* Quelques difficultés pour avancer entre autre car certains participants étaient très occupés 
+(Forum, Réunion de Famille, ...).
+
+* Routes de recherche finalisées et algorithmes aussi.
+
+* Avancements front-end : 
+** grid, flex concepts à apprendre, drawer en cours, ..
+
+* Avancements backend : prise en main en cours
+
+=== ENACTUS
+
+* Échange autour du blason et des réunions.
+
+=== Nom du projet
+
+* ÉcoRecette, SustainaBites, propositions de ChatGPT
+* YoKi (pas du tout inspiré)
+* EcoChoix
+* EcoCO2Gourmet
+* Carbo
+* Déméterre
+* Révolution gourmande -- soutenez le régime.
+* Géphago
+* Atémentaume
+* Gustatik'
+
+== Décisions
+
+=== Avancements
+
+* On continue...
+
+=== ENACTUS
+
+* Sacha prend en charge la réunion du 7 décembre avec ENACTUS (15h)
+* Timothée prend la charge de la réunion du 14 décembre avec Enactus (14h)
+* Sacha s'occupe du Lean Canvas.
+
+=== Nom du projet
+
+* A choisir la prochaine fois
+
+== TODO-List
+
+Allez voir sur Github
+
+== Pour la suite
+
+Prochaine réunion : Lundi 4 décembre à 12h, fin prévu avant 13h.
+
+=== Annexes

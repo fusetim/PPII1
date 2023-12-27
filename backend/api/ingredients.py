@@ -1,8 +1,9 @@
-from flask import Blueprint, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import NoResultFound, MultipleResultsFound
+from flask import Blueprint, jsonify
+from sqlalchemy import select
 from models.ingredient import Ingredient
 from db import db
+from search_table import get_ingredient_table
+from lsh import normalize_str
 
 # Creates the ingredients "router" (aka blueprint in Flask)
 bp = Blueprint("ingredients", __name__)
@@ -29,10 +30,43 @@ def get_ingredient(code):
     return jsonify(ingredient.to_dict())
 
 
+@bp.route("/search/<string:query>")
+def search_ingredient(query):
+    """Search for an ingredient based on a query string."""
+    table = get_ingredient_table()
+    normalized_query = normalize_str(query)
+    codes = table.get(normalized_query, 10)
+    results = []
+    code_set = set()
+    for code in codes:
+        ingredient = db.session.get(Ingredient, code)
+        if ingredient is not None:
+            data = ingredient.to_dict()
+            data["origin"] = "lsh-search"
+            results.append(data)
+            code_set.add(code)
+    for ingredient in (
+        db.session.execute(
+            select(Ingredient)
+            .where(Ingredient.normalized_name.like(f"%{normalized_query}%"))
+            .limit(min(10, 10 - len(results)))
+        )
+        .scalars()
+        .all()
+    ):
+        if ingredient.code not in code_set:
+            data = ingredient.to_dict()
+            data["origin"] = "db-search"
+            results.append(data)
+            code_set.add(ingredient.code)
+    return jsonify(results)
+
+
 class IngredientNotFound(Exception):
     """
     Exception raised when an ingredient is not found in the database.
     """
+
     status_code = 404
 
     def __init__(self, context, status_code=None, payload=None):
@@ -44,8 +78,10 @@ class IngredientNotFound(Exception):
 
     def to_dict(self):
         rv = dict(self.payload or ())
-        rv['reason'] = "Ingredient not found, it might not be in the database, or been deleted."
-        rv['context'] = self.context
+        rv[
+            "reason"
+        ] = "Ingredient not found, it might not be in the database, or been deleted."
+        rv["context"] = self.context
         return rv
 
 

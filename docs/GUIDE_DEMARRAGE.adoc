@@ -1,0 +1,133 @@
+= MISE EN ROUTE
+
+Cette page vous présentera les bases du projet et comment configurer un environnement de développement. Si vous souhaitez déployer cette application, veuillez consulter le link:./DEPLOY.adoc[Page de déploiement].
+
+== Petite introduction
+
+Ce projet est une application web, qui permet aux utilisateurs de créer et de rechercher des recettes pour obtenir leurs instructions mais surtout leur empreinte carbone. L'application est construite en deux parties, le backend et le frontend.
+
+Le backend est construit à l'aide de Flask, un framework python pour développer la partie serveur de l'application, qui dessert les routes API et le SSR (Server Side Rendering) du frontend.
+
+Le frontend est construit en utilisant Typescript, sans aucun framework, mais simplement une simple combinaison de HTML, SASS et Typescrypt. Le bundler, Parcel, est utilisé pour produire la version finale du frontend, qui sera utilisée comme modèle par l'application Flask.
+
+Maintenant que vous avez un petit aperçu du projet, voyons comment mettre en place un environnement de développement.
+
+=== Pré-requis
+
+Nous supposerons ici que vous disposez d'un système *nix et que vous avez une connaissance de base de la ligne de commande. Le guide est écrit sur Arch Linux, mais devrait être facilement adaptable à d'autres distributions. Pour les utilisateurs Mac, certaines modifications pourraient être nécessaires, mais le guide devrait être globalement le même.
+
+Plus important encore, vous devrez savoir comment configurer une base de données PostgresQL et comment créer un utilisateur et une base de données avec les autorisations appropriées. Nous n’aborderons pas cette partie ici, mais vous pouvez trouver de nombreux tutoriels sur internet pour le faire.
+
+==== Installation des packages pré-requis
+
+Vous devrez installer python3, pip, nodejs, npm et git. Sous Arch Linux, vous pouvez les installer avec la commande suivante :
+
+[source, shell]
+----
+$ sudo pacman -Syu python python-pip nodejs npm git
+----
+
+==== Clonage du dépôt
+
+Maintenant, vous devrez cloner le référentiel. Vous pouvez le faire avec la commande suivante :
+
+[source, shell]
+----
+$ git clone git@github.com:fusetim/PPII1.git # Si vous avez une clé ssh
+$ git clone https://github.com/fusetim/PPII1.git # Sinon, utilisez le lien HTTP
+----
+
+==== Configuration de la partie frontend
+
+Maintenant, vous devrez installer les dépendances de la partie frontend. Vous pouvez le faire avec la commande suivante :
+
+[source, shell]
+----
+$ cd PPII1/frontend
+$ npm install
+----
+
+Cette commande installera toutes les dépendances de la partie frontend, y compris le bundler Parcel.
+
+==== Mise en place de la partie backend
+
+Maintenant, vous devrez installer les dépendances de la partie backend. Vous pouvez le faire avec la commande suivante :
+
+[source, shell]
+----
+$ cd ../backend
+$ python -m venv .venv # Utilisez un environnement virtuel pour éviter les conflits avec votre système
+$ source .venv/bin/activate # Activer l'environnement virtuel
+$ pip install -r requirements.txt # Installer les dépendances
+----
+
+==== Configuration de la base de données
+
+Vous êtes maintenant prêt à développer le projet !
+Vous vous demandez peut-être comment lancer l'application.
+
+Tout d’abord, vous devrez exécuter une base de données PostgresQL, mais nous ne couvrirons pas cette partie ici. Vous pouvez trouver de nombreux tutoriels sur internet pour le faire.
+À partir de maintenant, nous supposerons que vous disposez d'une base de données PostgresQL en cours d'exécution sur votre système et que vous avez créé un utilisateur « ppii1 » et une base de données « ppii1 » avec les autorisations appropriées.
+
+Vous devrez d'abord configurer la connexion à la base de données que Flask devra utiliser, vous devrez donc copier le modèle `/backend/config_dev.toml` dans
+`/backend/config.toml` et modifiez le fichier pour qu'il corresponde à la configuration de votre base de données.
+
+Vous devez toujours amorcer cette base de données avec le schéma et certaines données. Vous pouvez le faire avec la commande suivante (dans le répertoire `/backend`) :
+
+[source, shell]
+----
+$ python -m flask db upgrade
+----
+
+Cette commande créera le schéma pour toutes les tables nécessaires.
+Maintenant, vous pouvez aller télécharger la base de données Agribalyse `Agribalyse Synthese 3.1.csv` pour l'importer dans la base de données. Vous pouvez le retrouver ici : link:https://data.ademe.fr/datasets/agribalyse-31-synthese[]
+
+Une fois téléchargé, vous pouvez l'importer dans la base de données avec le script `/scripts/Script_ingredients.py`. Vous devrez le modifier pour qu'il corresponde à la configuration de votre base de données et au chemin correct vers le fichier csv.
+
+Ensuite, vous pouvez l'exécuter avec la commande suivante (dans le répertoire `/scripts`) :
+
+[source, shell]
+----
+$ pip install -r requirements.txt # Installer les dépendances
+$ python Script_ingredients.py # Exécutez le script
+----
+
+Youpi, votre base de données incluait tous les ingrédients d'Agribalyse !
+Vous souhaiterez peut-être ajouter vous-même des recettes supplémentaires à la base de données.
+
+==== Construire le frontend
+
+Maintenant, vous devrez créer la partie frontend. Vous pouvez le faire avec la commande suivante (dans le répertoire `/frontend`) :
+
+[source, shell]
+----
+$ npm run build
+----
+
+[IMPORTANT]
+--
+Si vous souhaitez modifier le frontend, vous souhaiterez peut-être exécuter la commande suivante à la place, pour disposer d'un rechargement à chaud et d'un serveur Web :
+
+[source, shell]
+----
+$ npm run start
+----
+--
+
+==== Exécuter le backend
+
+Voilà, le frontend est prêt à être utilisé. Vous pourrez exécuter la partie backend.
+
+Tout d'abord, vous devrez copier le frontend vers le backend pour l'utiliser (dans le répertoire `/`) :
+
+[source, shell]
+----
+$ cp -r frontend/dist/* backend/
+----
+
+Ensuite, vous devrez exécuter la partie backend. Vous pouvez le faire avec la commande suivante (dans le répertoire `/backend`) :
+----
+$ python -m flask run
+----
+
+Apprécier! Vous pouvez maintenant accéder à l'application sur link:http://localhost:5000[].

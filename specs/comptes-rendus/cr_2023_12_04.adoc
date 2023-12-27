@@ -1,0 +1,71 @@
+= CR Réunion - 04/12/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi |TELECOM Nancy, 1.15 |04/12/2023 12h10-13h
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Nommer le projet
+
+* Mise au point
+
+* Point sur l'avancement des tâches
+
+== Échanges
+
+=== Nom du projet
+
+* Quelques noms sont proposés, notamment Culivert.
+
+=== Avancements & Mise au point
+
+* Anim'Est a mobilisé une bonne partie des troupes, par conséquent il a été difficile pour le groupe 
+d'avancer sur les tâches.
+
+* Rappel fait que nous somme sur la deuxième moitié du planning du projet : 5ème semaine en cours 
+pour encore 4 semaines de travail. Pour le moment l'application est encore loin d'être finalisé
+et il serait bien qu'on mette en commun toutes nos forces pour finaliser ce projet en temps et en 
+heure.
+
+* Les tâches encore en cours ont été rediscutées afin d'être redécoupées. Ces tâches doivent 
+impérativement être terminée pour la semaine suivante.
+
+* Des temps de "Developpement ensemble" afin de se motiver ensemble ont été proposés (par Clément),
+mais pour cette semaine semble compliqué à mettre en place.
+
+== Décisions
+
+=== Nom du projet
+ 
+* Culivert à l'unanimité
+
+=== Avancements
+
+* Panel admin toujours par Guillaume
+* Recherche ingrédient et résultats ingrédients par Sacha pour la fin de la semaine
+* Continuation du travail de Clément sur l'API
+* Page recette pour Timothée.
+* Diapo Enactus à faire par Timothée
+* Sacha s'occupe de faire la Lean Canvas, refaire le blason avec le bon nom et finalement
+renommer tous ce qui faut sur le drive Enactus avec le bon nom.
+
+== TODO-List
+
+Allez voir sur Github
+
+== Pour la suite
+
+Prochaine réunion : Mardi 12 décembre à 11h, fin prévu avant 12h.
+
+=== Annexes

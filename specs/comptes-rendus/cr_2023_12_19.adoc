@@ -1,0 +1,70 @@
+= CR Entrevue avec M. Bouthier pour conseils - 19/12/2023
+
+|===
+|Motif |Lieu| Date
+
+|Entrevue impromptue pour conseils sur la partie gestion de projet |TELECOM Nancy, Bureau de M. Bouthier |19/12/2023 10h10-10h40
+|===
+
+== Participants
+
+* M. Christophe BOUTHIER
+* M. Timothée BRILLAUD
+
+== Objectifs
+
+Face à la difficulté de diriger le projet, et voyant les échéances se rapprocher, 
+j'ai décidé en tant que chef de projet de demander conseils, pour motiver les équipes,
+comment organiser la fin du projet et comment faire ce qui est en mon devoir pour 
+éliminer mes responsabilités propres vis-à-vis au projet en cas d'échec.
+
+== Échanges
+
+* Après un bref récapitulatif sur l'état du projet actuel, j'ai détaillé mes sentiments sur 
+l'avancement de celui-ci :
+** Un avancement très lent, voire trop lent qui pourrait selon moi empêcher le projet d'être 
+finalisé à temps pour le rendu du 8 janvier.
+** Une équipe qui ne possède effectivement pas la majorité des compétences au début du projet,
+et qui doit donc découvrir au fur et à mesure du projet, la façon de le mener à bien. +
+En praticulier, on peut regretter les cours tardifs de WEB, qui ont participé à son étalement 
+dans le temps.
+** Un investissement de l'équipe qui me semble difficile à estimer malheureusement, mais qui
+à mon humble avis est trop faible pour les objectifs du PPII, d'où la demande de conseils 
+pour motiver cette équipe et mener à bien le projet pour la date de rendue.
+** La difficulté de motiver une équipe dont les compétences sont bien inférieures à la mienne, et 
+qui crée dont des difficultés sur le partage de connaissances : pas ou peu de discussions internes
+sur la partie technique en dehors des réunions, l'optimisme (je pense démesuré) des équipes sur 
+l'accomplissement de leur tâche.
+** Une certaine difficulté de communiquer avec les encadrants du PPII, ce qui me laisse un peu seul contre tous.
+
+* Les conseils suivants ont été formulés par M. Bouthier : 
+** Rappeler que le PPII est un module d'enseignement : la validation ou non du module peut être 
+différenciée si un deséquilibre majeur intervient entre les investissements des différents membres. La non-validation entraine le caractère aménagé de la suite du cursus, il faudra alors effectuer le PPII1
+plus tardivement dans votre scolarité, éventuellement en même temps que d'autre projet...
+** Le but du PPII est de mettre en pratique les apprentissages techniques **et** de gestion de 
+projet avant tout, la finalisation du projet n'est pas le point le plus important.
+** Afin de ne pas être responsable d'un éventuel manque de travail de quelqu'un, il est essentiel que :
+un je ne fasse pas tout tout seul -- et c'est jusque là l'objectif escompté par ma répartition des tâches, en ne prennant pas la responsabilité des tâches essentielles, qui seraient également les plus
+proches de l'enseignement de base, et deux que les tâches soient effectivement donnée et claires --
+ce que j'espère que j'ai fait par le passé, et si besoin rectifié (ex: Routes API du backend, où j'ai clarifié les spécifications des routes et donné un exemple pratique de l'implémentation d'une route).
+** L'utilisation ou en tout cas la création d'un diagramme de Gantt, même si tard dans le projet est encouragé, car il pourra servir lors de la soutenance afin de démontrer ce qui a été mis en oeuvre et pourquoi le projet a éventuellement échoué. Le WBS / Matrice RACI / Github Project sera d'une grande
+aide également. Il est essentielle de garder une trace des différents événements survenus dans le projet : il ne sont pas la pour juger quelqu'un (sauf cas exceptionnel).
+** Les comptes-rendus de réunion sont essentiels pour établir les responsabilités et la bonne tenue de route du projet. Il ne faut pas hésiter à clarifier des deadline non tenus et ses motifs : non tenue car ce n'est pas ce qui a été demandé qui a été réalisé, ... **-> Point important voir décisions**
+
+== Décisions
+
+* La décision est prise de commencer un diagramme de Gantt bien que tardive à ce niveau. 
+
+* La décision est prise de commencer l'écriture d'une note corrective sur les précédents comptes-rendus, afin de formaliser des éléments manquants (motifs de l'allongement des taches, difficultés rencontrées, ...). Cette note sera review par toutes les parties bien évidemment.
+
+* J'incite une nouvelle fois, toute l'équipe (si elle lit ce CR) à faire part des difficultés qui 
+l'empêchent d'avancer, afin de : 1 - le savoir et le prévoir si besoin, 2 - vous guidez si possible.
+
+* Écriture de ce compte-rendu pour être entièrement transparent avec le reste de l'équipe.
+
+== TODO-list
+
+* Diagramme de Gantt à réaliser avant la fin de la semaine.
+* Note corrective à faire au plus vite, de préférence avant la fin de la semaine, afin que toute l'équipe puisse y réfléchir et donne ses avis avant d'être merge. **Impérativement avant la prochaine
+réunion**.
+* Écriture du compte rendu.
