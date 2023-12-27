@@ -150,15 +150,21 @@ def recipe_ingredients_amount(id):
 @bp.route("recipe_full_data/<uuid:id>")
 def recipe_full_data(id):
     """
-    Return all the data about the recipe with UUID = id, formatted as json:
-    recipe{recipe_uid, name, co2, ingredients[
-            ingredient{code, name, co2, quantity, quantity_type}
-        ], description}
-    with ingredient[co2] already taking the quantity into account,
-    ingredient[quantity] being the value that must be displayed,
-    and ingredient[quantity_type] ()= QuantityType.name) being the unit of quantity.
+    Return most of the data about the recipe with UUID = id.
+    
+    The result is formatted as json:
+    recipe{recipe_uid, name, normalized_name, co2, ingredients{...}, description,
+        duration, illustration, tags{...}
+    }
+    ingredient{code, name, co2, quantity, quantity_type}
+    tag{recipe_tag_uid, name, normalized_name}
+
+    ingredient[co2] already takes the quantity into account,
+    ingredient[quantity] is the value that must be displayed,
+    and ingredient[quantity_type] ()= QuantityType.name) is the quantity unit .
     """
-    qry = (
+
+    ing_qry = (
         db.session.query(
             Ingredient.code,
             Ingredient.name,
@@ -184,7 +190,7 @@ def recipe_full_data(id):
         reference_quantity,  # in kg, can be None
         quantity_type,
         mass_equivalent,
-    ) in qry:
+    ) in ing_qry:
         if reference_quantity is not None:
             co2 = co2_per_kg * reference_quantity
         else:
@@ -203,13 +209,22 @@ def recipe_full_data(id):
     # total CO2 amount for the recipe
     recipe_co2 = sum([ing["co2"] for ing in ingredients])
 
+    tag_qry = db.session.query(RecipeTag.recipe_tag_uid)
+
+    tags = 
+
+
     recipe = Recipe.query.get(id)
     recipe_data = {
         "recipe_uid": recipe.recipe_uid,
         "name": recipe.name,
+        "normalized_name": recipe.normalized_name,
         "co2": recipe_co2,
         "ingredients": ingredients,
         "description": recipe.description,
+        "duration": recipe.duration,
+        "illustration": recipe.illustration,
+        "tags": tags,
     }
     return jsonify(recipe_data)
 
