@@ -244,6 +244,8 @@ nav {
 .arrows{
     display: flex;
     flex-direction: row;
+    font-size: 1.5em;
+    color: #685a49;
 }
 .nolink{
     color: #a39687;

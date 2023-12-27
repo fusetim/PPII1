@@ -105,9 +105,17 @@ def result_ingredients():
             else : 
                 page = int(page)
 
+            # on recrée le format mot1+mo2+... pour ne pas que au passage d'une page à l'autre
+            # on ne garde que le premier mot de la recherche (pour qu'il n'y ait pas d'espace dans l'url)
+            query = ""
+            for c in search:
+                if c == " ":
+                    query += "+"
+                else:
+                    query += c
             if page == 1:
                 return render_template("result_ingredients.html", 
-                                   data=data[:nbres], search=search, 
+                                   data=data[:nbres], search=search, query=query,
                                    m1="équivalent co2 :", 
                                    m2="par kg de produit", 
                                    f1="<",
@@ -115,19 +123,19 @@ def result_ingredients():
                                    sur="sur",
                                    lf1="#", 
                                    cf1="nolink", 
-                                   lf2=f"/search_ingredients?search={search}&page={page+1}", 
+                                   lf2=f"/search_ingredients?search={query}&page={page+1}", 
                                    cf2="arrow", 
                                    numero=str(page), 
                                    n_total=str(len(data)//nbres+1))
             elif page >= len(data)//nbres+1 :
                 return render_template("result_ingredients.html", 
-                                   data=data[(len(data)//nbres)*nbres:], search=search, 
+                                   data=data[(len(data)//nbres)*nbres:], search=search, query=query,
                                    m1="équivalent co2 :", 
                                    m2="par kg de produit", 
                                    f1="<",
                                    f2=">",
                                    sur="sur",
-                                   lf1=f"/search_ingredients?search={search}&page={page-1}", 
+                                   lf1=f"/search_ingredients?search={query}&page={page-1}", 
                                    cf1="arrow", 
                                    lf2="#", 
                                    cf2="nolink", 
@@ -135,15 +143,15 @@ def result_ingredients():
                                    n_total=str(len(data)//nbres+1))
             else :
                 return render_template("result_ingredients.html", 
-                                   data=data[(page-1)*nbres:(page)*nbres], search=search, 
+                                   data=data[(page-1)*nbres:(page)*nbres], search=search, query=query,
                                    m1="équivalent co2 :", 
                                    m2="par kg de produit", 
                                    f1="<",
                                    f2=">",
                                    sur="sur",
-                                   lf1=f"/search_ingredients?search={search}&page={page-1}", 
+                                   lf1=f"/search_ingredients?search={query}&page={page-1}", 
                                    cf1="arrow", 
-                                   lf2=f"/search_ingredients?search={search}&page={page+1}", 
+                                   lf2=f"/search_ingredients?search={query}&page={page+1}", 
                                    cf2="arrow", 
                                    numero=str(page), 
                                    n_total=str(len(data)//nbres+1))
