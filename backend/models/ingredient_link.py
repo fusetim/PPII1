@@ -17,10 +17,12 @@ class IngredientLink(db.Model):
         ingredient_code: The ingredient identifier.
         quantity: The quantity of the ingredient.
         quantity_type_uid: The UUID of the type of quantity (mass, volume, etc.)
-        reference_quantity: The reference quantity (always in kg), that is used to compute the
-        equivalent Co2 emission. If NULL, the reference quantity should be computed using the
-        quantity_type (and use a conversion mechanism) and the quantity.
-        display_name: The name of the ingredient as it should be displayed on the recipe page.
+        reference_quantity: The reference quantity (always in kg), that is used
+            to compute the equivalent Co2 emission. If NULL, the reference
+            quantity should be computed using the quantity_type (and use a
+            conversion mechanism) and the quantity.
+        display_name: The name of the ingredient as it should be displayed on
+            the recipe page.
     """
 
     __tablename__ = "ingredient_links"
