@@ -33,7 +33,7 @@ app.teardown_appcontext(save_search_tables)
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return redirect("/home")
 
 
 @app.route("/home", methods=("GET",))
