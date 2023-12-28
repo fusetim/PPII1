@@ -93,11 +93,11 @@ def result_ingredients():
         elif sort_type == 1:
             data.sort(key=lambda a:a[1], reverse=False)
             co2sort = 2
-            triangle = "/\\"
+            triangle = "▲"
         else :
             data.sort(key=lambda a:a[1], reverse=True)
             co2sort = 1
-            triangle = "\\/"
+            triangle = "▼"
         # nbres : nb de resultats affichés sur une meme page
         nbres=10
 
