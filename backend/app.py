@@ -89,12 +89,15 @@ def result_ingredients():
         if sort_type == 0:
             data.sort(key= lambda a:a[0])
             co2sort = 2
+            triangle = ""
         elif sort_type == 1:
             data.sort(key=lambda a:a[1], reverse=False)
             co2sort = 2
+            triangle = "/\\"
         else :
             data.sort(key=lambda a:a[1], reverse=True)
             co2sort = 1
+            triangle = "\\/"
         # nbres : nb de resultats affichés sur une meme page
         nbres=10
 
@@ -103,7 +106,7 @@ def result_ingredients():
             return render_template("result_ingredients.html", 
                                    data=data, search=search,
                                    produit="Produit", 
-                                   m1="équivalent co2 :", 
+                                   m1=f"équivalent co2    {triangle}", 
                                    m2="par kg de produit", 
                                    co2sort=co2sort,
                                    sort_type=sort_type,
@@ -135,7 +138,7 @@ def result_ingredients():
                 return render_template("result_ingredients.html", 
                                    data=data[:nbres], search=search, query=query,
                                    produit="Produit",
-                                   m1="équivalent co2", 
+                                   m1=f"équivalent co2    {triangle}", 
                                    m2="par kg de produit", 
                                    co2sort=co2sort,
                                    sort_type=sort_type,
@@ -152,7 +155,7 @@ def result_ingredients():
                 return render_template("result_ingredients.html", 
                                    data=data[(len(data)//nbres)*nbres:], search=search, query=query,
                                    produit="Produit",
-                                   m1="équivalent co2", 
+                                   m1=f"équivalent co2    {triangle}", 
                                    m2="par kg de produit", 
                                    co2sort=co2sort,
                                    sort_type=sort_type,
@@ -169,7 +172,7 @@ def result_ingredients():
                 return render_template("result_ingredients.html", 
                                    data=data[(page-1)*nbres:(page)*nbres], search=search, query=query,
                                    produit="Produit",
-                                   m1="équivalent co2", 
+                                   m1=f"équivalent co2    {triangle}", 
                                    m2="par kg de produit", 
                                    co2sort=co2sort,
                                    sort_type=sort_type,

@@ -121,12 +121,20 @@ body {
     width: 77%;
     font-size: 1.4em; 
     color: #a39687;
+    text-decoration: none;
+}
+.produit:active{
+    color: #4b3a24;
 }
 .message{
     display: flex;
     flex-direction: column;
     margin-bottom: 1em;
     color: #a39687;
+    text-decoration: none;
+}
+.message:active{
+    color: #4b3a24;
 }
 .m1{
     margin: 0;
@@ -248,11 +256,19 @@ nav {
 .arrows{
     display: flex;
     flex-direction: row;
+    margin-left: 38%;
     font-size: 1.5em;
     color: #685a49;
 }
+.arrow{
+    color: #685a49;
+    margin-top: 1em;
+    text-decoration: none;
+}
 .nolink{
     color: #a39687;
+    margin-top: 1em;
+    text-decoration: none;
 }
 .numero{
     font-size: 1em;
