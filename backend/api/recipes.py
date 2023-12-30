@@ -9,6 +9,7 @@ from models.upload import Upload
 from db import db
 from search_table import get_recipe_table
 from lsh import normalize_str
+from util.upload_helper import get_upload_url
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
@@ -62,8 +63,7 @@ def all_recipes():
             "type": recipe.type,
             "author": recipe.author,
             "duration": recipe.duration,
-            # broken for some reason:
-            # "illustration": recipe.illustration,
+            "illustration": get_upload_url(recipe.illustration),
         }
         for recipe in recipes
     ]
@@ -263,8 +263,7 @@ def recipe_full_data(id):
         "ingredients": ingredients,
         "description": recipe.description,
         "duration": recipe.duration,
-        # broken for some reason
-        # "illustration": recipe.illustration,
+        "illustration": get_upload_url(recipe.illustration),
         "tags": tags,
     }
     return jsonify(recipe_data)
