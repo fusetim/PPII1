@@ -73,6 +73,24 @@
                         {{ recipe|safe }}
                     </div>
                 </section>
+                <hr>
+                <section>
+                    <div id="author_card">
+                        <h2>À propos de l'auteur</h2>
+                        <div class="author_container">
+                            <div class="author_info">
+                                <img class="author_avatar" {{'src="{}"'.format(author.avatar_url)}} alt="Author avatar">
+                                <p class="display_name">{{author.display_name}}</p>
+                                <a class="username" href="#profile-culivert">@{{author.username}}</a>
+                            </div>
+                            <div class="author_description">
+                                <p>
+                                    {{author.bio}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </main>
     </section>
