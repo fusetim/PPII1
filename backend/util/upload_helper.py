@@ -2,6 +2,8 @@ from os.path import splitext, normpath
 from multiformats import multicodec, multibase, multihash, multiaddr, CID
 from flask import current_app
 from models.upload import Upload
+from uuid import UUID
+from db import db
 
 def allowed_file(filename):
     """
@@ -78,7 +80,13 @@ def get_upload_dir():
 def get_upload_url(upload, default=None):
     """
     Gets the URL of an upload.
+
+    Args:
+        upload (Upload or UUID): The upload data model or its UUID in database.
+        default (str): The default URL to return if the upload is None.
     """
+    if isinstance(upload, UUID):
+        upload = db.session.get(Upload, upload)
     if upload is None:
         return default
     return normpath("/{}/{}.{}".format(get_upload_dir(), upload.content_id, upload.extension))

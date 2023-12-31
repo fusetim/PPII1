@@ -533,7 +533,8 @@ section #author_card {
 .author_avatar {
     border-radius: 99999px;
     width: 152px;
-    overflow: hidden;
+    height: 152px;
+    object-fit: cover;
     margin-bottom: 8px;
 
     box-shadow: 0em 0.2em 0.2em rgba(0, 0, 0, 0.4);

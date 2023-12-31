@@ -79,7 +79,7 @@
                         <h2>À propos de l'auteur</h2>
                         <div class="author_container">
                             <div class="author_info">
-                                <img class="author_avatar" {{'src="{}"'.format(author.avatar_url)}} alt="Author avatar">
+                                <img class="author_avatar" {{'src="{}"'.format(author.avatar_url)|safe}} alt="Author avatar">
                                 <p class="display_name">{{author.display_name}}</p>
                                 <a class="username" href="#profile-culivert">@{{author.username}}</a>
                             </div>
