@@ -58,7 +58,7 @@
                             <div class="ingredient_info">
                                 <p class="label">{{ ingr.name }}</p>
                                 <div class="bar">
-                                    <div class="bar_indicator" {{ 'style="width: {}%"' .format(ingr.carbon_part)|safe}}>
+                                    <div class="bar_indicator" {{'style="width: {}%"' .format(ingr.carbon_part)|safe}}>
                                         {{ "{:4.2n}".format(ingr.carbon_part) }} %
                                     </div>
                                 </div>

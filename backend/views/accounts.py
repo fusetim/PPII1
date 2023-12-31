@@ -6,6 +6,7 @@ from models.user import User
 from sqlalchemy import select
 from http import HTTPStatus
 import uuid
+from util.upload_helper import upload_formfile
 
 # Creates the account "router" (aka blueprint in Flask)
 bp = Blueprint("accounts", __name__)
@@ -21,64 +22,15 @@ def register():
     status = HTTPStatus.OK
     if request.method == "POST":
         check = True
+        status = HTTPStatus.BAD_REQUEST
         # Get the username and password from the form
         username = request.form["username"]
         password = request.form["password"]
-        password_repeat = request.form["password_repeat"]
         # Validate the form
-        if username is None or password is None or password_repeat is None:
-            messages.append(
-                {
-                    "content": "Mot de passe ou nom d'utilisateur manquant.",
-                    "is_error": True,
-                }
-            )
-            check = False
-            status = HTTPStatus.BAD_REQUEST
-        if password != password_repeat:
-            messages.append(
-                {"content": "Les mots de passe ne correspondent pas.", "is_error": True}
-            )
-            check = False
-            status = HTTPStatus.BAD_REQUEST
-        if len(password) < 8:
-            messages.append(
-                {
-                    "content": "Le mot de passe est trop court. Choisissez un mot de passe d'au moins 8 caractères.",
-                    "is_error": True,
-                }
-            )
-            check = False
-            status = HTTPStatus.BAD_REQUEST
-        if len(password) > 50:
-            messages.append(
-                {
-                    "content": "Le mot de passe est trop long, il doit faire moins de 50 caractères.",
-                    "is_error": True,
-                }
-            )
-            check = False
-            status = HTTPStatus.BAD_REQUEST
-        if len(username) < 3:
-            messages.append(
-                {
-                    "content": "Le nom d'utilisateur est trop court. Choisissez un pseudonyme d'au moins 3 caractères.",
-                    "is_error": True,
-                }
-            )
-            check = False
-            status = HTTPStatus.BAD_REQUEST
-        if len(username) > 50:
-            messages.append(
-                {
-                    "content": "Le pseudonyme est trop long, il doit faire moins de 50 caractères.",
-                    "is_error": True,
-                }
-            )
-            check = False
-            status = HTTPStatus.BAD_REQUEST
+        (check_form, errors) = validate_register_form(request.form)
+        messages.extend(map(lambda e: {"content": e, "is_error": True}, errors))
 
-        if check:
+        if check_form:
             # Check if the username is already taken
             if (
                 db.session.execute(
@@ -99,7 +51,7 @@ def register():
                 db.session.begin()
                 try:
                     user = User(
-                        username=username, password=User.hash_password(password)
+                        username=username, display_name=username, password=User.hash_password(password)
                     )
                     db.session.add(user)
                 except Exception as e:
@@ -122,6 +74,36 @@ def register():
                     )
                     status = HTTPStatus.CREATED
     return (render_template("register.html", messages=messages), status)
+
+
+def validate_register_form(form_data):
+    """
+    Validate the register form data.
+
+    Args:
+        form_data (dict): The form data.
+    
+    Returns:
+        (bool, list[str]): A tuple containing the validity of the form and a list of messages to display.
+    """
+    messages = []
+    if form_data["username"] is None or form_data["password"] is None or form_data["password_repeat"] is None:
+        messages.append("Mot de passe ou nom d'utilisateur manquant.")
+    elif form_data["password"] != form_data["password_repeat"]:
+        messages.append("Les mots de passe ne correspondent pas.")
+    elif len(form_data["password"]) < 8:
+        messages.append("Le mot de passe est trop court. Choisissez un mot de passe d'au moins 8 caractères.")
+    elif len(form_data["password"]) > 50:
+        messages.append("Le mot de passe est trop long, il doit faire moins de 50 caractères.")
+    elif len(form_data["username"]) < 3:
+        messages.append("Le nom d'utilisateur est trop court. Choisissez un pseudonyme d'au moins 3 caractères.")
+    elif len(form_data["username"]) > 50:
+        messages.append("Le pseudonyme est trop long, il doit faire moins de 50 caractères.")
+    elif not form_data["username"].isidentifier():
+        messages.append("Le pseudonyme doit être un identifiant valide (composé uniquement de lettres, chiffres et underscore, dont le premier caractère est une lettre).")
+    else:
+        return (True, [])
+    return (False, messages)
 
 
 @bp.route("/login", methods=("GET", "POST"))
@@ -149,10 +131,6 @@ def login():
                 .first()
             )
             if user is None or (not User.verify_password(user, password)):
-                # For security reasons, a website should not tell the
-                # user if the username exists or not, otherwise an attacker
-                # could use this to find valid usernames, or try to
-                # retrace all the website used by a same person.
                 messages.append(
                     {
                         "content": "Identifiant incorrect. Veuillez réessayer.",
@@ -199,79 +177,14 @@ def profile_me():
 
     if request.method == "POST":
         if "change_password" in request.form:
-            if not (
-                "old_password" in request.form
-                and "new_password" in request.form
-                and "new_password_repeat" in request.form
-            ):
-                messages.append(
-                    {
-                        "content": "Requête invalide, si le problème persiste contactez un administrateur...",
-                        "is_error": True,
-                    }
-                )
-                status = HTTPStatus.BAD_REQUEST
-            else:
-                if request.form["new_password"] != request.form["new_password_repeat"]:
-                    messages.append(
-                        {
-                            "content": "Les mots de passes ne correspondent pas.",
-                            "is_error": True,
-                        }
-                    )
-                    status = HTTPStatus.BAD_REQUEST
-                elif len(request.form["new_password"]) < 8:
-                    messages.append(
-                        {
-                            "content": "Le mot de passe est trop court. Choisissez un mot de passe d'au moins 8 caractères.",
-                            "is_error": True,
-                        }
-                    )
-                    status = HTTPStatus.BAD_REQUEST
-                elif len(request.form["new_password"]) > 50:
-                    messages.append(
-                        {
-                            "content": "Le mot de passe est trop long, il doit faire moins de 50 caractères.",
-                            "is_error": True,
-                        }
-                    )
-                    status = HTTPStatus.BAD_REQUEST
-                else:
-                    cu = current_user.get_user()
-                    if User.verify_password(cu, request.form["old_password"]):
-                        cu.password = User.hash_password(request.form["new_password"])
-                        cu.session_uid = uuid.uuid4()
-                        try:
-                            db.session.commit()
-                        except:
-                            messages.append(
-                                {
-                                    "content": "Une erreur serveur est survenue. Veuillez réessayer dans quelques instants...",
-                                    "is_error": True,
-                                }
-                            )
-                            status = HTTPStatus.INTERNAL_SERVER_ERROR
-                        else:
-                            messages.append(
-                                {
-                                    "content": "Mot de passe modifié avec succès ! Vous allez maintenant être déconnecté.",
-                                    "is_error": False,
-                                }
-                            )
-                            status = HTTPStatus.ACCEPTED
-                    else:
-                        messages.append(
-                            {
-                                "content": "Mot de passe faux, veuillez réessayer.",
-                                "is_error": True,
-                            }
-                        )
-                        status = HTTPStatus.FORBIDDEN
-        elif "change_profile" in request.form:
-            if "bio" in request.form:
-                if len(request.form["bio"]) < 500:
-                    cu = current_user.get_user()
-                    cu.bio = request.form["bio"]
+            (check_form, errors) = validate_password_reset_form(request.form)
+            status = HTTPStatus.BAD_REQUEST
+            messages.extend(map(lambda e: {"content": e, "is_error": True}, errors))
+            if check_form:
+                cu = current_user.get_user()
+                if User.verify_password(cu, request.form["old_password"]):
+                    cu.password = User.hash_password(request.form["new_password"])
+                    cu.session_uid = uuid.uuid4()
                     try:
                         db.session.commit()
                     except:
@@ -285,19 +198,58 @@ def profile_me():
                     else:
                         messages.append(
                             {
-                                "content": "Votre profil a été modifié avec succès !",
+                                "content": "Mot de passe modifié avec succès ! Vous allez maintenant être déconnecté.",
                                 "is_error": False,
                             }
                         )
                         status = HTTPStatus.ACCEPTED
                 else:
                     messages.append(
-                        {"content": "Votre bio est trop longue !", "is_error": False}
+                        {
+                            "content": "Mot de passe faux, veuillez réessayer.",
+                            "is_error": True,
+                        }
                     )
-                    status = HTTPStatus.BAD_REQUEST
-            else:
-                messages.append({"content": "Argument invalide !", "is_error": False})
-                status = HTTPStatus.BAD_REQUEST
+                    status = HTTPStatus.FORBIDDEN
+        elif "change_profile" in request.form:
+            (check_form, errors) = validate_profile_edit_form(request.form)
+            status = HTTPStatus.BAD_REQUEST
+            messages.extend(map(lambda e: {"content": e, "is_error": True}, errors))
+            if check_form:
+                cu = current_user.get_user()
+                if "avatar" in request.files:
+                    (upload, errors) = upload_formfile(request.files["avatar"], current_user.user_uid, error_on_empty=False)
+                    messages.extend(map(lambda e: {"content": e, "is_error": True}, errors))
+                    if upload is not None:
+                        cu.avatar_uid = upload.upload_uid
+                else:
+                    messages.append(
+                        {
+                            "content": "Aucun avatar fourni, l'avatar actuel ne sera pas modifié.",
+                            "is_error": False,
+                        }
+                    )
+                cu.display_name = request.form["display_name"]
+                cu.bio = request.form["bio"]
+                try:
+                    db.session.commit()
+                except:
+                    messages.append(
+                        {
+                            "content": "Une erreur serveur est survenue. Veuillez réessayer dans quelques instants...",
+                            "is_error": True,
+                        }
+                    )
+                    status = HTTPStatus.INTERNAL_SERVER_ERROR
+                else:
+                    messages.append(
+                        {
+                            "content": "Profil modifié avec succès !",
+                            "is_error": False,
+                        }
+                    )
+                    status = HTTPStatus.ACCEPTED
+                
         else:
             messages.append(
                 {
@@ -310,8 +262,58 @@ def profile_me():
     return (
         render_template(
             "me.html",
-            user={"display_name": cu.username, "bio": cu.bio},
+            user={"display_name": cu.display_name, "bio": cu.bio},
             messages=messages,
         ),
         status,
     )
+
+
+def validate_password_reset_form(form_data):
+    """
+    Validate the password reset form data.
+
+    Args:
+        form_data (dict): The form data.
+    
+    Returns:
+        (bool, list[str]): A tuple containing the validity of the form and a list of messages to display.
+    """
+    messages = []
+    if form_data["new_password"] is None or form_data["new_password_repeat"] is None or form_data["old_password"] is None:
+        messages.append("Mot de passe manquant.")
+    elif form_data["new_password"] != form_data["new_password_repeat"]:
+        messages.append("Les mots de passes ne correspondent pas.")
+    elif len(form_data["new_password"]) < 8:
+        messages.append("Le mot de passe est trop court. Choisissez un mot de passe d'au moins 8 caractères.")
+    elif len(form_data["new_password"]) > 50:
+        messages.append("Le mot de passe est trop long, il doit faire moins de 50 caractères.")
+    else:
+        return (True, [])
+    return (False, messages)
+
+
+def validate_profile_edit_form(form_data):
+    """
+    Validate the profile edit form data.
+
+    Args:
+        form_data (dict): The form data.
+
+    Returns:
+        (bool, list[str]): A tuple containing the validity of the form and a list of messages to display.
+    """
+    messages = []
+    if form_data["display_name"] is None or form_data["bio"] is None:
+        messages.append("Nom d'affichage ou biographie manquant.")
+    elif len(form_data["display_name"]) > 50:
+        messages.append("Le nom d'affichage est trop long, il doit faire moins de 50 caractères.")
+    elif len(form_data["display_name"]) < 3:
+        messages.append("Le nom d'affichage est trop court. Choisissez un nom d'affichage d'au moins 3 caractères.")
+    elif not form_data["display_name"].isprintable():
+        messages.append("Le nom d'affichage doit être affichable.")
+    elif len(form_data["bio"]) > 500:
+        messages.append("La biographie est trop longue, elle doit faire moins de 500 caractères.")
+    else:
+        return (True, [])
+    return (False, messages)

@@ -25,10 +25,12 @@
             {% endfor %}
             <details open>
                 <summary>Mes informations</summary>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
+                    <label for="avatar">Avatar</label>
+                    <input type="file" name="avatar" id="avatar" accept="image/*">
                     <label for="display_name">Nom affiché</label>
                     <input type="text" name="display_name" id="display_name" value="{{user.display_name}}"
-                        maxlength="50" minlength="3" disabled>
+                        maxlength="50" minlength="3">
                     <label for="bio">Bio</label>
                     <textarea name="bio" id="bio" cols="30" rows="5" maxlength="500"
                         minlength="10">{{user.bio}}</textarea>

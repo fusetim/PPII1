@@ -92,7 +92,8 @@ input {
 }
 
 input[type=text],
-input[type=password] {
+input[type=password],
+input[type=file] {
     width: calc(100% - 32px);
 }
 
