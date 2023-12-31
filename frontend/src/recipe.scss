@@ -118,18 +118,27 @@ main {
     }
 
     .header .specs {
+        display: block;
+        overflow: scroll;
+    }
+
+    .header .specs p {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
         margin: 5px 30px;
         gap: 10px;
+
+        flex-wrap: nowrap;
+        width: max-content;
+
         @media (orientation: portrait) {
             margin: 2px 10px;
         }
     }
 
-    .header .specs span {
+    .header .specs p span {
         font-weight: 600;
         font-family: sans-serif;
         color: #fff;
