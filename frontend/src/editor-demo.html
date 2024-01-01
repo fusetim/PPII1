@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="editor.scss">
+</head>
+
+<body>
+  <header>
+    <p>Future navigation bar</p>
+  </header>
+  <main>
+    <div class="card">
+      <h1 class="card_title">Éditeur de recette</h1>
+      <form method="post" enctype="multipart/form-data">
+        <label for="title">Titre</label>
+        <input type="text" name="title" id="title" value="Pâte à la sauce bolognaise" maxlength="100" minlength="3">
+        <label for="short_description">Courte Description</label>
+        <textarea name="short_description" id="short_description" cols="30" rows="3" maxlength="140"
+          minlength="10">{{recipe.short_description}}</textarea>
+        <label for="illustration">Illustration</label>
+        <input type="file" name="illustration" id="illustration" accept="image/*">
+        <label for="ingredients">Ingrédients</label>
+        <div id="ingredients" class="chip-input" contenteditable="true">
+          <p class="chip clickable-chip" contenteditable="false"><span class="name">Pâtes</span><span class="quantity">500g</span></p>
+          <p class="chip clickable-chip" contenteditable="false"><span class="name">Sauce tomate</span><span class="quantity">500g</span></p>
+          <p class="chip clickable-chip" contenteditable="false"><span class="name">Viande hachée</span><span class="quantity">500g</span></p>
+          <p>sel</p>
+        </div>
+        <label for="tags">Tags</label>
+        <div id="tags" class="chip-input" contenteditable="true">
+          <p class="chip" contenteditable="false">Italien</p>
+          <p class="chip" contenteditable="false">Facile</p>
+          Aborda...
+        </div>
+        <label for="preparation_time">Temps de préparation (en minutes)</label>
+        <input type="number" name="preparation_time" id="preparation_time" value="30" min="0" max="3600">
+        <label for="instructions">Instructions</label>
+        <textarea name="instructions" id="steps" cols="30" rows="10"
+          minlength="10">
+          # Étape 1
+          Faire cuire les pâtes
+          
+          # Étape 2
+
+          Faire cuire la viande hachée
+        </textarea>
+        <input type="submit" name="save" value="Prévisualiser">
+        <input type="submit" name="save" value="Enregistrer">
+        <input type="submit" class="primary-btn" name="save" value="Publier">
+      </form>
+    </div>
+  </main>
+</body>
+
+</html>

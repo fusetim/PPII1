@@ -1,0 +1,209 @@
+@use "_constants";
+@import "../node_modules/normalize-css/normalize.css";
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url(../assets/fonts/OpenSans-VariableFont_wdth\,wght.ttf) format('truetype');
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--var--color-background);
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: stretch;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-family: 'Open Sans';
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    border: #000 1px solid;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+
+.card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 680px;
+
+    @media screen and (max-width: 800px) {
+        margin: 10vh 10px 10px 10px;
+        max-width: unset;
+        width: unset;
+        padding: 24px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 32px;
+    }
+
+    h2 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    text-align: center;
+}
+
+details {
+    summary {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+
+        display: list-item;
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+
+    width: 100%;
+}
+
+input,textarea,div.chip-input {
+    width: 100%;
+
+    border-radius: 8px;
+    border: #000 1px solid;
+
+    padding: 4px 8px;
+    margin-bottom: 8px;
+}
+
+input[type=text],
+input[type=password],
+input[type=number],
+input[type=file],
+textarea {
+    width: calc(100% - 16px);
+}
+
+div.chip-input {
+    width: calc(100% - 8px);
+}
+
+textarea {
+    min-width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+}
+
+input[type=submit] {
+    font-weight: 600;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    transition: background-color 0.2s ease-in-out;
+}
+
+.primary-btn {
+    background-color: hsl(25, 81%, 50%);
+    color: #fff;
+}
+
+.primary-btn:hover {
+    background-color: hsl(25, 81%, 45%);
+}
+
+
+div.chip-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 4px;
+}
+
+div.chip-input p.chip {
+    background-color: #e0e0e0;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    cursor: default;
+}
+
+div.chip-input p.chip.clickable-chip {
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+div.chip-input p.chip.clickable-chip:hover {
+    background-color: #ccc;
+}
+
+#ingredients p.chip.clickable-chip {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+#ingredients p.chip.clickable-chip :first-child {
+    border-right: #aaa 1px solid;
+    padding-right: 4px;
+}
+
+
+label {
+    width: 100%;
+    text-align: start;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.message {
+    display: inline;
+    border-radius: 8px;
+    border: rgb(57, 85, 145) 2px solid;
+    background-color: rgb(141, 178, 228);
+    padding: 16px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.message.error {
+    border: rgb(145, 57, 57) 2px solid;
+    background-color: rgb(228, 141, 141);
+}
