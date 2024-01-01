@@ -8,7 +8,8 @@
         "build": "parcel build",
         "test": "jest",
         "lint": "eslint",
-        "check": "tsc --noEmit"
+        "check": "tsc --noEmit",
+        "clean": "rm -rf dist"
     },
     "dependencies": {
         "@material/web": "^1.0.1",
@@ -33,7 +34,8 @@
             "(.*).css": "static/$1.{hash}.css",
             "(.*).js": "static/$1.{hash}.js",
             "(.*).html": "templates/$1.html",
-            "(.*).(jpg|jpeg|png|gif|webp|tiff|svg|ttf|woff|otf)": "static/assets/$1{~hash}.$2"
+            "(.*).(jpg|jpeg|png|gif|webp|tiff|svg)": "static/assets/$1.$2",
+            "(.*).(ttf|woff|otf)": "static/assets/$1{~hash}.$2"
         }
     }
 }

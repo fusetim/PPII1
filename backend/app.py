@@ -136,6 +136,15 @@ def get_recipe(recipe_uid):
 
     # Format carbon_score
     score, score_unit = format_mass(carbon_score / 4)
+
+    # Author
+    author = {
+        "avatar_url": get_upload_url(recipe.author_account.avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"),
+        "display_name": recipe.author_account.display_name,
+        "username": recipe.author_account.username,
+        "bio": recipe.author_account.bio,
+    }
+
     return render_template(
         "recipe.html",
         title=recipe.name,
@@ -146,4 +155,5 @@ def get_recipe(recipe_uid):
         score_unit=score_unit,
         recipe=markdown_render(recipe.description),
         cover=get_upload_url(recipe.illustration),
+        author=author,
     )

@@ -19,7 +19,9 @@
         </div>
         <details open>
             <summary>Mes informations</summary>
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
+                <label for="avatar">Avatar</label>
+                <input type="file" name="avatar" id="avatar" accept="image/*">
                 <label for="display_name">Nom affiché</label>
                 <input type="text" name="display_name" id="display_name" value="FuseTim" maxlength="50" minlength="3">
                 <label for="bio">Bio</label>
