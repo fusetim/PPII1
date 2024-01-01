@@ -23,17 +23,44 @@
         <label for="illustration">Illustration</label>
         <input type="file" name="illustration" id="illustration" accept="image/*">
         <label for="ingredients">Ingrédients</label>
-        <div id="ingredients" class="chip-input" contenteditable="true">
-          <p class="chip clickable-chip" contenteditable="false"><span class="name">Pâtes</span><span class="quantity">500g</span></p>
-          <p class="chip clickable-chip" contenteditable="false"><span class="name">Sauce tomate</span><span class="quantity">500g</span></p>
-          <p class="chip clickable-chip" contenteditable="false"><span class="name">Viande hachée</span><span class="quantity">500g</span></p>
-          <p>sel</p>
+        <div id="ingredients" class="chip-input">
+          <p class="chip clickable-chip"><span class="name">Pâtes</span><span class="quantity">500g</span></p>
+          <p class="chip clickable-chip"><span class="name">Sauce tomate</span><span class="quantity">500g</span></p>
+          <p class="chip clickable-chip"><span class="name">Viande hachée</span><span class="quantity">500g</span></p>
+          <p id="add-ingredient-chip" class="chip clickable-chip">Ajouter un ingrédient...</p>
+        </div>
+        <div id="add-ingredient-popover" class="open">
+          <div class="popover-inner">
+            <div id="ingredient-search">
+              <input type="text" name="ingredient_name" id="ingredient-name" placeholder="Nom de l'ingrédient*">
+              <div id="ingredient-suggestions" contenteditable="false">
+                <p>tomate</p>
+                <p>pomme de terre</p>
+              </div>
+            </div>
+            <input type="text" id="ingredient-display-name" name="ingredient_display_name" placeholder="Nom d'affichage de l'ingrédient">
+            <div class="quantity">
+              <input type="number" name="ingredient_quantity" placeholder="Quantité*">
+              <select name="ingredient_unit">
+                <option value="kg">kg</option>
+              </select>
+            </div>
+            <div class="quantity">
+              <input type="number" name="ingredient_reference_quantity" placeholder="Quantité de référence en kg">
+              <p>kg</p>
+            </div>
+            <input type="submit" name="save" value="Ajouter">
+          </div>
         </div>
         <label for="tags">Tags</label>
         <div id="tags" class="chip-input" contenteditable="true">
           <p class="chip" contenteditable="false">Italien</p>
           <p class="chip" contenteditable="false">Facile</p>
           Aborda...
+          <div id="tags-suggestions" contenteditable="false">
+            <p>abordable</p>
+            <p>peu couteux</p>
+          </div>
         </div>
         <label for="preparation_time">Temps de préparation (en minutes)</label>
         <input type="number" name="preparation_time" id="preparation_time" value="30" min="0" max="3600">

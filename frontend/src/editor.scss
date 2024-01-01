@@ -95,7 +95,7 @@ form {
     width: 100%;
 }
 
-input,textarea,div.chip-input {
+input,textarea,div.chip-input,select {
     width: 100%;
 
     border-radius: 8px;
@@ -103,6 +103,12 @@ input,textarea,div.chip-input {
 
     padding: 4px 8px;
     margin-bottom: 8px;
+
+    transition: background-color 0.2s ease-in-out;
+}
+
+select:hover {
+    background-color: #ddd;
 }
 
 input[type=text],
@@ -206,4 +212,91 @@ label {
 .message.error {
     border: rgb(145, 57, 57) 2px solid;
     background-color: rgb(228, 141, 141);
+}
+
+// Tags suggestions & Ingredient search
+#tags, #ingredient-search {
+    position: relative;
+}
+
+#tags-suggestions, #ingredient-suggestions {
+    position: absolute;
+    top: 100%;
+    width: calc(100% - 12px);
+    background-color: #fff;
+    border-radius: 0px 0px 8px 8px;
+    border: #000 1px solid;
+    left: 4px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    text-align: start;
+    padding: 4px 0px 0px 0px;
+
+    overflow: hidden;
+}
+
+#ingredient-name {
+    margin-bottom: 0;
+}
+
+#ingredient-display-name {
+    margin-top: 8px;
+}
+
+#tags-suggestions p, #ingredient-suggestions p {
+    margin: 0;
+    padding: 2px 8px;
+    cursor: pointer;
+    border-bottom: #000 1px solid;
+}
+
+#tags-suggestions p:hover, #ingredient-suggestions p:hover {
+    background-color: #eee;
+}
+
+#tags-suggestions p:last-child, #ingredient-suggestions p:last-child {
+    border-bottom: none;
+}
+
+#add-ingredient-popover {
+    display: none;
+}
+
+#add-ingredient-popover.open {
+    display: block;
+    position: relative;
+    width: 100%;
+}
+
+#add-ingredient-popover.open .popover-inner {
+    position: absolute;
+    top: 0;
+    right: 24px;
+    z-index: 99;
+    margin: 0 auto;
+
+    padding: 8px;
+
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0.1em 0.2em 0.2em rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0.1em 0.2em 0.2em rgba(0, 0, 0, 0.4);
+
+    width: 300px;
+    max-width: 300px;
+}
+
+.popover-inner .quantity {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 8px;
+
+    :last-child {
+        width: fit-content;
+    }
 }
