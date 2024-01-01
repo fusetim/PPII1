@@ -1,0 +1,57 @@
+= CR Réunion - 18/12/2023
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi |TELECOM Nancy, 1.15 |18/12/2023 9h00-9h40
+|===
+
+
+== Participants
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+* Guillaume HISLEUR
+
+== Ordre du jour
+
+* Avancements
+
+== Échanges
+
+=== Avancements & Mise au point
+
+* Page recette faite, terminée et intégrée, merge à effectuer. (Timothée)
+
+* Documentation, des schémas de BDD, et de l'installation. (Timothée)
+
+* Avancement limité sur la page d'accueil et de recherche. La découverte de Flexbox devrait l'aider (Sacha)
+
+* Avancement limité sur l'API, mais ça devrait aller plus vite, Clément dispose enfin de son chargeur d'ordinateur. + 
+La responsabilité des routes admin est à discuter, si Clément a le temps il peut les faire.
+
+* Avancement limité sur la partie Admin -> Déplacer le CSS inline dans un fichier CSS lui aurait pris beaucoup plus de temps que prévue (Guillaume).
+
+* Discussions sur le fonctionnement de frontend. -> Voir la nouvelle documentation développeur pour plus d'information.
+
+* Discussions internes sur le fonctionnement du panel admin, et notamment de l'intéraction entre le 
+frontend et le backend.
+
+== Décisions
+
+=== Avancements
+
+* Accords sur les transferts de données du panel admin (JSON, et exemples à fournir par Clément à Guillaume)
+
+* Début de la partie compte utilisateurs par Timothée.
+
+== TODO-List
+
+Allez voir sur Github
+
+== Pour la suite
+
+Prochaine réunion : Mardi 2 janvier à 16h, fin prévu avant 17h.
+
+=== Annexes

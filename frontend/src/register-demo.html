@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - CuliVert</title>
+    <link rel="stylesheet" href="login.scss">
+</head>
+
+<body>
+    <header>
+        <p>Future navigation bar</p>
+    </header>
+    <div class="card">
+        <h1 class="card_title">Inscription</h1>
+        <div class="message">
+            <p>Vous devez être connecté pour accéder à cette page.</p>
+        </div>
+        <div class="message error">
+            <p>Ce compte utilisateur est déjà pris.</p>
+            <p>Les mots de passes ne correspondent pas.</p>
+        </div>
+        <form method="post">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" name="username" id="username">
+            <label for="password">Mot de passe</label>
+            <input type="password" name="password" id="password">
+            <label for="password_repeat">Confirmation de mot de passe</label>
+            <input type="password" name="password_repeat" id="password_repeat">
+            <input type="submit" value="S'inscrire">
+            <input type="submit" name="register" value="S'inscrire">
+        </form>
+        <a href="./login-demo.html">Déjà inscrit ?</a>
+    </div>
+</body>
+
+</html>
