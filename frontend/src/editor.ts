@@ -7,6 +7,9 @@ const ingredient_suggestions = document.getElementById("ingredient-suggestions")
 const tags = document.getElementById("tags") as HTMLElement;
 const tags_suggestions = document.getElementById("tags-suggestions") as HTMLElement;
 const tag_input = document.getElementById("tag-input") as HTMLInputElement;
+const preview_btn = document.getElementById("preview-btn") as HTMLInputElement;
+const save_btn = document.getElementById("save-btn") as HTMLInputElement;
+const publish_btn = document.getElementById("publish-btn") as HTMLInputElement;
 
 const ingredient_popover = {
     element: document.getElementById("add-ingredient-popover") as HTMLElement,
@@ -156,9 +159,9 @@ tag_input.addEventListener("focusout", (evt) => {
 editor_form.addEventListener("keydown", (evt) => {
     if (evt.key === "Enter") {
         evt.preventDefault();
+        save_btn.click();
     }
 });
-
 
 //  === Event Handlers for pre-rendered elements ===
 // When the user clicks on an ingredient chip, open the popover with the ingredient's data to 
