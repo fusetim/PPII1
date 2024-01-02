@@ -1,0 +1,574 @@
+:root {
+  --var--color-background: oklch(90% .05 80.47);
+}
+
+@font-face {
+  font-family: Open Sans;
+  src: url("assets/OpenSans-VariableFont_wdth,wght~de305770.ttf") format("truetype");
+}
+
+html, body, .root {
+  background-color: var(--var--color-background);
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+.root {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  min-height: 100vh;
+  display: flex;
+}
+
+nav {
+  color: #fff;
+  background-color: #111;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 20%;
+  min-height: 100%;
+  padding: 1em;
+  display: flex;
+  overflow: hidden;
+}
+
+@media (orientation: portrait) {
+  nav {
+    display: none;
+  }
+}
+
+nav a, nav a:visited {
+  color: #fff;
+}
+
+nav .brand-logo {
+  text-align: center;
+  color: oklch(38.62% .075 55.38);
+  margin: 0;
+  padding: 0 0 .5em;
+  font-family: sans-serif;
+  font-size: 1.25em;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+main {
+  justify-content: center;
+  width: 100%;
+  display: flex;
+}
+
+main .column {
+  background-color: oklch(95% .025 80.47);
+}
+
+@media (width >= 1200px) {
+  main .column {
+    border-radius: 2em;
+    max-width: 1000px;
+    margin: 2em;
+    overflow: hidden;
+    box-shadow: 0 .2em .4em #0006;
+  }
+}
+
+main .header {
+  background-position: center;
+  background-size: cover;
+  height: 350px;
+  min-height: 8em;
+  padding: 0;
+  position: relative;
+  box-shadow: inset 0 0 2em #0006;
+}
+
+@media (orientation: portrait) {
+  main .header {
+    height: 200px;
+  }
+}
+
+main .header .title {
+  color: azure;
+  background: linear-gradient(#0000, 40%, #000);
+  width: 100%;
+  padding-bottom: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+main .header h1 {
+  -webkit-user-select: all;
+  user-select: all;
+  text-indent: 0;
+  margin: 10px 30px;
+  padding-top: .8em;
+  font-size: 32px;
+}
+
+@media (orientation: portrait) {
+  main .header h1 {
+    margin: 5px 10px;
+    font-size: 28px;
+  }
+}
+
+main .header .specs {
+  display: block;
+  overflow: scroll;
+}
+
+main .header .specs p {
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  margin: 5px 30px;
+  display: flex;
+}
+
+@media (orientation: portrait) {
+  main .header .specs p {
+    margin: 2px 10px;
+  }
+}
+
+main .header .specs p span {
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 99999px;
+  padding: 2px 8px;
+  font-family: sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: .5s;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+@media (orientation: portrait) {
+  main .header .specs p span {
+    padding: 2px 10px;
+    font-size: 12px;
+  }
+}
+
+main .header .specs span:hover {
+  color: #111;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #fff;
+}
+
+main section {
+  margin: 2em;
+}
+
+@media (orientation: portrait) {
+  main section {
+    margin: 1em;
+  }
+}
+
+main section h2 {
+  flex-direction: row;
+  align-items: center;
+  font-size: 24px;
+  display: flex;
+}
+
+@media (orientation: portrait) {
+  main section h2 {
+    font-size: 24px;
+  }
+}
+
+main section h2 .comment {
+  color: #111;
+  margin: 0 0 0 .5em;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: .7em;
+  font-weight: 400;
+}
+
+main hr {
+  color: oklch(72.34% .0485 80.47);
+  border: 2px solid;
+  border-radius: 9999px;
+  width: 75%;
+  margin-top: 48px;
+  margin-bottom: 36px;
+}
+
+@media (orientation: portrait) {
+  main hr {
+    border: 1.5px solid;
+    margin-top: 36px;
+    margin-bottom: 24px;
+  }
+}
+
+main .ingredients {
+  flex-flow: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 0;
+  display: flex;
+}
+
+@media (orientation: portrait) {
+  main .ingredients {
+    gap: 8px;
+    font-size: 14px;
+  }
+}
+
+main .ingredients p {
+  background-color: #fff;
+  border-radius: 99999px;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 .1em .2em #0006;
+}
+
+main .ingredients p span {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: .2s;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+main .ingredients span.quantity {
+  background-color: #eeeb31;
+  padding: .5em 1em .5em .5em;
+}
+
+main .ingredients p:hover span.quantity {
+  background-color: #b6b42cd0;
+}
+
+main .ingredients span.quantity.bad {
+  background-color: #fa5246;
+}
+
+main .ingredients p:hover span.quantity.bad {
+  background-color: #ca3328;
+}
+
+main .ingredients span.quantity.good {
+  background-color: #5bfa46;
+}
+
+main .ingredients p:hover span.quantity.good {
+  background-color: #4bc925;
+}
+
+main .ingredients span.name {
+  padding: .5em .5em .5em 1em;
+}
+
+main .ingredients p:hover span.name {
+  background-color: #ddd;
+}
+
+main .carbon_impact {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  display: flex;
+}
+
+main .carbon_card {
+  background-color: #fff;
+  border-radius: 16px;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  display: flex;
+  box-shadow: 0 .2em .4em #0006;
+}
+
+@media (orientation: portrait) {
+  main .carbon_card {
+    padding: 16px;
+  }
+}
+
+main .carbon_card h4 {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+}
+
+@media (orientation: portrait) {
+  main .carbon_card h4 {
+    font-size: 20px;
+  }
+}
+
+main .carbon_card p {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+main .score_card span.score {
+  color: oklch(71.48% .1617 63.85);
+  font-size: 64px;
+  font-weight: 600;
+}
+
+@media (orientation: portrait) {
+  main .score_card span.score {
+    font-size: 64px;
+  }
+}
+
+main .score_card span.score .score_unit {
+  font-size: .5em;
+}
+
+@media (orientation: portrait) {
+  main .score_card span.unit {
+    font-size: 14px;
+  }
+}
+
+main .ingredient_card h4 {
+  padding-bottom: 8px;
+}
+
+main .ingredient_card .ingredient_info {
+  width: 100%;
+}
+
+main .ingredient_card .label {
+  text-align: left;
+  padding-bottom: 2px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+main .ingredient_card .bar {
+  background-color: oklch(87.18% .0583 63.85);
+  border-radius: 9999px;
+  width: 100%;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+main .ingredient_card .bar_indicator {
+  text-align: right;
+  white-space: nowrap;
+  background-color: oklch(71.48% .1617 63.85);
+  padding: 4px;
+  font-weight: 500;
+  overflow: visible;
+}
+
+@media (orientation: portrait) {
+  main .ingredient_card .bar_indicator {
+    font-size: 14px;
+  }
+}
+
+main section .mk_render h1, main section .mk_render h2, main section .mk_render h3, main section .mk_render h4, main section .mk_render h5, main section .mk_render h6 {
+  margin: 16px 0;
+  padding: 0;
+  font-weight: 700;
+}
+
+main section .mk_render h1 {
+  font-size: 1.4rem;
+}
+
+main section .mk_render h2 {
+  font-size: 1.2rem;
+}
+
+@media (orientation: portrait) {
+  main section .mk_render h2 {
+    font-size: 1.2rem;
+  }
+}
+
+main section .mk_render h3 {
+  font-size: 1.1rem;
+}
+
+@media (orientation: portrait) {
+  main section .mk_render h3 {
+    font-size: 1.1rem;
+  }
+}
+
+main section .mk_render h4 {
+  font-size: 1rem;
+}
+
+@media (orientation: portrait) {
+  main section .mk_render h4 {
+    font-size: 1rem;
+  }
+}
+
+main section .mk_render h5 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@media (orientation: portrait) {
+  main section .mk_render h5 {
+    font-size: 1rem;
+  }
+}
+
+main section .mk_render h6 {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+@media (orientation: portrait) {
+  main section .mk_render h6 {
+    font-size: 1rem;
+  }
+}
+
+main section .mk_render p, main section .mk_render li {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+@media (orientation: portrait) {
+  main section .mk_render p, main section .mk_render li {
+    font-size: 1rem;
+  }
+}
+
+main section .mk_render hr {
+  border-width: 1px;
+}
+
+section #author_card {
+  background-color: #fff;
+  border-radius: 16px;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  display: flex;
+  box-shadow: 0 .2em .4em #0006;
+}
+
+@media screen and (width <= 600px) {
+  section #author_card {
+    padding: 16px;
+  }
+}
+
+section #author_card h2 {
+  margin: 0 0 16px;
+  padding: 0;
+  font-size: 20px;
+}
+
+@media (orientation: portrait) {
+  section #author_card h2 {
+    font-size: 20px;
+  }
+}
+
+.author_container {
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  display: flex;
+}
+
+@media screen and (width <= 600px) {
+  .author_container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.author_info {
+  border-right: 2px solid oklch(72.34% .0485 80.47);
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
+  gap: 0;
+  padding-right: 24px;
+  display: flex;
+}
+
+@media screen and (width <= 600px) {
+  .author_info {
+    border-right: none;
+    padding-right: 0;
+  }
+}
+
+.author_info p, .author_info a {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.author_info p.display_name {
+  color: #111;
+  font-family: sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.author_info a.username, .author_info a.username:visited {
+  color: #8a502e;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  transition: color .2s ease-in-out;
+}
+
+.author_info a.username:hover {
+  color: #603720;
+}
+
+.author_avatar {
+  object-fit: cover;
+  border-radius: 99999px;
+  width: 152px;
+  height: 152px;
+  margin-bottom: 8px;
+  box-shadow: 0 .2em .2em #0006;
+}
+
+.author_description {
+  text-align: justify;
+  color: #222;
+  padding-left: 24px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+@media screen and (width <= 600px) {
+  .author_description {
+    padding-left: 0;
+  }
+}
+
+/*# sourceMappingURL=recipe-demo.12f435d9.css.map */

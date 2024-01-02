@@ -210,5 +210,5 @@ backend/tmp/
 # pour les connards sur Apple
 **/.DS_Store
 
-backend/templates
-backend/static
+# pour les autres connards
+backend/config.toml

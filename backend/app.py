@@ -234,17 +234,6 @@ def recipes():
                     data.insert(0, r)
         return render_template("result_recipes.html", data=data[:20], search=search)
 
-@app.route("/account")
-def account():
-    # /!\ il faut aller chercher les infos de l'utilisateur dans la bd
-    username, bio, creation_date, deletion_date = ("Sacha",
-                                                   "Futur respo créateurs Anim'Est, et j'ai une super recette de patte a pizza",
-                                                    1, 1)
-    return render_template("account.html",
-                           username=username,
-                           bio=bio)
-
-
 @app.route("/recipe/<uuid:recipe_uid>")
 def get_recipe(recipe_uid):
     """

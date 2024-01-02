@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/recipe-demo.12f435d9.css">
+    <title>{{title}} - CuliVert</title>
+</head>
+
+<body>
+    <section class="root">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="/templates/index.html" class="brand-logo">CuliVert</a>
+                <ul>
+                    <li><a href="/templates/index.html">Home</a></li>
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <div class="column">
+                <div class="header" {{'style="background-image: url(\' {}\');" '.format(cover)|safe}}="">
+                    <div class="title">
+                        <h1>{{title}}</h1>
+                        <div class="specs">
+                            <p>
+                                <span>{{duration}} de préparation</span>
+                                {% for t in tags %}
+                                <span>{{t}}</span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <section>
+                    <h2>Ingrédients <span class="comment">(pour 4 personnes)</span></h2>
+                    <div class="ingredients">
+                        {% for ingr in ingredients %}
+                        <p><span class="name">{{ingr.name}}</span><span class="quantity">{{"{:4.4n}".format(ingr.quantity)}}{{ingr.unit}}</span></p>
+                        {% endfor %}
+                    </div>
+                </section>
+                <section>
+                    <h2>Bilan carbone</h2>
+                    <div class="carbon_impact">
+                        <div class="carbon_card score_card">
+                            <h4>Score environnemental</h4>
+                            <p>
+                                <span class="score">{{"{:4.3n}".format(carbon_score)}} <span class="score_unit">{{score_unit}}</span> </span>
+                                <br>
+                                <span class="unit">{{score_unit}} CO2 équivalent par personne</span>
+                            </p>
+                        </div>
+                        <div class="carbon_card ingredient_card">
+                            <h4>Impact par ingrédient</h4>
+                            {% for ingr in ingredients %}
+                            <div class="ingredient_info">
+                                <p class="label">{{ ingr.name }}</p>
+                                <div class="bar">
+                                    <div class="bar_indicator" {{'style="width: {}%" '.format(ingr.carbon_part)|safe}}="">
+                                        {{ "{:4.2n}".format(ingr.carbon_part) }} %
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                </div></section>
+                <hr>
+                <section>
+                    <h2>Instructions</h2>
+                    <div class="mk_render">
+                        {{ recipe|safe }}
+                    </div>
+                </section>
+                <hr>
+                <section>
+                    <div id="author_card">
+                        <h2>À propos de l'auteur</h2>
+                        <div class="author_container">
+                            <div class="author_info">
+                                <img class="author_avatar" {{'src="{}" '.format(author.avatar_url)|safe}}="" alt="Author avatar">
+                                <p class="display_name">{{author.display_name}}</p>
+                                <a class="username" href="#profile-culivert">@{{author.username}}</a>
+                            </div>
+                            <div class="author_description">
+                                <p>
+                                    {{author.bio}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </section>
+    <script src="/static/index.b71e74eb.js" defer=""></script>
+</body>
+
+</html>
