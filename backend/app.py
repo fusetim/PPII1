@@ -234,7 +234,7 @@ def recipes():
                     data.insert(0, r)
         return render_template("result_recipes.html", data=data[:20], search=search)
 
-@app.route("/account/<string:id>")
+@app.route("/accounts/<string:id>")
 def account(id):
     # culivert uid : 6434e9ce-8e46-48a2-9f2f-35699160f526
     username, display_name, bio, creation_date, deletion_date, avatar_uid = db.session.execute(text("SELECT username, display_name, bio, creation_date, deletion_date, avatar_uid FROM users WHERE user_uid = :c"), {"c" : id}).all()[0]
@@ -259,7 +259,7 @@ def account(id):
                            display_name=display_name,
                            bio=bio,
                            date_text=date_text,
-                           avatar_uid=get_upload_url(avatar_uid))
+                           avatar_uid=get_upload_url(avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"))
 
 
 @app.route("/recipe/<uuid:recipe_uid>")
