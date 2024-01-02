@@ -14,6 +14,19 @@
   <main>
     <div class="card">
       <h1 class="card_title">Éditeur de recette</h1>
+      <noscript>
+        <div class="message error">
+          <p>Cette page ne peut pas fonctionner sans Javascript. Veuillez l'activer et recharger la page.</p>
+        </div>
+      </noscript>
+      <div id="msg-group">
+        <div class="message error">
+          <p>Informations manquantes...</p>
+        </div>
+        <div class="message error">
+          <p>Informations manquantes...</p>
+        </div>
+      </div>
       <form method="post" enctype="multipart/form-data">
         <label for="title">Titre</label>
         <input type="text" name="title" id="title" value="Pâte à la sauce bolognaise" maxlength="100" minlength="3">
@@ -29,11 +42,11 @@
           <p class="chip clickable-chip"><span class="name">Viande hachée</span><span class="quantity">500g</span></p>
           <p id="add-ingredient-chip" class="chip clickable-chip">Ajouter un ingrédient...</p>
         </div>
-        <div id="add-ingredient-popover" class="open">
+        <div id="add-ingredient-popover">
           <div class="popover-inner">
             <div id="ingredient-search">
               <input type="text" name="ingredient_name" id="ingredient-name" placeholder="Nom de l'ingrédient*">
-              <div id="ingredient-suggestions" contenteditable="false">
+              <div id="ingredient-suggestions" class="hidden" contenteditable="false">
                 <p>tomate</p>
                 <p>pomme de terre</p>
               </div>
@@ -49,7 +62,8 @@
               <input type="number" name="ingredient_reference_quantity" placeholder="Quantité de référence en kg">
               <p>kg</p>
             </div>
-            <input type="submit" name="save" value="Ajouter">
+            <input id="ingredient-add" type="submit" name="ingredient-save" value="Ajouter">
+            <input id="ingredient-cancel" type="submit" name="ingredient-save" value="Abandonner">
           </div>
         </div>
         <label for="tags">Tags</label>
@@ -57,7 +71,7 @@
           <p class="chip" contenteditable="false">Italien</p>
           <p class="chip" contenteditable="false">Facile</p>
           Aborda...
-          <div id="tags-suggestions" contenteditable="false">
+          <div id="tags-suggestions" class="hidden" contenteditable="false">
             <p>abordable</p>
             <p>peu couteux</p>
           </div>
@@ -80,6 +94,7 @@
       </form>
     </div>
   </main>
+  <script src="./editor.ts"></script>
 </body>
 
 </html>

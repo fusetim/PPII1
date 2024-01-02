@@ -198,12 +198,19 @@ label {
     font-weight: 600;
 }
 
+#msg-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+
 .message {
     display: inline;
     border-radius: 8px;
     border: rgb(57, 85, 145) 2px solid;
     background-color: rgb(141, 178, 228);
-    padding: 16px;
+    padding: 12px;
     margin-bottom: 8px;
     font-size: 14px;
     text-align: center;
@@ -236,6 +243,10 @@ label {
     padding: 4px 0px 0px 0px;
 
     overflow: hidden;
+}
+
+#tags-suggestions.hidden, #ingredient-suggestions.hidden {
+    display: none;
 }
 
 #ingredient-name {
