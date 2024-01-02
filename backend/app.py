@@ -204,13 +204,15 @@ def recipes():
     """
     a page showing a search bar to question the "recipes" db
     """
+    nbres = 10  # nombre de resultats affichés sur une seule page
     search = request.args.get("search")
     table = get_recipe_table()
     normalized_query = normalize_str(search)
     codes = table.get(normalized_query, 10)
     data = []
+    # on veut maintenant chercher les resultats contenant search
     other = db.session.execute(
-                text(f"SELECT name FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'")
+                text(f"SELECT name, recipe_uid FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
     if codes == [] and other == []:
         if search != "":
@@ -221,9 +223,8 @@ def recipes():
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
             recipe = db.session.execute(
-                text("SELECT name FROM recipes WHERE recipe_uid = :c"), {"c": code}
+                text("SELECT name, recipe_uid FROM recipes WHERE recipe_uid = :c"), {"c": code}
             ).all()[0]
-            # on veut maintenant chercher les resultats contenant search
             data.append(recipe)
 
         if search != "":

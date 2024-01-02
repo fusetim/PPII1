@@ -21,7 +21,7 @@
                 <br><br>
                 {% for recette in data %}
                 <div class="affichage">
-                    <div class="row_recipe">{{recette[0]}}</div> 
+                    <a class="row_recipe" href="/recipe/{{recette[1]}}">{{recette[0]}}</a> 
                 </div>
                 {%endfor%}
             </main>
