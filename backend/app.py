@@ -12,7 +12,7 @@ from lsh import normalize_str
 from models.recipe import Recipe
 from models.ingredient_link import IngredientLink
 from models.ingredient import Ingredient
-from math import floor
+from math import ceil
 from md_render import markdown_render
 from util.human_format import format_duration, format_mass
 from util.upload_helper import get_upload_url
@@ -62,6 +62,8 @@ def result_ingredients():
     a page showing the results of the research from the home page
     shows ingredients' names and co2 equivalent cost
     """
+    # nbres : nb de resultats affichés sur une meme page
+    nbres=10
     search = request.args.get("search")
     table = get_ingredient_table()
     normalized_query = normalize_str(search)
@@ -110,11 +112,8 @@ def result_ingredients():
             data.sort(key=lambda a:a[1], reverse=True)
             co2sort = 1
             triangle = "▼"
-        # nbres : nb de resultats affichés sur une meme page
-        nbres=10
 
         if len(data)<=nbres:
-            arrows = """<section class="arrows">1 sur 1</section>"""
             return render_template("result_ingredients.html", 
                                    data=data, search=search,
                                    produit="Produit", 
@@ -146,7 +145,8 @@ def result_ingredients():
                     query += "+"
                 else:
                     query += c
-            if page == 1:
+            if page <= 1:
+                # première page
                 return render_template("result_ingredients.html", 
                                    data=data[:nbres], search=search, query=query,
                                    produit="Produit",
@@ -161,11 +161,12 @@ def result_ingredients():
                                    cf1="nolink", 
                                    lf2=f"/search_ingredients?search={query}&page={page+1}&sort_type={sort_type}", 
                                    cf2="arrow", 
-                                   numero=str(page), 
-                                   n_total=str(len(data)//nbres+1))
-            elif page >= len(data)//nbres+1 :
+                                   numero="1", 
+                                   n_total=str(ceil(len(data)/nbres)))
+            # dernière page
+            elif (page >= ceil(len(data)/nbres)):
                 return render_template("result_ingredients.html", 
-                                   data=data[(len(data)//nbres)*nbres:], search=search, query=query,
+                                   data=data[ceil(len(data)/nbres-1)*nbres:], search=search, query=query,
                                    produit="Produit",
                                    m1=f"équivalent co2    {triangle}", 
                                    m2="par kg de produit", 
@@ -178,8 +179,9 @@ def result_ingredients():
                                    cf1="arrow", 
                                    lf2="#", 
                                    cf2="nolink", 
-                                   numero=str(len(data)//nbres+1),
-                                   n_total=str(len(data)//nbres+1))
+                                   numero=str(ceil(len(data)/nbres)),
+                                   n_total=str(ceil(len(data)/nbres)))
+            # les autres pages au milieu
             else :
                 return render_template("result_ingredients.html", 
                                    data=data[(page-1)*nbres:(page)*nbres], search=search, query=query,
@@ -196,7 +198,7 @@ def result_ingredients():
                                    lf2=f"/search_ingredients?search={query}&page={page+1}&sort_type={sort_type}", 
                                    cf2="arrow", 
                                    numero=str(page), 
-                                   n_total=str(len(data)//nbres+1))
+                                   n_total=str(ceil(len(data)/nbres)))
 
 
 @app.route("/search_recipes")
@@ -205,6 +207,7 @@ def recipes():
     a page showing a search bar to question the "recipes" db
     """
     nbres = 10  # nombre de resultats affichés sur une seule page
+
     search = request.args.get("search")
     table = get_recipe_table()
     normalized_query = normalize_str(search)
@@ -214,11 +217,10 @@ def recipes():
     other = db.session.execute(
                 text(f"SELECT name, recipe_uid FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
-    if codes == [] and other == []:
-        if search != "":
-            return render_template("no_result_recipes.html", search=search)
-        else:
-            return render_template("result_recipes.html", data=data, search=search)
+    if search == "":
+        return render_template("result_recipes.html", data=data, search=search)
+    elif codes == [] and other == []:
+        return render_template("no_result_recipes.html", search=search) 
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
@@ -232,7 +234,74 @@ def recipes():
                 if r not in data:
                     #data.append(r)
                     data.insert(0, r)
-        return render_template("result_recipes.html", data=data[:20], search=search)
+        if len(data)<=nbres:
+            return render_template("result_recipes.html", 
+                                   data=data, search=search,
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1="#", 
+                                   cf1="nolink", 
+                                   lf2="#", 
+                                   cf2="nolink", 
+                                   numero="1", 
+                                   n_total="1")
+        else:
+            page = request.args.get("page")
+            if page == None:
+                page = 1
+            else : 
+                page = int(page)
+
+            # on recrée le format mot1+mo2+... pour ne pas que au passage d'une page à l'autre
+            # on ne garde que le premier mot de la recherche (pour qu'il n'y ait pas d'espace dans l'url)
+            query = ""
+            for c in search:
+                if c == " ":
+                    query += "+"
+                else:
+                    query += c
+            if page <= 1:
+                return render_template("result_recipes.html", 
+                                   data=data[:nbres], search=search, query=query,
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1="#", 
+                                   cf1="nolink", 
+                                   lf2=f"/search_recipes?search={query}&page={page+1}", 
+                                   cf2="arrow", 
+                                   numero="1", 
+                                   n_total=str(ceil(len(data)/nbres)))
+            elif page >= ceil(len(data)/nbres) :
+                return render_template("result_recipes.html", 
+                                   data=data[(ceil(len(data)/nbres-1))*nbres:], search=search, query=query,
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1=f"/search_recipes?search={query}&page={page-1}", 
+                                   cf1="arrow", 
+                                   lf2="#", 
+                                   cf2="nolink", 
+                                   numero=str(ceil(len(data)/nbres)),
+                                   n_total=str(ceil(len(data)/nbres)))
+            else :
+                return render_template("result_recipes.html", 
+                                   data=data[(page-1)*nbres:(page)*nbres], search=search, query=query,
+                                   f1="<",
+                                   f2=">",
+                                   sur="sur",
+                                   lf1=f"/search_recipes?search={query}&page={page-1}", 
+                                   cf1="arrow", 
+                                   lf2=f"/search_recipes?search={query}&page={page+1}", 
+                                   cf2="arrow", 
+                                   numero=str(page), 
+                                   n_total=str(ceil(len(data)/nbres)))
+
+
+
+
+
 
 @app.route("/accounts/<string:id>")
 def account(id):

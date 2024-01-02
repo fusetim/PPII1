@@ -18,12 +18,19 @@
                     <input type="text" value="{{search}}" placeholder="recherchez une recette..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
-                <br><br>
+                <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
+                <br>
                 {% for recette in data %}
                 <div class="affichage">
                     <a class="row_recipe" href="/recipe/{{recette[1]}}">{{recette[0]}}</a> 
                 </div>
                 {%endfor%}
+                <!-- affichage des pages -->
+                <section class="arrows">
+                    <a class="{{cf1}}" href={{lf1}}>{{f1}}</a>
+                    <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
+                    <a class="{{cf2}}" href={{lf2}}>{{f2}}</a>
+                </section>
             </main>
         </section>
     </body>
