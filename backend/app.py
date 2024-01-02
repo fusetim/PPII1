@@ -302,6 +302,7 @@ def recipes():
 def account(id):
     nbres = 10  # nombre de resultats affichés sur une seule page
     # culivert uid : 6434e9ce-8e46-48a2-9f2f-35699160f526
+    # Sacha uid : 6be9e17b-5311-4f8a-b497-c744dd6fe7c4
     username, display_name, bio, creation_date, deletion_date, avatar_uid = db.session.execute(text("SELECT username, display_name, bio, creation_date, deletion_date, avatar_uid FROM users WHERE user_uid = :c"), {"c" : id}).all()[0]
     if deletion_date == None:
         mois = ["janvier",
@@ -331,23 +332,14 @@ def account(id):
     data = db.session.execute(
         text("SELECT name, recipe_uid FROM recipes WHERE author = :c"), {"c": id}
     ).all()
-    if len(data)<=nbres:
+    if len(data) <= nbres:
         return render_template("account.html",
                                 username=username,
                                 display_name=display_name,
                                 bio=bio,
                                 date_text=date_text,
-                                avatar_uid=get_upload_url(avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"), 
-                                data=data,
-                                f1="<",
-                                f2=">",
-                                sur="sur",
-                                lf1="#", 
-                                cf1="nolink", 
-                                lf2="#", 
-                                cf2="nolink", 
-                                numero="1", 
-                                n_total="1")
+                                avatar_uid=get_upload_url(avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"),
+                                data=data)
     else:
         page = request.args.get("page")
         if page == None:

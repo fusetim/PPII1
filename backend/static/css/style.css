@@ -315,6 +315,7 @@ nav {
 
 .display_name{
     font-size: 2em;
+    font-weight: bold;
     margin: 0;
 }
 .username{
