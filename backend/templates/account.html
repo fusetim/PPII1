@@ -1,0 +1,27 @@
+<html>
+    <title>CuliVert</title>
+    <head>
+        <link rel="stylesheet" href="../static/css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <section class="structure">
+            <nav>
+                <a class="logo" href="/home">CuliVert</h1>
+                <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
+                <a class="tab" href="/search_recipes?search=&page=1">Recettes</a>
+                <a class="currenttab" href="/accounts/me">Compte</a>
+            </nav>
+            <main>
+                <div class="id_card">
+                    <img class="author_avatar" src="{{avatar_uid}}" alt="Author avatar">
+                    <p class="display_name">{{display_name}}</p>
+                    <a href=# class="username">@{{username}}</a>
+                    <p class="bio">{{bio}}</p>
+                    <p class="date_text">{{date_text}}</p>
+                </div>
+            </main>
+        </section>
+    </body>
+</html>

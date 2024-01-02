@@ -169,7 +169,6 @@ body {
 }
 nav {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
     padding-top: 2em;
@@ -282,4 +281,47 @@ nav {
     color: #685a49;
     margin-left: 1em;
     margin-right: 1em;
+}
+
+.author_avatar {
+    border-radius: 99999px;
+    width: 152px;
+    height: 152px;
+    object-fit: cover;
+    margin-bottom: 8px;
+
+    box-shadow: 0em 0.2em 0.2em rgba(0, 0, 0, 0.4);
+}
+
+.id_card{
+    line-height: normal;
+    min-width: 450px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 2em;
+    padding-top: 3em;
+    color: #685a49;
+    box-shadow: 0px 5px 10px #b09066;
+    align-items: center;
+}
+
+
+.display_name{
+    font-size: 2em;
+    margin: 0;
+}
+.username{
+    color: #db8e33;
+}
+
+.bio{
+    font-size: 1.4em;
+    text-align: center;
+}
+
+.date_text{
+    font-size: 1em;
+    color: #a99c8b
 }

@@ -234,6 +234,34 @@ def recipes():
                     data.insert(0, r)
         return render_template("result_recipes.html", data=data[:20], search=search)
 
+@app.route("/account/<string:id>")
+def account(id):
+    # culivert uid : 6434e9ce-8e46-48a2-9f2f-35699160f526
+    username, display_name, bio, creation_date, deletion_date, avatar_uid = db.session.execute(text("SELECT username, display_name, bio, creation_date, deletion_date, avatar_uid FROM users WHERE user_uid = :c"), {"c" : id}).all()[0]
+    if deletion_date == None:
+        mois = ["janvier",
+                "fevrier",
+                "mars",
+                "avril",
+                "mai",
+                "juin",
+                "juillet",
+                "aout",
+                "septembre",
+                "octobre",
+                "novembre",
+                "décembre"]
+        date_text = f"Utilise CuliVert depuis le {creation_date.day} {mois[creation_date.month-1]} {creation_date.year}"
+    else:
+        date_text = ""
+    return render_template("account.html",
+                           username=username,
+                           display_name=display_name,
+                           bio=bio,
+                           date_text=date_text,
+                           avatar_uid=get_upload_url(avatar_uid))
+
+
 @app.route("/recipe/<uuid:recipe_uid>")
 def get_recipe(recipe_uid):
     """
