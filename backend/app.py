@@ -318,6 +318,7 @@ def get_recipe(recipe_uid):
         "display_name": recipe.author_account.display_name,
         "username": recipe.author_account.username,
         "bio": recipe.author_account.bio,
+        "Uuid": recipe.author_account.user_uid
     }
 
     return render_template(
