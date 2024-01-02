@@ -60,14 +60,17 @@ input[type=text]{
 .logo:link{
     color: #2d9465;
     text-decoration: none;
+    height: 70px;
 }
 .logo:visited{
     color: #2d9465;
     text-decoration: none;
+    height: 70px;
 }
 .logo:active{
     color: #2d9465;
     text-decoration: none;
+    height: 70px;
 }
 
 body {
@@ -168,12 +171,12 @@ body {
     box-shadow: none;
 }
 nav {
+    flex-wrap: wrap;
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-top: 2em;
     padding-bottom: 2em;
-    height: 70px;
 }
 
 .tab {
@@ -190,6 +193,7 @@ nav {
     margin-right: 10px;
     margin-bottom: 10px;
     align-items: center;
+    height: 70px;
 }
 .tab:active{
     display: flex;
@@ -205,6 +209,7 @@ nav {
     margin-right: 10px;
     margin-bottom: 10px;
     align-items: center;
+    height: 70px;
 }
 .currenttab {
     display: flex;
@@ -220,7 +225,7 @@ nav {
     margin-right: 10px;
     margin-bottom: 10px;
     align-items: center;
-
+    height: 70px;
 }
 .noresult {
     font-size: 3em;
