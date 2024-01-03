@@ -210,5 +210,5 @@ backend/tmp/
 # pour les connards sur Apple
 **/.DS_Store
 
-backend/template
+backend/templates
 backend/static
