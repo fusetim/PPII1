@@ -336,7 +336,7 @@ def account(id):
                                 display_name=display_name,
                                 bio=bio,
                                 date_text=date_text,
-                                avatar_uid=get_upload_url(avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"),
+                                avatar_url=get_upload_url(avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"),
                                 data=data)
     else:
         page = request.args.get("page")
