@@ -50,10 +50,10 @@ longue qu'une semaine. Néanmoins un bon avancement devrait être atteint d'ici 
 
 == Compte rendu de la réunion du 04/12/2023
 
-Comme indiqué dans le compte rendu originale, Anim'Est a mobilisé beaucoup de membre du groupe, à savoir M. BRILLAUD,
-M. BANAK et M. ESCUDE-COTINAT. De ce fait, un avancement faible était attendu et a été observé. Toutes les tâches encore
-en cours sont reportées au 12/12/2023. Néanmoins un avancement conséquent est attendu d'ici la prochaine réunion, comme
-expliqué.
+Comme indiqué dans le compte rendu originale, Anim'Est a mobilisé beaucoup de membre du groupe, à savoir M. BRILLAUD et
+M. BANAK. De plus, M. ESCUDE-COTINAT était pris par les journées Forum des Grandes Écoles. De ce fait, un avancement faible
+était attendu et a été observé. Toutes les tâches encore en cours sont reportées au 12/12/2023. Néanmoins un avancement
+conséquent est attendu d'ici la prochaine réunion, comme expliqué.
 
 == Compte rendu de la réunion du 12/12/2023
 
@@ -84,7 +84,8 @@ et la feuille partagée WBS/RACI, disponible sur le Google Drive.
 
 == Compte rendu de la réunion du 18/12/2023
 
-Aucune erreur n'a été signalée.
+La tâche d'écriture des routes API, partie ADMIN, est finalement reprise par M. ESCUDE-COTINAT, contrairement au changement
+énoncé le 12/12/2023. La tâche est donc reportée au 02/01/2024.
 
 == Compte rendu de la réunion du 19/12/2023
 
