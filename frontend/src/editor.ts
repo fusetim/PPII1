@@ -183,6 +183,17 @@ editor_form.addEventListener("keydown", (evt) => {
     }
 });
 
+// Retrieve the quantity types from the server
+retrieveQuantityTypes().then((quantity_types) => {
+    ingredient_popover.unit_input.replaceChildren();
+    for (let quantity_type of Object.values(quantity_types)) {
+        let option = document.createElement("option");
+        option.value = quantity_type.quantity_type_uid;
+        option.textContent = quantity_type.unit;
+        ingredient_popover.unit_input.appendChild(option);
+    }
+});
+
 // Prevent the form from being submitted
 // We want to handle ourself the submission of the form.
 editor_form.addEventListener("submit", (evt) => {
@@ -209,6 +220,7 @@ save_btn.addEventListener("click", () => {
         let msg = createMessage("Recette sauvegardée !", null, false);
         msg_group.appendChild(msg);
         autoTimeoutMessage(msg);
+        resetIllustration();
     }, (err) => {
         console.error(err);
         let msg = createMessage("Erreur lors de la sauvegarde de la recette.", (err as Error).message, true);
@@ -224,6 +236,7 @@ publish_btn.addEventListener("click", () => {
         let msg = createMessage("Recette publiée !", null, false);
         msg_group.appendChild(msg);
         autoTimeoutMessage(msg);
+        resetIllustration();
     }, (err) => {
         console.error(err);
         let msg = createMessage("Erreur lors de la publication de la recette.", (err as Error).message, true);
@@ -304,6 +317,14 @@ interface Upload {
     cid: string;
     upload_uid: string;
     url: string;
+};
+
+// Quantity type
+interface QuantityType {
+    quantity_type_uid: string;
+    name: string;
+    unit: string;
+    mass_equivalent: number | null;
 };
 
 //  ===  Functions  ===
@@ -437,6 +458,7 @@ function searchIngredient(name: string): Promise<Ingredient[]> {
     });
 }
 
+// Create a message element
 function createMessage(message: string, context: string | null, is_error: boolean): HTMLElement {
     let msg = document.createElement("div");
     msg.classList.add("message");
@@ -454,8 +476,32 @@ function createMessage(message: string, context: string | null, is_error: boolea
     return msg;
 }
 
+// Automatically remove a message after MESSAGE_TIMEOUT milliseconds
 function autoTimeoutMessage(msg: HTMLElement) {
     setTimeout(() => {
         msg.remove();
     }, MESSAGE_TIMEOUT);
+}
+
+// Reset the illustration file input
+// This is mostly used to clear the input after the illustration has been uploaded
+// and the recipe saved. We don't need to re-upload the illustration if the user
+// have not changed it.
+function resetIllustration() {
+    let illustration_input = document.getElementById("illustration") as HTMLInputElement;
+    illustration_input.value = "";
+}
+
+// Retrieve the quantity types from the server
+async function retrieveQuantityTypes(): Promise<QuantityType> {
+    return await fetch("/api/recipes/all_quantities", {
+        method: "GET",
+        credentials: "omit",
+    }).then((res) => {
+        if (res.ok) {
+            return res.json() as Promise<QuantityType>;
+        } else {
+            throw new Error("Error while retrieving the quantity types");
+        }
+    });
 }
