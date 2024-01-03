@@ -17,6 +17,7 @@ from md_render import markdown_render
 from util.human_format import format_duration, format_mass
 from util.upload_helper import get_upload_url
 from login import login_manager
+from flask_login import login_required
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -157,3 +158,12 @@ def get_recipe(recipe_uid):
         cover=get_upload_url(recipe.illustration),
         author=author,
     )
+
+
+@app.route("/editor")
+@login_required
+def editor():
+    """
+    a page to create a recipe
+    """
+    return render_template("editor.html")

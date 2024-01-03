@@ -44,6 +44,24 @@ ingredient_popover.element.addEventListener("focusout", (evt) => {
 ingredient_popover.name_input.addEventListener("input", () => {
     if (ingredient_popover.name_input.value.length > 0) {
         ingredient_suggestions.classList.remove("hidden");
+        searchIngredient(ingredient_popover.name_input.value).then((ingredients) => {
+            // Clear the precedent suggestions
+            ingredient_suggestions.innerHTML = "";
+            // Create the new suggestions
+            for (let ingredient of ingredients) {
+                let sugg = document.createElement("p");
+                sugg.classList.add("suggestion");
+                sugg.setAttribute("data-ingr-code", ingredient.ingr_code);
+                sugg.textContent = ingredient.name ?? ingredient.ingr_code;
+                ingredient_suggestions.appendChild(sugg);
+                sugg.addEventListener("click", () => {
+                    ingredient_popover.name_input.value = sugg.textContent ?? "";
+                    ingredient_popover.name_input.setAttribute("data-ingr-code", sugg.getAttribute("data-ingr-code") ?? "");
+                    ingredient_popover.display_name_input.value = sugg.textContent ?? "";
+                    ingredient_suggestions.classList.add("hidden");
+                });
+            }
+        });
     } else {
         ingredient_suggestions.classList.add("hidden");
     }
@@ -207,17 +225,6 @@ for (let chip of ingredients?.children ?? []) {
     ingredientChipAddEventHandlers(chip as HTMLElement);
 }
 
-// TEMPORARY: Handling the click on an ingredient suggestion
-// TODO: Implement the real search and suggestion system
-for (let sugg of ingredient_suggestions?.children ?? []) {
-    sugg.addEventListener("click", () => {
-        ingredient_popover.name_input.value = sugg.textContent ?? "";
-        ingredient_popover.name_input.setAttribute("data-ingr-code", sugg.getAttribute("data-ingr-code") ?? "");
-        ingredient_popover.display_name_input.value = sugg.textContent ?? "";
-        ingredient_suggestions.classList.add("hidden");
-    });
-}
-
 // TEMPORARY: Handling the click on a tag suggestion
 for (let sugg of tags_suggestions?.children ?? []) {
     sugg.addEventListener("click", () => {
@@ -239,6 +246,12 @@ for (let sugg of tags_suggestions?.children ?? []) {
 // Ingredient type
 interface Ingredient {
     ingr_code: string;
+    name: string;
+};
+
+// IngredientLink type
+interface IngredientLink {
+    ingr_code: string;
     display_name: string | null;
     quantity: number;
     quantity_type: string;
@@ -252,7 +265,7 @@ interface Recipe {
     short_description: string;
     preparation_time: number;
     description: string;
-    ingredients: Ingredient[];
+    ingredients: IngredientLink[];
     tags: string[];
     illustration: File | null;
 };
@@ -265,7 +278,7 @@ interface RecipeRequest {
     short_description: string;
     preparation_time: number;
     description: string;
-    ingredients: Ingredient[];
+    ingredients: IngredientLink[];
     tags: string[];
     illustration_uid: string | null;
 };
@@ -294,9 +307,9 @@ function ingredientChipAddEventHandlers(chip: HTMLElement) {
 }
 
 // Handle the retrieval of all the information from the form
-function getData() : Recipe{
-    let ingredients : Ingredient[] = [];
-    let tags : string[] = [];
+function getData(): Recipe {
+    let ingredients: IngredientLink[] = [];
+    let tags: string[] = [];
     let illustration = null;
     for (let chip of document.querySelectorAll("#ingredients > .chip")) {
         if (chip == add_ingredient_chip) continue;
@@ -330,7 +343,8 @@ function getData() : Recipe{
     return recipe;
 }
 
-function uploadIllustration(file: File) : Promise<Upload> {
+// Handle the upload of the illustration
+function uploadIllustration(file: File): Promise<Upload> {
     let formData = new FormData();
     formData.append("file", file);
     return fetch("/api/uploads/add", {
@@ -347,6 +361,7 @@ function uploadIllustration(file: File) : Promise<Upload> {
     });
 }
 
+// Handle the saving of the recipe
 async function saveRecipe(recipe: Recipe): Promise<String> {
     let illustration_uid = null;
     if (recipe.illustration != null) {
@@ -363,7 +378,7 @@ async function saveRecipe(recipe: Recipe): Promise<String> {
         tags: recipe.tags,
         illustration_uid: illustration_uid,
     };
-    
+
     let endpoint = recipeRequest.recipe_uid == null ? "/api/recipes/add" : "/api/recipes/edit";
     let method = recipeRequest.recipe_uid == null ? "POST" : "PATCH";
 
@@ -383,5 +398,19 @@ async function saveRecipe(recipe: Recipe): Promise<String> {
         }
     }).then((data) => {
         return data.recipe_uid;
+    });
+}
+
+// Search an ingredient by its name
+function searchIngredient(name: string): Promise<Ingredient[]> {
+    return fetch(`/api/ingredients/search/${encodeURIComponent(name)}`, {
+        method: "GET",
+        credentials: "omit",
+    }).then((res) => {
+        if (res.ok) {
+            return res.json() as Promise<Ingredient[]>;
+        } else {
+            throw new Error("Error while searching for the ingredient");
+        }
     });
 }
