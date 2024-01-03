@@ -23,12 +23,14 @@
                 <div class="header" {{'style="background-image: url(\' {}\');"'.format(cover)|safe}}>
                     <div class="title">
                         <h1>{{title}}</h1>
-                        <p class="specs">
-                            <span>{{duration}} de préparation</span>
-                            {% for t in tags %}
-                            <span>{{t}}</span>
-                            {% endfor %}
-                        </p>
+                        <div class="specs">
+                            <p>
+                                <span>{{duration}} de préparation</span>
+                                {% for t in tags %}
+                                <span>{{t}}</span>
+                                {% endfor %}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <section>
@@ -58,7 +60,7 @@
                             <div class="ingredient_info">
                                 <p class="label">{{ ingr.name }}</p>
                                 <div class="bar">
-                                    <div class="bar_indicator" {{ 'style="width: {}%"' .format(ingr.carbon_part)|safe}}>
+                                    <div class="bar_indicator" {{'style="width: {}%"'.format(ingr.carbon_part)|safe}}>
                                         {{ "{:4.2n}".format(ingr.carbon_part) }} %
                                     </div>
                                 </div>
@@ -71,6 +73,24 @@
                     <h2>Instructions</h2>
                     <div class="mk_render">
                         {{ recipe|safe }}
+                    </div>
+                </section>
+                <hr>
+                <section>
+                    <div id="author_card">
+                        <h2>À propos de l'auteur</h2>
+                        <div class="author_container">
+                            <div class="author_info">
+                                <img class="author_avatar" {{'src="{}"'.format(author.avatar_url)|safe}} alt="Author avatar">
+                                <p class="display_name">{{author.display_name}}</p>
+                                <a class="username" href="#profile-culivert">@{{author.username}}</a>
+                            </div>
+                            <div class="author_description">
+                                <p>
+                                    {{author.bio}}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
