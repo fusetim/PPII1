@@ -22,6 +22,8 @@ const ingredient_popover = {
     cancel_btn: document.getElementById("ingredient-cancel") as HTMLInputElement,
 };
 
+const MESSAGE_TIMEOUT = 10000; // 10 seconds
+
 //  ===  Event Handlers  ===
 
 // On click, the add chip should open the popover if it's closed, and close it if it's open
@@ -192,28 +194,42 @@ preview_btn.addEventListener("click", () => {
     let recipe = getData();
     saveRecipe(recipe).then((recipe_uid) => {
         window.location.href = `/recipes/${recipe_uid}`;
+    }, (err) => {
+        console.error(err);
+        let msg = createMessage("Erreur lors de la sauvegarde de la recette.", (err as Error).message, true);
+        msg_group.appendChild(msg);
+        autoTimeoutMessage(msg);
+        return null;
     });
 });
 
 save_btn.addEventListener("click", () => {
     let recipe = getData();
     saveRecipe(recipe).then((recipe_uid) => {
-        let msg = document.createElement("div");
-        msg.classList.add("message");
-        let p = document.createElement("p");
-        p.textContent = "Recette sauvegardée !";
-        msg.appendChild(p);
+        let msg = createMessage("Recette sauvegardée !", null, false);
+        msg_group.appendChild(msg);
+        autoTimeoutMessage(msg);
+    }, (err) => {
+        console.error(err);
+        let msg = createMessage("Erreur lors de la sauvegarde de la recette.", (err as Error).message, true);
+        msg_group.appendChild(msg);
+        autoTimeoutMessage(msg);
+        return null;
     });
 });
 
 publish_btn.addEventListener("click", () => {
     let recipe = getData();
     saveRecipe(recipe).then((recipe_uid) => {
-        let msg = document.createElement("div");
-        msg.classList.add("message");
-        let p = document.createElement("p");
-        p.textContent = "Recette publiée !";
-        msg.appendChild(p);
+        let msg = createMessage("Recette publiée !", null, false);
+        msg_group.appendChild(msg);
+        autoTimeoutMessage(msg);
+    }, (err) => {
+        console.error(err);
+        let msg = createMessage("Erreur lors de la publication de la recette.", (err as Error).message, true);
+        msg_group.appendChild(msg);
+        autoTimeoutMessage(msg);
+        return null;
     });
 });
 
@@ -351,12 +367,11 @@ function uploadIllustration(file: File): Promise<Upload> {
         method: "POST",
         body: formData,
         credentials: "same-origin",
-    }).then((res) => {
+    }).then(async (res) => {
         if (res.ok) {
-            return res.json() as Promise<Upload>;
+            return await res.json();
         } else {
-            // TODO: Handle the error
-            throw new Error("Error while uploading the illustration");
+            throw new Error((await res.json())["error"]);
         }
     });
 }
@@ -365,8 +380,16 @@ function uploadIllustration(file: File): Promise<Upload> {
 async function saveRecipe(recipe: Recipe): Promise<String> {
     let illustration_uid = null;
     if (recipe.illustration != null) {
-        let upload = await uploadIllustration(recipe.illustration);
-        illustration_uid = upload.upload_uid;
+        try {
+            let upload = await uploadIllustration(recipe.illustration);
+            illustration_uid = upload.upload_uid;
+        }
+        catch (err) {
+            console.error(err);
+            let msg = createMessage("Erreur lors de l'upload de l'illustration.", (err as Error).message, true);
+            msg_group.appendChild(msg);
+            autoTimeoutMessage(msg);
+        }
     }
     let recipeRequest: RecipeRequest = {
         recipe_uid: recipe.recipe_uid,
@@ -393,7 +416,6 @@ async function saveRecipe(recipe: Recipe): Promise<String> {
         if (res.ok) {
             return res.json();
         } else {
-            // TODO: Handle the error
             throw new Error("Error while saving the recipe");
         }
     }).then((data) => {
@@ -413,4 +435,27 @@ function searchIngredient(name: string): Promise<Ingredient[]> {
             throw new Error("Error while searching for the ingredient");
         }
     });
+}
+
+function createMessage(message: string, context: string | null, is_error: boolean): HTMLElement {
+    let msg = document.createElement("div");
+    msg.classList.add("message");
+    if (is_error) {
+        msg.classList.add("error");
+    }
+    let p = document.createElement("p");
+    p.textContent = message;
+    msg.appendChild(p);
+    if (context != null) {
+        let p2 = document.createElement("p");
+        p2.textContent = context;
+        msg.appendChild(p2);
+    }
+    return msg;
+}
+
+function autoTimeoutMessage(msg: HTMLElement) {
+    setTimeout(() => {
+        msg.remove();
+    }, MESSAGE_TIMEOUT);
 }
