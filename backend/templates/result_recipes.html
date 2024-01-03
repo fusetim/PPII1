@@ -20,8 +20,10 @@
                 </form>
                 <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
                 <br>
+                <!-- recette like : (recipe_name, recipe_uid, author_name, author_uid) -->
                 {% for recette in data %}
                 <div class="affichage">
+                    <a class="username" href="/accounts/{{recette[3]}}">@{{recette[2]}}</a>
                     <a class="row_recipe" href="/recipe/{{recette[1]}}">{{recette[0]}}</a> 
                 </div>
                 {%endfor%}

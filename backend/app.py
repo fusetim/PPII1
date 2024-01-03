@@ -67,11 +67,12 @@ def result_ingredients():
     search = request.args.get("search")
     table = get_ingredient_table()
     normalized_query = normalize_str(search)
-    codes = table.get(normalized_query, 10)
+    codes = table.get(normalized_query)
     data = []
     other = db.session.execute(
                 text(f"SELECT name, co2 FROM ingredients WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
+    
     if search == "":
         return render_template("result_ingredients.html", data=data, search=search)
     
@@ -211,11 +212,11 @@ def recipes():
     search = request.args.get("search")
     table = get_recipe_table()
     normalized_query = normalize_str(search)
-    codes = table.get(normalized_query, 10)
+    codes = table.get(normalized_query)
     data = []
     # on veut maintenant chercher les resultats contenant search
     other = db.session.execute(
-                text(f"SELECT name, recipe_uid FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'")
+                text(f"SELECT name, recipe_uid, author FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'")
             ).all()
     if search == "":
         return render_template("result_recipes.html", data=data, search=search)
@@ -224,9 +225,7 @@ def recipes():
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
-            recipe = db.session.execute(
-                text("SELECT name, recipe_uid FROM recipes WHERE recipe_uid = :c"), {"c": code}
-            ).all()[0]
+            recipe = db.session.execute(text(f"SELECT name, recipe_uid, author FROM recipes WHERE recipe_uid = :c"), {"c" : code}).all()[0]
             data.append(recipe)
 
         if search != "":
@@ -234,6 +233,13 @@ def recipes():
                 if r not in data:
                     #data.append(r)
                     data.insert(0, r)
+        recipes = []
+
+        # on rajoute l'username à data
+        for r in data:
+            username = db.session.execute(text("SELECT username FROM users WHERE user_uid = :c"), {"c" : r[2]}).all()[0][0]
+            recipes.append((r[0], r[1], username, r[2]))
+        data = recipes
         if len(data)<=nbres:
             return render_template("result_recipes.html", 
                                    data=data, search=search,
@@ -320,14 +326,6 @@ def account(id):
         date_text = f"Utilise CuliVert depuis le {creation_date.day} {mois[creation_date.month-1]} {creation_date.year}"
     else:
         date_text = ""
-    """return render_template("account.html",
-                           username=username,
-                           display_name=display_name,
-                           bio=bio,
-                           date_text=date_text,
-                           avatar_uid=get_upload_url(avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"))
-    """
-    
     # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
     data = db.session.execute(
         text("SELECT name, recipe_uid FROM recipes WHERE author = :c"), {"c": id}
