@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="../static/css/style.css">
+        <link rel="stylesheet" href="sacha-style.scss">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
     </head>
@@ -8,14 +8,14 @@
         <section class="structure">
             <nav>
                 <a class="logo" href="/home">CuliVert</h1>
-                <a class="currenttab" href="/search_ingredients?search={{search}}&page=1">Ingrédients</a>
-                <a class="tab" href="/search_recipes?search={{search}}&page=1">Recettes</a>
+                <a class="currenttab" {{'href="/search_ingredients?search={}&page=1"'.format(search)|safe}}>Ingrédients</a>
+                <a class="tab" {{'href="/search_recipes?search={}&page=1"'.format(search)|safe}}">Recettes</a>
                 <a class="tab" href="/accounts/me">Mon compte</a>
                 <a class="tab" href="/editor">+ publier</a>
             </nav>
             <main>
                 <form class="search_ingredients" action="/search_ingredients" method="GET">
-                    <input type="text" value="{{search}}" placeholder="recherchez une recette..." name="search" required>
+                    <input type="text" {{'value="{}"'.format(search)|safe}} placeholder="recherchez un ingrédient..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
                 <p class="noresult">Aucun résultat</p>

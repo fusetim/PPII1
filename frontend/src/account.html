@@ -1,7 +1,7 @@
 <html>
     <title>CuliVert</title>
     <head>
-        <link rel="stylesheet" href="../static/css/style.css">
+        <link rel="stylesheet" href="sacha-style.scss">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
     </head>
@@ -16,7 +16,7 @@
             </nav>
             <main>
                 <div class="id_card">
-                    <img class="author_avatar" src="{{avatar_uid}}" alt="Author avatar">
+                    <img class="author_avatar" {{'src="{}"'.format(avatar_url)|safe}} alt="Author avatar">
                     <p class="display_name">{{display_name}}</p>
                     <a href=# class="username">@{{username}}</a>
                     <p class="bio">{{bio}}</p>
@@ -26,14 +26,14 @@
                 <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
                 {% for recette in data %}
                 <div class="affichage">
-                    <a class="row_recipe" href="/recipe/{{recette[1]}}">{{recette[0]}}</a> 
+                    <a class="row_recipe" {{'href="/recipe/{}"'.format(recette[1])|safe}}>{{recette[0]}}</a> 
                 </div>
                 {%endfor%}
                 <!-- affichage des pages -->
                 <section class="arrows">
-                    <a class="{{cf1}}" href={{lf1}}>{{f1}}</a>
+                    <a {{'class="{}" href="{}"'.format(cf1,lf1)|safe}}>{{f1}}</a>
                     <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
-                    <a class="{{cf2}}" href={{lf2}}>{{f2}}</a>
+                    <a {{'class="{}" href="{}"'.format(cf2,lf2)|safe}}>{{f2}}</a>
                 </section>
             </main>
         </section>
