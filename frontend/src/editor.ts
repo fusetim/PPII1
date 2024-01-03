@@ -163,6 +163,42 @@ editor_form.addEventListener("keydown", (evt) => {
     }
 });
 
+// Prevent the form from being submitted
+// We want to handle ourself the submission of the form.
+editor_form.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+});
+
+// == Handling event on the buttons ==
+preview_btn.addEventListener("click", () => {
+    let recipe = getData();
+    saveRecipe(recipe).then((recipe_uid) => {
+        window.location.href = `/recipes/${recipe_uid}`;
+    });
+});
+
+save_btn.addEventListener("click", () => {
+    let recipe = getData();
+    saveRecipe(recipe).then((recipe_uid) => {
+        let msg = document.createElement("div");
+        msg.classList.add("message");
+        let p = document.createElement("p");
+        p.textContent = "Recette sauvegardée !";
+        msg.appendChild(p);
+    });
+});
+
+publish_btn.addEventListener("click", () => {
+    let recipe = getData();
+    saveRecipe(recipe).then((recipe_uid) => {
+        let msg = document.createElement("div");
+        msg.classList.add("message");
+        let p = document.createElement("p");
+        p.textContent = "Recette publiée !";
+        msg.appendChild(p);
+    });
+});
+
 //  === Event Handlers for pre-rendered elements ===
 // When the user clicks on an ingredient chip, open the popover with the ingredient's data to 
 // edit them.
@@ -198,6 +234,49 @@ for (let sugg of tags_suggestions?.children ?? []) {
     });
 }
 
+//  === Type definitions ===
+
+// Ingredient type
+interface Ingredient {
+    ingr_code: string;
+    display_name: string | null;
+    quantity: number;
+    quantity_type: string;
+    reference_quantity: number | null;
+};
+
+// Recipe type
+interface Recipe {
+    recipe_uid: string | null;
+    title: string;
+    short_description: string;
+    preparation_time: number;
+    description: string;
+    ingredients: Ingredient[];
+    tags: string[];
+    illustration: File | null;
+};
+
+// Recipe request type
+interface RecipeRequest {
+    // If recipe_uid is null, it means we want to create a new recipe
+    recipe_uid: string | null;
+    title: string;
+    short_description: string;
+    preparation_time: number;
+    description: string;
+    ingredients: Ingredient[];
+    tags: string[];
+    illustration_uid: string | null;
+};
+
+// Upload type
+interface Upload {
+    cid: string;
+    upload_uid: string;
+    url: string;
+};
+
 //  ===  Functions  ===
 
 // Add the event handlers to a chip
@@ -211,5 +290,98 @@ function ingredientChipAddEventHandlers(chip: HTMLElement) {
         ingredient_popover.reference_quantity_input.value = chip.getAttribute("data-reference-quantity") ?? "";
         ingredient_popover.element?.classList.add("open");
         chip.remove();
+    });
+}
+
+// Handle the retrieval of all the information from the form
+function getData() : Recipe{
+    let ingredients : Ingredient[] = [];
+    let tags : string[] = [];
+    let illustration = null;
+    for (let chip of document.querySelectorAll("#ingredients > .chip")) {
+        if (chip == add_ingredient_chip) continue;
+        ingredients.push({
+            ingr_code: chip.getAttribute("data-ingr-code") ?? "",
+            display_name: chip.getAttribute("data-display-name") ?? "",
+            quantity: +(chip.getAttribute("data-quantity") ?? "0") as number,
+            quantity_type: chip.getAttribute("data-quantity-type") ?? "",
+            reference_quantity: chip.getAttribute("data-reference-quantity") == null ? +chip.getAttribute("data-reference-quantity") : null,
+        });
+    }
+    // TODO: Implement the real tag system
+    let illustration_input = document.getElementById("illustration") as HTMLInputElement;
+    if (illustration_input.files != null && illustration_input.files.length >= 1) {
+        illustration = illustration_input.files[0];
+    }
+
+    let recipe_uid_input = (document.getElementById("recipe-uid") as HTMLInputElement);
+
+    let recipe: Recipe = {
+        recipe_uid: recipe_uid_input.value == "" ? null : recipe_uid_input.value,
+        title: (document.getElementById("title") as HTMLInputElement).value,
+        short_description: (document.getElementById("short_description") as HTMLInputElement).value,
+        preparation_time: +(document.getElementById("preparation_time") as HTMLInputElement).value,
+        description: (document.getElementById("steps") as HTMLTextAreaElement).value,
+        ingredients: ingredients,
+        tags: tags,
+        illustration: illustration,
+    };
+
+    return recipe;
+}
+
+function uploadIllustration(file: File) : Promise<Upload> {
+    let formData = new FormData();
+    formData.append("file", file);
+    return fetch("/api/uploads/add", {
+        method: "POST",
+        body: formData,
+        credentials: "same-origin",
+    }).then((res) => {
+        if (res.ok) {
+            return res.json() as Promise<Upload>;
+        } else {
+            // TODO: Handle the error
+            throw new Error("Error while uploading the illustration");
+        }
+    });
+}
+
+async function saveRecipe(recipe: Recipe): Promise<String> {
+    let illustration_uid = null;
+    if (recipe.illustration != null) {
+        let upload = await uploadIllustration(recipe.illustration);
+        illustration_uid = upload.upload_uid;
+    }
+    let recipeRequest: RecipeRequest = {
+        recipe_uid: recipe.recipe_uid,
+        title: recipe.title,
+        short_description: recipe.short_description,
+        preparation_time: recipe.preparation_time,
+        description: recipe.description,
+        ingredients: recipe.ingredients,
+        tags: recipe.tags,
+        illustration_uid: illustration_uid,
+    };
+    
+    let endpoint = recipeRequest.recipe_uid == null ? "/api/recipes/add" : "/api/recipes/edit";
+    let method = recipeRequest.recipe_uid == null ? "POST" : "PATCH";
+
+    return await fetch(endpoint, {
+        method: method,
+        body: JSON.stringify(recipeRequest),
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            // TODO: Handle the error
+            throw new Error("Error while saving the recipe");
+        }
+    }).then((data) => {
+        return data.recipe_uid;
     });
 }
