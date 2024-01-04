@@ -1,0 +1,50 @@
+<html>
+    <title>CuliVert</title>
+    <head>
+        <link rel="stylesheet" href="sacha-style.scss">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <section class="structure">
+            <nav>
+                <a class="logo" href="/home">CuliVert</h1>
+                <a class="currenttab" {{'href="/search_ingredients?search={}&page=1&sort_type={}"'.format(search,sort_type)|safe}}>Ingrédients</a>
+                <a class="tab" {{'href="/search_recipes?search={}&page=1"'.format(search)|safe}}">Recettes</a>
+                <a class="tab" href="/accounts/me">Mon compte</a>
+                <a class="tab" href="/editor">+ publier</a>
+            </nav>
+            <main>
+                <form class="search_ingredients" action="/search_ingredients?page=1" method="GET">
+                    <input type="text" {{'value="{}"'.format(search)|safe}} placeholder="recherchez une recette..." name="search" required>
+                    <input type="submit" value="rechercher">
+                </form>
+                <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
+                
+                <!-- message est soit "" soit "equivalent co2" (sert à effacer  le message si on a aucune recherche en cours)-->
+                <div class="row_ingredient">
+                    <a {{'href="/search_ingredients?search={}&page=1"'.format(search)|safe}} class="produit">{{produit}}</a>
+                    <a {{'href="/search_ingredients?search={}&page=1&sort_type={}"'.format(search,co2sort)|safe}} class="message">
+                        <p class=m1>{{m1}}</p>
+                        <p class="m2">{{m2}}</p>
+                    </a>
+                </div>
+
+                {% for ingredient in data %}
+                <div class="affichage">
+                    <div class="row_ingredient">
+                        <div class="ingredient_name">{{ingredient[0]}}</div>
+                        <div class="score_ingredient">{{ingredient[1]}} kg</div>
+                    </div> 
+                </div>
+                {%endfor%} 
+                <!-- affichage des pages -->
+                <section class="arrows">
+                    <a {{'class="{}" href="{}"'.format(cf1,lf1)|safe}}>{{f1}}</a>
+                    <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
+                    <a {{'class="{}" href="{}"'.format(cf2,lf2)|safe}}>{{f2}}</a>
+                </section>
+            </main>
+        </section>
+    </body>
+</html>
