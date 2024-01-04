@@ -56,6 +56,17 @@ HANDLED_ERRORS = [
 ]
 
 def handle_error(status_code, phrase, description):
+    """
+    Route generator to handle a specific HTTP error.
+
+    Args:
+        status_code (int): The HTTP Status code.
+        phrase (str): Custom (or not) HTTP Status phrase.
+        description (list[str]): A small description to display the user. Each item is a line.
+
+    Returns:
+        A route that can handle this particular HTTP error.
+    """
     def handle_route(e):
         return render_template("error-page.html", status_code=status_code, phrase=phrase, description=description), status_code
     return handle_route
