@@ -1,0 +1,96 @@
+= CR Réunion - 02/01/2024
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi | Discord |02/01/2024 18h00-19h00
+|===
+
+
+== Participants
+
+=== Présents
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT
+
+=== Absents
+
+Guillaume HISLEUR a été excusé, pour des raisons familiales, il ne pouvait pas être présent à la réunion.
+
+== Ordre du jour
+
+* Avancements
+
+* Dossier Final ENACTUS
+
+* Note corrective des CR
+
+== Échanges
+
+=== Avancements
+
+Timothée a présenté son avancement sur les différentes parties du projet en cours : les comptes utilisateurs ont été finalisés
+-- l'inscription et la connexion fonctionne, la page Mon Compte est opérationnelle. De plus la fonctionnalité "User Uploads" a
+été implémentée, permettant à l'utilisateur de télécharger des fichiers sur le serveur. C'est notamment déjà utilisé pour les
+illustrations des recettes et les avatars des utilisateurs. L'éditeur de recette, pour la partie utilisateur, est lui encore
+en cours de développement mais devrait être terminé d'ici vendredi. La majorité des fonctionnalités de l'éditeur sont déjà
+implémentées, il ne reste plus qu'à les lier à la base de données (ou plutôt à l'API).
+
+Clément a présenté son avancement sur la partie BACKEND du projet. La majorité des routes ont été implémentées, il ne reste
+que les quelques routes liées à l'ajout et la modification des recettes coté ADMIN qui doivent être termninées. Par
+conséquent, il a été décidé qu'une première PR serait faite dans les 24h, avec les fonctionnalités déjà implémentées,
+puis une seconde PR sera faite avec les fonctionnalités restantes, afin de pouvoir commencer à tester l'API et l'intégrer
+aux pages existantes.
+
+Sacha a présenté son avancement sur la partie FRONTEND du projet. La page d'accueil et les pages de recherche sont terminées
+-- la pagination marche et toutes les informations nécessaires y sont bien affichées. Une première PR devrait être merge
+dans les 24h, avec les fonctionnalités déjà implémentées. Il reste encore une page Profil Utilisateur à implémenter, et
+sera merge soit demain soit dans un second temps. Suite à un malentendu, Sacha avait commencé à implémenter une page Mon
+Compte, mais Timothée avait déjà implémenté cette page, l'erreur a été cependant de courte durée. Par ailleurs, une liste
+des recettes écrites par l'utilisateur doit être intégré au profil utilisateur, ralongeant un peu le temps de développement.
+
+Il a été mis au clair que toutes les branches ouvertes devaient être merged d'ici vendredi soir (05/01/2023), afin de pouvoir commencer
+à tester l'application et faire les petites corrections nécessaires, au besoin.
+
+=== Techniques
+
+Quelques échanges techniques ont eu lieux, notamment sur la manière de gérer les transferts de données entre l'éditeur de
+recette et le backend. Il a été confirmé que les données seraient transférées en JSON, et que quelques requêtes intermédiaires
+seraient faites afin de rechercher les ingrédients, téléverser les images, etc, et transmettre ainsi uniquement les identifiants
+appropriés au backend.
+
+Une petite discussion autour de la structure du frontend a eu lieu, afin d'éclaircir son fonctionnement au sein du projet.
+
+=== Dossier Final ENACTUS
+
+Bien que le dossier a déjà été bien avancé par Timothée, il faut mettre à jour les informations concernant le projet, notamment
+les fonctionnalités qui ont été réellement implémentées, et les fonctionnalités qui ont été abandonnées. Clément se chargera
+donc de mettre à jour le dossier, et de l'envoyer le 08/01/2024 au plus tard.
+
+=== Note corrective des CR
+
+Quelques petites erreurs ont déjà été remontées, elles seront corriger au fur et à mesure.
+
+La note sera merged d'ici vendredi.
+
+== Décisions
+
+* Une PR est attendue dans les 24h avec les fonctionnalités déjà implémentées des routes API (Clément).
+* Une PR est attendue dans les 24h avec les fonctionnalités déjà implémentées des pages FRONTEND (Sacha).
+* Toutes les branches doivent être merged d'ici vendredi soir (05/01/2023).
+* Le dossier final ENACTUS doit être mis à jour et envoyé le 08/01/2024 au plus tard (Clément).
+* La note corrective des CR doit être merged d'ici vendredi soir (05/01/2023), tout commentaire doit être formulé
+auparavant sur Discord.
+
+== TODO-List
+
+Cf Github
+
+== Pour la suite
+
+Un point sera fait vendredi soir (05/01/2023) afin de voir l'avancement du projet. Il sera également décidé si une réunion
+est nécessaire ou non le jour même ou le lendemain.
+
+=== Annexes
