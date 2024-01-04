@@ -17,7 +17,7 @@ from md_render import markdown_render
 from util.human_format import format_duration, format_mass
 from util.upload_helper import get_upload_url
 from login import login_manager
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -571,6 +571,45 @@ def get_recipe(recipe_uid):
 @login_required
 def editor():
     """
-    a page to create a recipe
+    Editor page, allowing the user to create/edit a recipe.
     """
-    return render_template("editor.html")
+    if request.args.get("recipe_uid") is not None:
+        recipe_uid = request.args.get("recipe_uid")
+        recipe = db.session.get(Recipe, recipe_uid)
+        if recipe is None:
+            return ("Recipe not found.", 404)
+        else:
+            if recipe.author != current_user.user_uid:
+                return ("You are not the author of this recipe.", 403)
+            return render_template(
+                "editor.html",
+                recipe_uid=recipe_uid,
+                name=recipe.name,
+                preparation_time=recipe.duration,
+                tags=[tag.name for tag in recipe.tags],
+                short_description=recipe.short_description,
+                description=recipe.description,
+                ingredients=[
+                    {
+                        "code": link.ingredient.code,
+                        "name": link.ingredient.name,
+                        "display_name": link.display_name,
+                        "quantity": link.quantity,
+                        "quantity_type_uid": link.quantity_type_uid,
+                        "unit": link.quantity_type.unit,
+                        "reference_quantity": link.reference_quantity,
+                    }
+                    for link in recipe.ingredients
+                ],
+            )
+    else:
+        return render_template(
+                "editor.html",
+                recipe_uid=None,
+                name="",
+                preparation_time=30,
+                tags=[],
+                short_description="",
+                description="",
+                ingredients=[],
+            )
