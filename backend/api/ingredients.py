@@ -9,6 +9,16 @@ from lsh import normalize_str
 bp = Blueprint("ingredients", __name__)
 
 
+@bp.route("/")
+def all_ingredients():
+    """
+    test route: return all ingredients (json)
+    """
+    ingredients = Ingredient.query.all()
+    ing_list = [ing.to_dict() for ing in ingredients]
+    return jsonify(ing_list)
+
+
 # Probably the most useful route of this router.
 # It handles the lookup of an ingredient based on its unique identifier (code).
 @bp.route("/<string:code>")
