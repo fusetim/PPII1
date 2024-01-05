@@ -241,7 +241,9 @@ editor_form.addEventListener("submit", (evt) => {
 preview_btn.addEventListener("click", () => {
     let recipe = getData();
     saveRecipe(recipe).then((recipe_uid) => {
-        window.location.href = `/recipes/${recipe_uid}`;
+        let recipe_uid_input = (document.getElementById("recipe-uid") as HTMLInputElement);
+        recipe_uid_input.value = recipe_uid;
+        window.location.href = `/recipe/${recipe_uid}`;
     }, (err) => {
         console.error(err);
         let msg = createMessage("Erreur lors de la sauvegarde de la recette.", (err as Error).message, true);
@@ -254,6 +256,8 @@ preview_btn.addEventListener("click", () => {
 save_btn.addEventListener("click", () => {
     let recipe = getData();
     saveRecipe(recipe).then((recipe_uid) => {
+        let recipe_uid_input = (document.getElementById("recipe-uid") as HTMLInputElement);
+        recipe_uid_input.value = recipe_uid;
         let msg = createMessage("Recette sauvegardée !", null, false);
         msg_group.appendChild(msg);
         autoTimeoutMessage(msg);
@@ -270,6 +274,8 @@ save_btn.addEventListener("click", () => {
 publish_btn.addEventListener("click", () => {
     let recipe = getData();
     saveRecipe(recipe).then((recipe_uid) => {
+        let recipe_uid_input = (document.getElementById("recipe-uid") as HTMLInputElement);
+        recipe_uid_input.value = recipe_uid;
         let msg = createMessage("Recette publiée !", null, false);
         msg_group.appendChild(msg);
         autoTimeoutMessage(msg);
@@ -435,7 +441,7 @@ function uploadIllustration(file: File): Promise<Upload> {
 }
 
 // Handle the saving of the recipe
-async function saveRecipe(recipe: Recipe): Promise<String> {
+async function saveRecipe(recipe: Recipe): Promise<string> {
     let illustration_uid = null;
     if (recipe.illustration != null) {
         try {
