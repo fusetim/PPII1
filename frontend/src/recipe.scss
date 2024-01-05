@@ -28,45 +28,32 @@ body,
 // The navbar is not expected to work there, it is just for testing
 // and experimentation purposes.
 nav {
-    @media (orientation: portrait) {
-        display: none;
-    }
-
+    flex-wrap: wrap;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    width: 20%;
-    min-height: 100%;
-    overflow: hidden;
-    padding: 1em;
-    background-color: #111;
-    color: #fff;
-
-    a,
-    a:visited {
-        color: #fff;
-    }
-
-    .brand-logo {
-        font-size: 1.25em;
-        font-weight: 700;
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        color: oklch(38.62% 0.075 55.38);
-        padding-bottom: 0.5em;
-        text-decoration: none;
-    }
+    flex-direction: row;
+    align-items: center;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    margin-top: 0;
+    margin-left: 0%;
+    width: 100%;
 }
 
+.structure{
+    margin-top: 2em;
+    font-family: 'Arial';
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 70%;
+    margin-left: 15%;
+}
 main {
     display: flex;
     justify-content: center;
-    width: 100%;
 
     .column {
+        width: 100%;
         @media (min-width: 1200px) {
             max-width: 1000px;
             border-radius: 2em 2em;
