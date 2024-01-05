@@ -1,29 +1,38 @@
 = Base de données
 
-__Ce document a été mis à jour le 17/12/2023.__
+__Ce document a été mis à jour le 04/01/2024.__
 
 Ce document relate de la structure de la base de données du projet. Il est très probable que celle-ci
 évolue au cours du projet.
 
 == Tables et relations
 
-image:assets/DB_2023_12_17.png[]
+image:assets/DB_2024_01_04.png[]
 
-Au niveau de la base de données, nous avons 2 tables principales :
+Au niveau de la base de données, nous avons 3 tables principales :
 
 * `recipes` qui contient les recettes et les informations qui leur sont liées (nom, description, auteur, ...)
 
 * `ingredients` qui contient les ingrédients, en majorité fournis par link:https://agribalyse.ademe.fr/[AGRIBALYSE]
 
-Ces deux tables sont liées par une table de relation `ingredient_links` qui contient les liaisons ingrédients-recettes,
-et les informations de quantités (et d'unités).
+* `users` qui contient les utilisateurs, et les informations qui leur sont liées (identifiants, bio, avatar, ...)
 
-Une dernière table `quantity_types` contient les types de quantités (masse en gramme, volume en litre, cuillère à café, ...)
+Les tables `recipes` & `ingredients` sont liées par une table de relation `ingredient_links` qui contient les liaisons
+ingrédients-recettes, et les informations de quantités (et d'unités), ainsi qu'un nom d'affichage personnalisable.
+
+Une autre table `quantity_types` contient les types de quantités (masse en gramme, volume en litre, cuillère à café, ...)
 et permet de faire les conversions principales entre l'unité associée et une masse en kilogramme. Ainsi on peut afficher
 de joli quantité avec des unités de mesures arbitraires, tout en faisant les calculs (notamment l'équivalent Carbone)
 avec des kilogrammes.
 
 Par ailleurs, chaque recette peut comporter un emsemble de tags (définies dans la table `recipe_tags`) et dont les liaisons (M-M) sont définies dans la table `recipe_tag_links`.
+
+Quant à la table `users`, elle définie les identifiants, bio, avatar, ... des utilisateurs, et sont liées aux recettes qu'ils ont créées (1-N).
+De plus leur avatar est une référence à une ligne de la table `user_uploads`, qui contient les informations de l'image (nom, extension, auteur, emplacement,...).
+Il faut noter que les utilisateurs disposent d'un champ `session_uid` qui est un identifiant unique de session, qui est utilisé pour les authentifications. Elle
+permet notamment de déconnecter tous les appareils d'un utilisateur lors d'un changement de mot de passe.
+
+La table `user_uploads` est également utilisée pour stocker les images des recettes, qui sont référencées dans la table `recipes` par l'attribut `illustration_uid`.
 
 === Conventions
 
@@ -58,4 +67,7 @@ mêmes schémas que le serveur.
 
 Pour peupler vos tables, nous vous conseillons d'utiliser le script `/scripts/Script_ingredients.py` qui permet
 de récupérer les données d'AGRIBALYSE et de les insérer dans la table `ingredients`, il ne vous manque alors plus que
-des recettes :)
+des recettes. Vous pouvez trouver un exemple de base de données à importer dans `/scripts/db_test.sql`. Il faut cependant
+noter que les ingrédients doivent être ajoutés auparavant sinon les contraintes d'intégrité ne seront pas respectées. En
+effet pour des raisons de licences, nous ne pouvons pas fournir une base de données complète, contenant les ingrédients
+d'AGRIBALYSE.

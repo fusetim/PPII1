@@ -1,22 +1,23 @@
 from api import api
 from views import views
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, redirect
 import tomllib
 from sqlalchemy import text
 from flask_migrate import Migrate
 import os
 import sys
 from db import db
-from search_table import save_search_tables, get_ingredient_table
+from search_table import save_search_tables, get_ingredient_table, get_recipe_table
 from lsh import normalize_str
 from models.recipe import Recipe
 from models.ingredient_link import IngredientLink
 from models.ingredient import Ingredient
-from math import floor
+from math import ceil
 from md_render import markdown_render
 from util.human_format import format_duration, format_mass
 from util.upload_helper import get_upload_url
 from login import login_manager
+from http import HTTPStatus
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -42,10 +43,41 @@ app.teardown_appcontext(save_search_tables)
 # By default, Flask already routes the static directory :)
 # No need for a dedicated route.
 
+# Setup the error handlers
+HANDLED_ERRORS = [
+    (400, "Mauvaise Requête", ["La syntaxe de la requête est invalide.", "Veuillez contacter un administrateur si l'erreur se reproduit."]),
+    (401, "Non-Autorisé", ["Une authentification est requise pour poursuivre la requête.", "Veuillez vous connecter puis réessayer."]),
+    (403, "Interdit", ["L'accès à ce contenu est restreint.", "Il est peut-être nécessaire de se connecter avant de réessayer."]),
+    (404, "Introuvable", ["La page que vous tentez d'accéder n'existe pas.", "Elle a peut-être été supprimée ou déplacée."]),
+    (405, "Méthode Non Autorisée", ["La requête utilise un verbe qui n'est pas pris en charge par le serveur."]),
+    (413, "Requêtre Trop Longue", ["La requête est trop longue.", "Si vous essayez d'uploader un fichier, il se peut que vous dépasser la limite définie par le serveur."]),
+    (429, "Trop de Requêtes", ["L'utilisateur a dépassé les limites de requêtes acceptables.", "Veuillez patientez quelques minutes avant de réessayer."]),
+    (500, "Erreur Interne du Serveur", ["Le serveur a rencontré une situation qu'il ne sait pas traiter."]),
+]
+
+def handle_error(status_code, phrase, description):
+    """
+    Route generator to handle a specific HTTP error.
+
+    Args:
+        status_code (int): The HTTP Status code.
+        phrase (str): Custom (or not) HTTP Status phrase.
+        description (list[str]): A small description to display the user. Each item is a line.
+
+    Returns:
+        A route that can handle this particular HTTP error.
+    """
+    def handle_route(e):
+        return render_template("error-page.html", status_code=status_code, phrase=phrase, description=description), status_code
+    return handle_route
+
+for (status_code, phrase, description) in HANDLED_ERRORS:
+    app.register_error_handler(status_code, handle_error(status_code, phrase, description))
+
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return redirect("/home")
 
 
 @app.route("/home", methods=("GET",))
@@ -55,42 +87,444 @@ def home():
     """
     return render_template("home.html")
 
-
 @app.route("/search_ingredients")
 def result_ingredients():
     """
     a page showing the results of the research from the home page
     shows ingredients' names and co2 equivalent cost
     """
+    # nbres : nb de resultats affichés sur une meme page
+    nbres = 10
     search = request.args.get("search")
     table = get_ingredient_table()
     normalized_query = normalize_str(search)
-    codes = table.get(normalized_query, 10)
+    codes = table.get(normalized_query)
     data = []
-    if codes == []:
-        return render_template("no_result.html")
+    other = db.session.execute(
+        text(
+            f"SELECT name, co2 FROM ingredients WHERE normalized_name LIKE '%{normalized_query}%'"
+        )
+    ).all()
+
+    if search == "":
+        return render_template("result_ingredients.html", data=data, search=search)
+
+    elif codes == [] and other == []:
+        return render_template("no_result_ingredients.html", search=search)
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
             ingr = db.session.execute(
                 text("SELECT name, co2 FROM ingredients WHERE code = :c"), {"c": code}
             ).all()[0]
+            # on arondit le score co2
+            ingr = (ingr[0], round(ingr[1], 2))
             data.append(ingr)
-        return render_template("result_ingredients.html", data=data)
+        if search != "":
+            for r in other:
+                if r not in data:
+                    # on arondit le score co2
+                    r = (r[0], round(r[1], 2))
+                    # data.append(r)
+                    data.insert(0, r)
+        sort_type = request.args.get("sort_type")
+        if sort_type in (None, ""):
+            sort_type = 0
+        else:
+            sort_type = int(sort_type)
+
+        # on trie data comme voulu (0 : par nom ; 1 par co2 croissant ; 2 par co2 decroissant)
+        if sort_type == 0:
+            data.sort(key=lambda a: a[0])
+            co2sort = 2
+            triangle = ""
+        elif sort_type == 1:
+            data.sort(key=lambda a: a[1], reverse=False)
+            co2sort = 2
+            triangle = "▲"
+        else:
+            data.sort(key=lambda a: a[1], reverse=True)
+            co2sort = 1
+            triangle = "▼"
+
+        if len(data) <= nbres:
+            return render_template(
+                "result_ingredients.html",
+                data=data,
+                search=search,
+                produit="Produit",
+                m1=f"équivalent co2    {triangle}",
+                m2="par kg de produit",
+                co2sort=co2sort,
+                sort_type=sort_type,
+                f1="<",
+                f2=">",
+                sur="sur",
+                lf1="#",
+                cf1="nolink",
+                lf2="#",
+                cf2="nolink",
+                numero="1",
+                n_total="1",
+            )
+        else:
+            page = request.args.get("page")
+            if page == None:
+                page = 1
+            else:
+                page = int(page)
+
+            # on recrée le format mot1+mo2+... pour ne pas que au passage d'une page à l'autre
+            # on ne garde que le premier mot de la recherche (pour qu'il n'y ait pas d'espace dans l'url)
+            query = ""
+            for c in search:
+                if c == " ":
+                    query += "+"
+                else:
+                    query += c
+            if page <= 1:
+                # première page
+                return render_template(
+                    "result_ingredients.html",
+                    data=data[:nbres],
+                    search=search,
+                    query=query,
+                    produit="Produit",
+                    m1=f"équivalent co2    {triangle}",
+                    m2="par kg de produit",
+                    co2sort=co2sort,
+                    sort_type=sort_type,
+                    f1="<",
+                    f2=">",
+                    sur="sur",
+                    lf1="#",
+                    cf1="nolink",
+                    lf2=f"/search_ingredients?search={query}&page={page+1}&sort_type={sort_type}",
+                    cf2="arrow",
+                    numero="1",
+                    n_total=str(ceil(len(data) / nbres)),
+                )
+            # dernière page
+            elif page >= ceil(len(data) / nbres):
+                return render_template(
+                    "result_ingredients.html",
+                    data=data[ceil(len(data) / nbres - 1) * nbres :],
+                    search=search,
+                    query=query,
+                    produit="Produit",
+                    m1=f"équivalent co2    {triangle}",
+                    m2="par kg de produit",
+                    co2sort=co2sort,
+                    sort_type=sort_type,
+                    f1="<",
+                    f2=">",
+                    sur="sur",
+                    lf1=f"/search_ingredients?search={query}&page={page-1}&sort_type={sort_type}",
+                    cf1="arrow",
+                    lf2="#",
+                    cf2="nolink",
+                    numero=str(ceil(len(data) / nbres)),
+                    n_total=str(ceil(len(data) / nbres)),
+                )
+            # les autres pages au milieu
+            else:
+                return render_template(
+                    "result_ingredients.html",
+                    data=data[(page - 1) * nbres : (page) * nbres],
+                    search=search,
+                    query=query,
+                    produit="Produit",
+                    m1=f"équivalent co2    {triangle}",
+                    m2="par kg de produit",
+                    co2sort=co2sort,
+                    sort_type=sort_type,
+                    f1="<",
+                    f2=">",
+                    sur="sur",
+                    lf1=f"/search_ingredients?search={query}&page={page-1}&sort_type={sort_type}",
+                    cf1="arrow",
+                    lf2=f"/search_ingredients?search={query}&page={page+1}&sort_type={sort_type}",
+                    cf2="arrow",
+                    numero=str(page),
+                    n_total=str(ceil(len(data) / nbres)),
+                )
 
 
-@app.route("/recipes")
+@app.route("/search_recipes")
 def recipes():
     """
     a page showing a search bar to question the "recipes" db
     """
-    return render_template("recipes.html")
+    nbres = 10  # nombre de resultats affichés sur une seule page
+
+    search = request.args.get("search")
+    table = get_recipe_table()
+    normalized_query = normalize_str(search)
+    codes = table.get(normalized_query)
+    data = []
+    # on veut maintenant chercher les resultats contenant search
+    other = db.session.execute(
+        text(
+            f"SELECT name, recipe_uid, author FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'"
+        )
+    ).all()
+    if search == "":
+        return render_template("result_recipes.html", data=data, search=search)
+    elif codes == [] and other == []:
+        return render_template("no_result_recipes.html", search=search)
+    else:
+        for code in codes:
+            # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
+            recipe = db.session.execute(
+                text(
+                    f"SELECT name, recipe_uid, author FROM recipes WHERE recipe_uid = :c"
+                ),
+                {"c": code},
+            ).all()[0]
+            data.append(recipe)
+
+        if search != "":
+            for r in other:
+                if r not in data:
+                    # data.append(r)
+                    data.insert(0, r)
+        recipes = []
+
+        # on rajoute l'username à data
+        for r in data:
+            username = db.session.execute(
+                text("SELECT username FROM users WHERE user_uid = :c"), {"c": r[2]}
+            ).all()[0][0]
+            recipes.append((r[0], r[1], username, r[2]))
+        data = recipes
+        if len(data) <= nbres:
+            return render_template(
+                "result_recipes.html",
+                data=data,
+                search=search,
+                f1="<",
+                f2=">",
+                sur="sur",
+                lf1="#",
+                cf1="nolink",
+                lf2="#",
+                cf2="nolink",
+                numero="1",
+                n_total="1",
+            )
+        else:
+            page = request.args.get("page")
+            if page == None:
+                page = 1
+            else:
+                page = int(page)
+
+            # on recrée le format mot1+mo2+... pour ne pas que au passage d'une page à l'autre
+            # on ne garde que le premier mot de la recherche (pour qu'il n'y ait pas d'espace dans l'url)
+            query = ""
+            for c in search:
+                if c == " ":
+                    query += "+"
+                else:
+                    query += c
+            if page <= 1:
+                return render_template(
+                    "result_recipes.html",
+                    data=data[:nbres],
+                    search=search,
+                    query=query,
+                    f1="<",
+                    f2=">",
+                    sur="sur",
+                    lf1="#",
+                    cf1="nolink",
+                    lf2=f"/search_recipes?search={query}&page={page+1}",
+                    cf2="arrow",
+                    numero="1",
+                    n_total=str(ceil(len(data) / nbres)),
+                )
+            elif page >= ceil(len(data) / nbres):
+                return render_template(
+                    "result_recipes.html",
+                    data=data[(ceil(len(data) / nbres - 1)) * nbres :],
+                    search=search,
+                    query=query,
+                    f1="<",
+                    f2=">",
+                    sur="sur",
+                    lf1=f"/search_recipes?search={query}&page={page-1}",
+                    cf1="arrow",
+                    lf2="#",
+                    cf2="nolink",
+                    numero=str(ceil(len(data) / nbres)),
+                    n_total=str(ceil(len(data) / nbres)),
+                )
+            else:
+                return render_template(
+                    "result_recipes.html",
+                    data=data[(page - 1) * nbres : (page) * nbres],
+                    search=search,
+                    query=query,
+                    f1="<",
+                    f2=">",
+                    sur="sur",
+                    lf1=f"/search_recipes?search={query}&page={page-1}",
+                    cf1="arrow",
+                    lf2=f"/search_recipes?search={query}&page={page+1}",
+                    cf2="arrow",
+                    numero=str(page),
+                    n_total=str(ceil(len(data) / nbres)),
+                )
+
+
+@app.route("/accounts/<string:id>")
+def account(id):
+    """
+    a page showing the profile of a user
+
+    Args:
+        id (string): the UUID of the user to display
+    """
+    nbres = 10  # nombre de resultats affichés sur une seule page
+    # culivert uid : 6434e9ce-8e46-48a2-9f2f-35699160f526
+    # Sacha uid : 6be9e17b-5311-4f8a-b497-c744dd6fe7c4
+    (
+        username,
+        display_name,
+        bio,
+        creation_date,
+        deletion_date,
+        avatar_uid,
+    ) = db.session.execute(
+        text(
+            "SELECT username, display_name, bio, creation_date, deletion_date, avatar_uid FROM users WHERE user_uid = :c"
+        ),
+        {"c": id},
+    ).all()[0]
+    if deletion_date == None:
+        mois = [
+            "janvier",
+            "fevrier",
+            "mars",
+            "avril",
+            "mai",
+            "juin",
+            "juillet",
+            "aout",
+            "septembre",
+            "octobre",
+            "novembre",
+            "décembre",
+        ]
+        date_text = f"Utilise CuliVert depuis le {creation_date.day} {mois[creation_date.month-1]} {creation_date.year}"
+    else:
+        date_text = ""
+    # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
+    data = db.session.execute(
+        text("SELECT name, recipe_uid FROM recipes WHERE author = :c"), {"c": id}
+    ).all()
+    if len(data) <= nbres:
+        return render_template(
+            "account.html",
+            username=username,
+            display_name=display_name,
+            bio=bio,
+            date_text=date_text,
+            avatar_url=get_upload_url(
+                avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"
+            ),
+            data=data,
+        )
+    else:
+        page = request.args.get("page")
+        if page == None:
+            page = 1
+        else:
+            page = int(page)
+
+        # on recrée le format mot1+mo2+... pour ne pas que au passage d'une page à l'autre
+        # on ne garde que le premier mot de la recherche (pour qu'il n'y ait pas d'espace dans l'url)
+        query = ""
+        for c in search:
+            if c == " ":
+                query += "+"
+            else:
+                query += c
+        # première page
+        if page <= 1:
+            return render_template(
+                "account.html",
+                username=username,
+                display_name=display_name,
+                bio=bio,
+                date_text=date_text,
+                avatar_uid=get_upload_url(
+                    avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"
+                ),
+                data=data[:nbres],
+                f1="<",
+                f2=">",
+                sur="sur",
+                lf1="#",
+                cf1="nolink",
+                lf2=f"/search_recipes?search={query}&page={page+1}",
+                cf2="arrow",
+                numero="1",
+                n_total=str(ceil(len(data) / nbres)),
+            )
+        # dernière page
+        elif page >= ceil(len(data) / nbres):
+            return render_template(
+                "account.html",
+                username=username,
+                display_name=display_name,
+                bio=bio,
+                date_text=date_text,
+                avatar_uid=get_upload_url(
+                    avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"
+                ),
+                data=data[(ceil(len(data) / nbres - 1)) * nbres :],
+                f1="<",
+                f2=">",
+                sur="sur",
+                lf1=f"/search_recipes?search={query}&page={page-1}",
+                cf1="arrow",
+                lf2="#",
+                cf2="nolink",
+                numero=str(ceil(len(data) / nbres)),
+                n_total=str(ceil(len(data) / nbres)),
+            )
+        # page intermédiaire
+        else:
+            return render_template(
+                "account.html",
+                username=username,
+                display_name=display_name,
+                bio=bio,
+                date_text=date_text,
+                avatar_uid=get_upload_url(
+                    avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"
+                ),
+                data=data[(page - 1) * nbres : (page) * nbres],
+                f1="<",
+                f2=">",
+                sur="sur",
+                lf1=f"/search_recipes?search={query}&page={page-1}",
+                cf1="arrow",
+                lf2=f"/search_recipes?search={query}&page={page+1}",
+                cf2="arrow",
+                numero=str(page),
+                n_total=str(ceil(len(data) / nbres)),
+            )
 
 
 @app.route("/recipe/<uuid:recipe_uid>")
 def get_recipe(recipe_uid):
     """
     a page displaying the recipe with the given id
+
+    Args:
+        recipe_uid (uuid): the UUID of the recipe to display
     """
 
     def ingr_mass_equivalent(link: IngredientLink):
@@ -139,10 +573,14 @@ def get_recipe(recipe_uid):
 
     # Author
     author = {
-        "avatar_url": get_upload_url(recipe.author_account.avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"),
+        "avatar_url": get_upload_url(
+            recipe.author_account.avatar_uid,
+            "/static/assets/user_avatar_placeholder_from_undraw.svg",
+        ),
         "display_name": recipe.author_account.display_name,
         "username": recipe.author_account.username,
         "bio": recipe.author_account.bio,
+        "uuid": recipe.author_account.user_uid,
     }
 
     return render_template(

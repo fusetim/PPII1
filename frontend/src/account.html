@@ -1,0 +1,41 @@
+<html>
+    <title>CuliVert</title>
+    <head>
+        <link rel="stylesheet" href="sacha-style.scss">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <section class="structure">
+            <nav>
+                <a class="logo" href="/home">CuliVert</h1>
+                <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
+                <a class="tab" href="/search_recipes?search=&page=1">Recettes</a>
+                <a class="tab" href="/accounts/me">Mon compte</a>
+                <a class="tab" href="/editor">+ publier</a>
+            </nav>
+            <main>
+                <div class="id_card">
+                    <img class="author_avatar" {{'src="{}"'.format(avatar_url)|safe}} alt="Author avatar">
+                    <p class="display_name">{{display_name}}</p>
+                    <a href=# class="username">@{{username}}</a>
+                    <p class="bio">{{bio}}</p>
+                    <p class="date_text">{{date_text}}</p>
+                </div>
+                <br>
+                <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
+                {% for recette in data %}
+                <div class="affichage">
+                    <a class="row_recipe" {{'href="/recipe/{}"'.format(recette[1])|safe}}>{{recette[0]}}</a> 
+                </div>
+                {%endfor%}
+                <!-- affichage des pages -->
+                <section class="arrows">
+                    <a {{'class="{}" href="{}"'.format(cf1,lf1)|safe}}>{{f1}}</a>
+                    <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
+                    <a {{'class="{}" href="{}"'.format(cf2,lf2)|safe}}>{{f2}}</a>
+                </section>
+            </main>
+        </section>
+    </body>
+</html>
