@@ -47,30 +47,17 @@ def search_recipe(query):
     return jsonify(results)
 
 
-@bp.route("/recipes")
+@bp.route("/all")
 def all_recipes():
     """
     test route: return all recipes (json)
     """
     recipes = Recipe.query.options().all()
-    recipe_list = [
-        {
-            "type": "recipe",
-            "recipe_uid": recipe.recipe_uid,
-            "name": recipe.name,
-            "short_description": recipe.short_description,
-            "description": recipe.description,
-            "type": recipe.type,
-            "author": recipe.author,
-            "duration": recipe.duration,
-            "illustration": get_upload_url(recipe.illustration),
-        }
-        for recipe in recipes
-    ]
+    recipe_list = [ recipe.to_dict() for recipe in recipes ]
     return jsonify(recipe_list)
 
 
-@bp.route("/links")
+@bp.route("/all_links")
 def all_links():
     """
     test route: return all links (json)
@@ -80,7 +67,7 @@ def all_links():
     return jsonify(links_data)
 
 
-@bp.route("/quantities")
+@bp.route("/all_quantities")
 def all_quantities():
     """
     test route: return all quantities (json)
@@ -95,7 +82,7 @@ def recipe_info(id):
     """Return the name, description & short_desc of the recipe with UUID = id."""
     recipe = Recipe.query.get(id)
     if recipe is None:
-        raise RecipeNotFound(context="Not in DB.", payload={"code": id})
+        raise RecipeNotFound(context="Not in DB.", payload={"recipe_uid": id})
     info = {
         "name": recipe.name,
         "short_description": recipe.short_description,
@@ -110,7 +97,9 @@ def recipe_ingredients(id):
     Return the code, name & CO2 equivalent of the ingredients from recipe
     with UUID = id.
 
-    They are formatted as json: ingredients{ingredient{code, name, co2}}
+    They are formatted as json: ingredients{ingredient{code, name, co2}}.
+
+    This route might raise a RecipeNotFound exception, if the recipe is not in DB.
     """
     ingredients = (
         db.session.query(Ingredient.code, Ingredient.name, Ingredient.co2)
@@ -123,6 +112,14 @@ def recipe_ingredients(id):
     ingredients_data = [
         {"code": code, "name": name, "co2": co2} for code, name, co2 in ingredients
     ]
+
+    # If the list is empty we want to check that the requested recipe is in the DB,
+    # to properly inform the client that the recipe is not in the DB.
+    # Otherwise, we can return an empty list.
+    if len(ingredients_data) == 0:
+        if db.session.get(Recipe, id) is None:
+            raise RecipeNotFound(context="Not in DB.", payload={"recipe_uid": id})
+
     return jsonify(ingredients_data)
 
 
@@ -132,12 +129,14 @@ def recipe_ingredients_amount(id):
     Return info about the amount of ingredients in the recipe with UUID = id.
 
     It is formatted as json:
-    ingredient{code, name, co2, quantity, quantity_type}
+    ingredient{code, name, co2, quantity, quantity_type_unit, quantity_type_uid}
     with co2 already taking the quantity into account,
     quantity being the value that must be displayed,
-    and quantity_type ()= QuantityType.name) being the unit of quantity.
+    and quantity_type_unit ()= QuantityType.unit) being the unit of quantity.
 
-    eg: "The recipe contains {quantity} {quantity_type} of {name}."
+    This route might raise a RecipeNotFound exception, if the recipe is not in DB.
+
+    eg: "The recipe contains {quantity} {quantity_type_unit} of {name}."
     """
     qry = (
         db.session.query(
@@ -146,7 +145,8 @@ def recipe_ingredients_amount(id):
             Ingredient.co2,  # per kg
             IngredientLink.quantity,
             IngredientLink.reference_quantity,
-            QuantityType.name,
+            QuantityType.quantity_type_uid,
+            QuantityType.unit,
             QuantityType.mass_equivalent,
         )
         .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
@@ -163,7 +163,8 @@ def recipe_ingredients_amount(id):
         co2_per_kg,
         quantity,  # in quantity_type
         reference_quantity,  # in kg, can be None
-        quantity_type,
+        quantity_type_uid,
+        quantity_type_unit,
         mass_equivalent,
     ) in qry:
         if reference_quantity is not None:
@@ -177,9 +178,18 @@ def recipe_ingredients_amount(id):
                 "name": name,
                 "co2": co2,
                 "quantity": quantity,
-                "quantity_type": quantity_type,
+                "quantity_unit": quantity_type_unit,
+                "quantity_type_uid": quantity_type_uid,
             }
         )
+
+    # If the list is empty we want to check that the requested recipe is in the DB,
+    # to properly inform the client that the recipe is not in the DB.
+    # Otherwise, we can return an empty list.
+    if len(ingredients) == 0:
+        if db.session.get(Recipe, id) is None:
+            raise RecipeNotFound(context="Not in DB.", payload={"recipe_uid": id})
+
     return jsonify(ingredients)
 
 
@@ -192,13 +202,18 @@ def recipe_full_data(id):
     recipe{recipe_uid, name, normalized_name, co2, ingredients{...}, description,
         duration, illustration, tags{...}
     }
-    ingredient{code, name, co2, quantity, quantity_type}
+    ingredient{code, name, co2, quantity, quantity_type_uid, quantity_type_unit}
     tag{recipe_tag_uid, name, normalized_name}
 
     ingredient[co2] already takes the quantity into account,
     ingredient[quantity] is the value that must be displayed,
-    and ingredient[quantity_type] ()= QuantityType.name) is the quantity unit .
+    and ingredient[quantity_type_unit] ()= QuantityType.unit) is the quantity unit .
+
+    This route might raise a RecipeNotFound exception, if the recipe is not in DB.
     """
+    # Check if the recipe is in the DB
+    if db.session.get(Recipe, id) is None:
+        raise RecipeNotFound(context="Not in DB.", payload={"recipe_uid": id})
 
     ing_qry = (
         db.session.query(
@@ -207,7 +222,8 @@ def recipe_full_data(id):
             Ingredient.co2,  # per kg
             IngredientLink.quantity,
             IngredientLink.reference_quantity,
-            QuantityType.name,
+            QuantityType.quantity_type_uid,
+            QuantityType.unit,
             QuantityType.mass_equivalent,
         )
         .join(IngredientLink, Ingredient.code == IngredientLink.ingredient_code)
@@ -224,7 +240,8 @@ def recipe_full_data(id):
         co2_per_kg,
         quantity,  # in quantity_type
         reference_quantity,  # in kg, can be None
-        quantity_type,
+        quantity_type_uid,
+        quantity_type_unit,
         mass_equivalent,
     ) in ing_qry:
         if reference_quantity is not None:
@@ -238,7 +255,8 @@ def recipe_full_data(id):
                 "name": name,
                 "co2": co2,
                 "quantity": quantity,
-                "quantity_type": quantity_type,
+                "quantity_unit": quantity_type_unit,
+                "quantity_type_uid": quantity_type_uid,
             }
         )
 

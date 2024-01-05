@@ -1,0 +1,76 @@
+<html>
+    <title>CuliVert</title>
+    <head>
+        <link rel="stylesheet" href="sacha-style.scss">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <section class="structure">
+            <nav>
+                <a class="logo" href="/home">CuliVert</h1>
+                <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
+                <a class="tab" href="/search_recipes?search=&page=1">Recettes</a>
+                <a class="tab" href="/accounts/me">Mon compte</a>
+                <a class="tab" href="/editor">+ publier</a>
+            </nav>
+            <main>
+                <section class="case">
+                    <p class="description">
+                        Essayez de rechercher un produit pour vérifier son empreinte carbone :
+                    </p>
+                    <form class="search_ingredients" action="/search_ingredients" method="GET">
+                        <input type="text" placeholder="recherchez un produit..." name="search" required>
+                        <input type="submit" value="rechercher">
+                    </form>
+                </section>
+                <h1 class="header">
+                    À propos
+                </h1>
+                <h2 class="subhead">
+                    Le projet CuliVert
+                </h2>
+                <p class="about">
+                    CuliVert est une initiative étudiante développée à Nancy dont le but est d’accompagner les consommateurs dans la 
+                    transition écologique, en collaboration avec 
+                    l'association Enactus. 
+                </p>
+                <p class="about">
+                    Nous mettons à disposition une base de données qui affiche l'empreinte 
+                    carbone correspondant à plus de 2700 produits de la grande distribution.
+                    Afin d'encourager une consommation plus responsable, ce projet permet aussi
+                    de partager et de consulter diverses recettes entre utilisateurs, dont 
+                    l'impact environnemental est calculé automatiquement.
+                </p>
+                <h2 class="subhead">
+                    Dans quel contexte ?
+                </h2>
+                <p class="about">
+                    Notre démarche s’inscrit parmi les 17 objectifs de développement durable 
+                    adoptés en 2015 lors de l’assemblée générale des Nations Unies pour l'horizon 2030.
+                    Plus précisément, CuliVert participe à l'objectif "consommation et production responsable"
+                    en appelant les consommateurs à réfléchir sur leurs habitudes alimentaires.
+                </p>
+                <h2 class="subhead">
+                    Quelles données ?
+                </h2>
+                <p class="about">
+                    Les données fournies proviennent d'Agribalyse®. Cette base de données est alimentée
+                    depuis 2013 au cours d'un programme collectif prenant entièrement en compte le cycle de vie 
+                    des produits : agriculture, transformation, logistique, emballage, transport et fin de vie.
+                </p>
+                <h2 class="subhead">
+                    Liens utiles
+                </h2>
+                <p class="links">
+                    <a class="link" href="https://enactus.fr">Enactus</a>
+                    <a class="link" href="https://www.agenda-2030.fr/17-objectifs-de-developpement-durable/?">
+                        Objectifs de développement durable
+                    </a>
+                    <a class="link" href="https://agribalyse.ademe.fr">Agribalyse®</a>
+                </p>
+                <p class="signature">Timothée, Clément, Guillaume, Sacha</p>
+            </main>
+        </section>
+    </body>
+</html>

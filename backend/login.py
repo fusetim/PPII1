@@ -11,7 +11,7 @@ login_manager.login_view = "views.accounts.login"
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    if request.blueprint == 'api':
+    if request.path.startswith("/api"):
         abort(HTTPStatus.UNAUTHORIZED)
     return redirect(url_for('views.accounts.login', next=request.url))
 

@@ -2,6 +2,7 @@ from db import db
 from sqlalchemy import String, Float, Text, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Uuid
+from util.upload_helper import get_upload_url
 import uuid
 
 
@@ -64,5 +65,5 @@ class Recipe(db.Model):
         rv["type"] = self.type
         rv["author"] = self.author
         rv["duration"] = self.duration
-        rv["illustration"] = self.illustration
+        rv["illustration"] = get_upload_url(self.illustration_uid)
         return rv
