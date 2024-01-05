@@ -355,13 +355,13 @@ def add_recipe():
             raise (jsonify({"error": "Missing ingredient quantity"}), 400)
         if ("quantity_type" not in ingr) or (not isinstance(ingr["quantity_type"], str)):
             raise (jsonify({"error": "Missing ingredient quantity_type"}), 400)
-        if ("reference_quantity" in ingr) and not (isinstance(ingr["reference_quantity"], float) or isinstance(ingr["reference_quantity"], int)):
+        if ("reference_quantity" in ingr) and not (isinstance(ingr["reference_quantity"], float) or isinstance(ingr["reference_quantity"], int) or (ingr["reference_quantity"] is None)):
             raise (jsonify({"error": "Invalid ingredient reference_quantity"}), 400)
-        if data["preparation_time"] < 0:
+        if "preparation_time" in ingr and ingr["preparation_time"] < 0:
             raise (jsonify({"error": "Negative preparation_time is invalid"}), 400)
-        if data["quantity"] < 0:
+        if "quantity" in ingr and ingr["quantity"] < 0:
             raise (jsonify({"error": "Negative quantity is invalid"}), 400)
-        if data["reference_quantity"] is not None and data["reference_quantity"] < 0:
+        if "reference_quantity" in ingr and ingr["reference_quantity"] is not None and ingr["reference_quantity"] < 0:
             raise (jsonify({"error": "Negative reference_quantity is invalid"}), 400)
         if db.session.get(Ingredient, ingr["ingr_code"]) is None:
             raise (jsonify({"error": "Invalid ingredient code"}), 400)
@@ -371,6 +371,7 @@ def add_recipe():
             IngredientLink(
                 ingredient_code=ingr["ingr_code"],
                 quantity=ingr["quantity"],
+                display_name=ingr["display_name"],
                 quantity_type_uid=UUID(ingr["quantity_type"]),
                 reference_quantity=ingr["reference_quantity"] if "reference_quantity" in ingr else None,
             )
@@ -441,7 +442,8 @@ def edit_recipe():
             recipe.illustration_uid = UUID(data["illustration_uid"])
         else:
             raise (jsonify({"error": "Invalid illustration_uid - it does not exist"}), 400)
-    recipe.ingredients = []
+    for links in recipe.ingredients:
+        db.session.delete(links)
     for ingr in data["ingredients"]:
         if not isinstance(ingr, dict):
             raise (jsonify({"error": "Invalid ingredient"}), 400)
@@ -453,13 +455,13 @@ def edit_recipe():
             raise (jsonify({"error": "Missing ingredient quantity"}), 400)
         if ("quantity_type" not in ingr) or (not isinstance(ingr["quantity_type"], str)):
             raise (jsonify({"error": "Missing ingredient quantity_type"}), 400)
-        if ("reference_quantity" in ingr) and not (isinstance(ingr["reference_quantity"], float) or isinstance(ingr["reference_quantity"], int)):
+        if ("reference_quantity" in ingr) and not (isinstance(ingr["reference_quantity"], float) or isinstance(ingr["reference_quantity"], int) or (ingr["reference_quantity"] is None)):
             raise (jsonify({"error": "Invalid ingredient reference_quantity"}), 400)
-        if data["preparation_time"] < 0:
+        if "preparation_time" in ingr and ingr["preparation_time"] < 0:
             raise (jsonify({"error": "Negative preparation_time is invalid"}), 400)
-        if data["quantity"] < 0:
+        if "quantity" in ingr and ingr["quantity"] < 0:
             raise (jsonify({"error": "Negative quantity is invalid"}), 400)
-        if data["reference_quantity"] is not None and data["reference_quantity"] < 0:
+        if "reference_quantity" in ingr and ingr["reference_quantity"] is not None and ingr["reference_quantity"] < 0:
             raise (jsonify({"error": "Negative reference_quantity is invalid"}), 400)
         if db.session.get(Ingredient, ingr["ingr_code"]) is None:
             raise (jsonify({"error": "Invalid ingredient code"}), 400)
@@ -469,6 +471,7 @@ def edit_recipe():
             IngredientLink(
                 ingredient_code=ingr["ingr_code"],
                 quantity=ingr["quantity"],
+                display_name=ingr["display_name"],
                 quantity_type_uid=UUID(ingr["quantity_type"]),
                 reference_quantity=ingr["reference_quantity"] if "reference_quantity" in ingr else None,
             )
