@@ -53,8 +53,8 @@ ingredient_popover.name_input.addEventListener("input", () => {
             for (let ingredient of ingredients) {
                 let sugg = document.createElement("p");
                 sugg.classList.add("suggestion");
-                sugg.setAttribute("data-ingr-code", ingredient.ingr_code);
-                sugg.textContent = ingredient.name ?? ingredient.ingr_code;
+                sugg.setAttribute("data-ingr-code", ingredient.code);
+                sugg.textContent = ingredient.name ?? ingredient.code;
                 ingredient_suggestions.appendChild(sugg);
                 sugg.addEventListener("click", () => {
                     ingredient_popover.name_input.value = sugg.textContent ?? "";
@@ -84,6 +84,38 @@ ingredient_popover.name_input.addEventListener("focusout", (evt) => {
 
 // Handling the action of the add button in the ingredient popover
 ingredient_popover.add_btn.addEventListener("click", (evt) => {
+    // Prevent the click event from bubbling up to the form
+    evt.preventDefault();
+    // Perform validation
+    if (ingredient_popover.name_input.getAttribute("data-ingr-code") == null || ingredient_popover.name_input.getAttribute("data-ingr-code") == "") {
+        ingredient_popover.name_input.setCustomValidity("Veuillez sélectionner un ingrédient dans la liste.");
+        ingredient_popover.name_input.reportValidity();
+        return;
+    }
+    if (ingredient_popover.display_name_input.value == "") {
+        ingredient_popover.display_name_input.setCustomValidity("Veuillez entrer un nom d'affichage.");
+        ingredient_popover.name_input.reportValidity();
+        return;
+    }
+    if (ingredient_popover.quantity_input.value == "") {
+        ingredient_popover.quantity_input.setCustomValidity("Veuillez entrer une quantité.");
+        ingredient_popover.name_input.reportValidity();
+        return;
+    }
+    if (ingredient_popover.reference_quantity_input.value == "") {
+        let mass_equivalent = +(ingredient_popover.unit_input.selectedOptions[0].getAttribute("data-mass-equivalent") ?? 0);
+        if (mass_equivalent == null || mass_equivalent == 0) {
+            ingredient_popover.reference_quantity_input.setCustomValidity("Veuillez entrer une quantité de référence.");
+            ingredient_popover.name_input.reportValidity();
+            return;
+        }
+    }
+    // Remove previous validation errors
+    ingredient_popover.name_input.setCustomValidity("");
+    ingredient_popover.display_name_input.setCustomValidity("");
+    ingredient_popover.quantity_input.setCustomValidity("");
+    ingredient_popover.reference_quantity_input.setCustomValidity("");
+    
     // Close the popover
     ingredient_popover.element.classList.remove("open");
     // Create the new chip
@@ -98,7 +130,7 @@ ingredient_popover.add_btn.addEventListener("click", (evt) => {
     chip.innerHTML = `
         <span class="name">${ingredient_popover.display_name_input.value}</span>
         <span class="quantity">${ingredient_popover.quantity_input.value}</span>
-        <span class="unit">${ingredient_popover.unit_input.value}</span>
+        <span class="unit">${ingredient_popover.unit_input.selectedOptions[0].innerText}</span>
     `;
     // Add the chip to the list
     ingredients.insertBefore(chip, add_ingredient_chip);
@@ -107,8 +139,6 @@ ingredient_popover.add_btn.addEventListener("click", (evt) => {
     ingredient_popover.display_name_input.value = "";
     ingredient_popover.quantity_input.value = "";
     ingredient_popover.reference_quantity_input.value = "";
-    // Prevent the click event from bubbling up to the form
-    evt.preventDefault();
     // Add the event handlers to the new chip
     ingredientChipAddEventHandlers(chip);
 });
@@ -189,10 +219,17 @@ retrieveQuantityTypes().then((quantity_types) => {
     for (let quantity_type of Object.values(quantity_types)) {
         let option = document.createElement("option");
         option.value = quantity_type.quantity_type_uid;
+        option.setAttribute("data-mass-equivalent", quantity_type.mass_equivalent.toString());
         option.textContent = quantity_type.unit;
         ingredient_popover.unit_input.appendChild(option);
     }
 });
+
+// When the user changes the quantity type, update the reference quantity input
+ingredient_popover.unit_input.addEventListener("change", updateReferenceQuantity);
+
+// When the user changes the quantity, update the reference quantity input.
+ingredient_popover.quantity_input.addEventListener("input", updateReferenceQuantity);
 
 // Prevent the form from being submitted
 // We want to handle ourself the submission of the form.
@@ -274,7 +311,7 @@ for (let sugg of tags_suggestions?.children ?? []) {
 
 // Ingredient type
 interface Ingredient {
-    ingr_code: string;
+    code: string;
     name: string;
 };
 
@@ -504,4 +541,14 @@ async function retrieveQuantityTypes(): Promise<QuantityType> {
             throw new Error("Error while retrieving the quantity types");
         }
     });
+}
+
+function updateReferenceQuantity() {
+    let option = ingredient_popover.unit_input.selectedOptions[0];
+    let mass_equivalent = option.getAttribute("data-mass-equivalent");
+    if (mass_equivalent != null && mass_equivalent != "" && +mass_equivalent != 0) {
+        ingredient_popover.reference_quantity_input.value = (+mass_equivalent * +ingredient_popover.quantity_input.value).toString();
+    } else {
+        ingredient_popover.reference_quantity_input.value = "";
+    }
 }

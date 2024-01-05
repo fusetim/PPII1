@@ -120,6 +120,14 @@ textarea {
     width: calc(100% - 16px);
 }
 
+input[type=text]:invalid,
+input[type=password]:invalid,
+input[type=number]:invalid,
+select:invalid,
+textarea:invalid {
+    border: rgb(202, 22, 22) 1px solid;
+}
+
 div.chip-input {
     width: calc(100% - 8px);
 }
