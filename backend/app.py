@@ -18,6 +18,7 @@ from util.human_format import format_duration, format_mass
 from util.upload_helper import get_upload_url
 from login import login_manager
 from flask_login import login_required, current_user
+from http import HTTPStatus
 
 # Add the root directory to the PYTHONPATH
 p = os.path.abspath(".")
@@ -43,6 +44,37 @@ app.teardown_appcontext(save_search_tables)
 # By default, Flask already routes the static directory :)
 # No need for a dedicated route.
 
+# Setup the error handlers
+HANDLED_ERRORS = [
+    (400, "Mauvaise Requête", ["La syntaxe de la requête est invalide.", "Veuillez contacter un administrateur si l'erreur se reproduit."]),
+    (401, "Non-Autorisé", ["Une authentification est requise pour poursuivre la requête.", "Veuillez vous connecter puis réessayer."]),
+    (403, "Interdit", ["L'accès à ce contenu est restreint.", "Il est peut-être nécessaire de se connecter avant de réessayer."]),
+    (404, "Introuvable", ["La page que vous tentez d'accéder n'existe pas.", "Elle a peut-être été supprimée ou déplacée."]),
+    (405, "Méthode Non Autorisée", ["La requête utilise un verbe qui n'est pas pris en charge par le serveur."]),
+    (413, "Requêtre Trop Longue", ["La requête est trop longue.", "Si vous essayez d'uploader un fichier, il se peut que vous dépasser la limite définie par le serveur."]),
+    (429, "Trop de Requêtes", ["L'utilisateur a dépassé les limites de requêtes acceptables.", "Veuillez patientez quelques minutes avant de réessayer."]),
+    (500, "Erreur Interne du Serveur", ["Le serveur a rencontré une situation qu'il ne sait pas traiter."]),
+]
+
+def handle_error(status_code, phrase, description):
+    """
+    Route generator to handle a specific HTTP error.
+
+    Args:
+        status_code (int): The HTTP Status code.
+        phrase (str): Custom (or not) HTTP Status phrase.
+        description (list[str]): A small description to display the user. Each item is a line.
+
+    Returns:
+        A route that can handle this particular HTTP error.
+    """
+    def handle_route(e):
+        return render_template("error-page.html", status_code=status_code, phrase=phrase, description=description), status_code
+    return handle_route
+
+for (status_code, phrase, description) in HANDLED_ERRORS:
+    app.register_error_handler(status_code, handle_error(status_code, phrase, description))
+
 
 @app.route("/")
 def hello_world():
@@ -55,7 +87,6 @@ def home():
     home page with an "about" section and a search bar to question the "ingredients" db
     """
     return render_template("home.html")
-
 
 @app.route("/search_ingredients")
 def result_ingredients():
