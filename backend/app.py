@@ -299,7 +299,7 @@ def recipes():
             username = db.session.execute(
                 text("SELECT username FROM users WHERE user_uid = :c"), {"c": r[2]}
             ).all()[0][0]
-            recipes.append((r[0], r[1], username, r[2]))
+            recipes.append((r[0], r[1], username))
         data = recipes
         if len(data) <= nbres:
             return render_template(
@@ -381,8 +381,8 @@ def recipes():
                 )
 
 
-@app.route("/accounts/<string:id>")
-def account(id):
+@app.route("/accounts/<string:username>")
+def account(username):
     """
     a page showing the profile of a user
 
@@ -393,7 +393,7 @@ def account(id):
     # culivert uid : 6434e9ce-8e46-48a2-9f2f-35699160f526
     # Sacha uid : 6be9e17b-5311-4f8a-b497-c744dd6fe7c4
     (
-        username,
+        user_uid,
         display_name,
         bio,
         creation_date,
@@ -401,9 +401,9 @@ def account(id):
         avatar_uid,
     ) = db.session.execute(
         text(
-            "SELECT username, display_name, bio, creation_date, deletion_date, avatar_uid FROM users WHERE user_uid = :c"
+            "SELECT user_uid, display_name, bio, creation_date, deletion_date, avatar_uid FROM users WHERE username = :c"
         ),
-        {"c": id},
+        {"c": username},
     ).all()[0]
     if deletion_date == None:
         mois = [
@@ -425,7 +425,7 @@ def account(id):
         date_text = ""
     # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
     data = db.session.execute(
-        text("SELECT name, recipe_uid FROM recipes WHERE author = :c"), {"c": id}
+        text("SELECT name, recipe_uid FROM recipes WHERE author = :c"), {"c": user_uid}
     ).all()
     if len(data) <= nbres:
         return render_template(
@@ -446,14 +446,7 @@ def account(id):
         else:
             page = int(page)
 
-        # on recrée le format mot1+mo2+... pour ne pas que au passage d'une page à l'autre
-        # on ne garde que le premier mot de la recherche (pour qu'il n'y ait pas d'espace dans l'url)
-        query = ""
-        for c in search:
-            if c == " ":
-                query += "+"
-            else:
-                query += c
+        
         # première page
         if page <= 1:
             return render_template(
@@ -471,7 +464,7 @@ def account(id):
                 sur="sur",
                 lf1="#",
                 cf1="nolink",
-                lf2=f"/search_recipes?search={query}&page={page+1}",
+                lf2=f"/accounts/{username}?search={query}&page={page+1}",
                 cf2="arrow",
                 numero="1",
                 n_total=str(ceil(len(data) / nbres)),
@@ -491,7 +484,7 @@ def account(id):
                 f1="<",
                 f2=">",
                 sur="sur",
-                lf1=f"/search_recipes?search={query}&page={page-1}",
+                lf1=f"/accounts/{username}?search={query}&page={page-1}",
                 cf1="arrow",
                 lf2="#",
                 cf2="nolink",
@@ -513,9 +506,9 @@ def account(id):
                 f1="<",
                 f2=">",
                 sur="sur",
-                lf1=f"/search_recipes?search={query}&page={page-1}",
+                lf1=f"/accounts/{username}?search={query}&page={page-1}",
                 cf1="arrow",
-                lf2=f"/search_recipes?search={query}&page={page+1}",
+                lf2=f"/accounts/{username}?search={query}&page={page+1}",
                 cf2="arrow",
                 numero=str(page),
                 n_total=str(ceil(len(data) / nbres)),

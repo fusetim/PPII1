@@ -10,6 +10,13 @@
 
 <body>
     <section class="root">
+        <nav>
+            <a class="logo" href="/home">CuliVert</h1>
+            <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
+            <a class="currenttab" href="/search_recipes?search=&page=1">Recettes</a>
+            <a class="tab" href="/accounts/me">Mon compte</a>
+            <a class="tab" href="/editor">+ publier</a>
+        </nav>
         <main>
             <div class="column">
                 <div class="header" {{'style="background-image: url(\' {}\');"'.format(cover)|safe}}>
@@ -81,7 +88,7 @@
                             <div class="author_info">
                                 <img class="author_avatar" {{'src="{}"'.format(author.avatar_url)|safe}} alt="Author avatar">
                                 <p class="display_name">{{author.display_name}}</p>
-                                <a class="username" {{'href="/accounts/{}"'.format(author.uuid)|safe}}>@{{author.username}}</a>
+                                <a class="username" {{'href="/accounts/{}"'.format(author.username)|safe}}>@{{author.username}}</a>
                             </div>
                             <div class="author_description">
                                 <p>
