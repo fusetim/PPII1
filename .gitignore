@@ -214,3 +214,4 @@ backend/templates
 backend/static
 
 docker-data/
+docker-data.zip
