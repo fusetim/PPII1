@@ -17,13 +17,13 @@
         "axios": "^1.6.4",
         "lit-element": "^4.0.2",
         "normalize-css": "^2.3.1",
-        "parcel": "^2.10.3",
         "posthtml-doctype": "^1.1.1",
         "sass": "^1.26.5",
         "typescript": "^5.2.2"
     },
     "devDependencies": {
         "@parcel/transformer-sass": "^2.10.3",
+        "parcel": "^2.11.0",
         "parcel-namer-rewrite": "^2.10.3-rc.2",
         "posthtml-include": "^1.7.4"
     },
