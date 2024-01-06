@@ -30,8 +30,9 @@ ENV FLASK_ALLOWED_EXTENSIONS='["png","jpg","jpeg","webp"]'
 ENV FLASK_UPLOAD_FOLDER="./static/media/"
 ENV FLASK_MAX_CONTENT_LENGTH=8000000
 
-# Setup the volumes
+# Setup the volumes, port, ...
 VOLUME ["/culivert/backend/static/media"]
+EXPOSE 5000
 
 # Setup the entrypoint
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]

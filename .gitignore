@@ -212,3 +212,5 @@ backend/tmp/
 
 backend/templates
 backend/static
+
+docker-data/
