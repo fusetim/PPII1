@@ -91,6 +91,34 @@ main {
         padding-bottom: 10px;
     }
 
+    .header .action-bar {
+        position: absolute;
+        top: 16px;
+        right: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: flex-end;
+        gap: 4px;
+        padding-right: 16px;
+    }
+
+    .header .action-bar button {
+        background: rgba($color: #000000, $alpha: 0.4);
+        border: #fff 2px solid;
+        border-radius: 4px;
+        color: #fff;
+        padding: 4px 8px;
+        font-weight: 500;
+        font-size: 12px;
+        transition: background 200ms ease-in-out, color 200ms ease-in-out, border-color 200ms ease-in-out;
+    }
+
+    .header .action-bar button:hover {
+        background: rgba($color: #000000, $alpha: 0.6);
+        cursor: pointer;
+    }
+
     .header h1 {
         padding-top: 0.8em;
         margin: 10px 30px;

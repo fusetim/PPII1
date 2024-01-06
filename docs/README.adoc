@@ -3,3 +3,4 @@
 * link:./GUIDE_DEMARRAGE.adoc[Guide de démarrage (Français)]
 * link:./GET_STARTED.adoc[Getting started (English)]
 * link:./DB.adoc[Documentation de la base de données]
+* link:./DEPLOIEMENT.adoc[Documentation du déploiement]
