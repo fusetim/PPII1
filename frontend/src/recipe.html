@@ -10,17 +10,15 @@
 
 <body>
     <section class="root">
-        <nav>
-            <div class="nav-wrapper">
-                <a href="./index.html" class="brand-logo">CuliVert</a>
-                <ul>
-                    <li><a href="./index.html">Home</a></li>
-                </ul>
-            </div>
-        </nav>
         <main>
             <div class="column">
                 <div class="header" {{'style="background-image: url(\' {}\');"'.format(cover)|safe}}>
+                    {% if is_owner %}
+                    <div class="action-bar">
+                        <button id="action-edit">Éditer</button>
+                        <button id="action-delete">Supprimer</button>
+                    </div>
+                    {% endif %}
                     <div class="title">
                         <h1>{{title}}</h1>
                         <div class="specs">
@@ -96,7 +94,7 @@
             </div>
         </main>
     </section>
-    <script type="module" src="./index.ts"></script>
+    <script type="module" src="./recipe.ts"></script>
 </body>
 
 </html>

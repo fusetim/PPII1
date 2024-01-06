@@ -17,6 +17,7 @@ from md_render import markdown_render
 from util.human_format import format_duration, format_mass
 from util.upload_helper import get_upload_url
 from login import login_manager
+from flask_login import login_required, current_user
 from http import HTTPStatus
 
 # Add the root directory to the PYTHONPATH
@@ -542,7 +543,7 @@ def get_recipe(recipe_uid):
     # Looking for our recipe
     recipe = db.session.get(Recipe, recipe_uid)
     if recipe is None:
-        raise ("Recipe not found.", 404)
+        return render_template("error-page.html", status_code=404, phrase="Recette introuvable", description=["La recette que vous tentez d'accéder n'existe pas.", "Elle a peut-être été supprimée ou déplacée."]), 404
 
     # Looking for the ingredients
     links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
@@ -594,4 +595,53 @@ def get_recipe(recipe_uid):
         recipe=markdown_render(recipe.description),
         cover=get_upload_url(recipe.illustration),
         author=author,
+        is_owner=current_user.is_authenticated and current_user.user_uid == recipe.author,
     )
+
+
+@app.route("/editor")
+@login_required
+def editor():
+    """
+    Editor page, allowing the user to create/edit a recipe.
+    """
+    if request.args.get("recipe_uid") is not None:
+        recipe_uid = request.args.get("recipe_uid")
+        recipe = db.session.get(Recipe, recipe_uid)
+        if recipe is None:
+            return render_template("error-page.html", status_code=404, phrase="Recette introuvable", description=["La recette que vous tentez d'accéder n'existe pas.", "Elle a peut-être été supprimée ou déplacée."]), 404
+        else:
+            if recipe.author != current_user.user_uid:
+                return render_template("error-page.html", status_code=403, phrase="Accès interdit", description=["Vous n'êtes pas autorisé à accéder à cette page.", "Seul l'auteur de la recette peut la modifier."]), 403
+            return render_template(
+                "editor.html",
+                recipe_uid=recipe_uid,
+                name=recipe.name,
+                preparation_time=recipe.duration,
+                tags=[tag.name for tag in recipe.tags],
+                short_description=recipe.short_description,
+                description=recipe.description,
+                ingredients=[
+                    {
+                        "code": link.ingredient.code,
+                        "name": link.ingredient.name,
+                        "display_name": link.display_name,
+                        "quantity": link.quantity,
+                        "quantity_type_uid": link.quantity_type_uid,
+                        "unit": link.quantity_type.unit,
+                        "reference_quantity": link.reference_quantity,
+                    }
+                    for link in recipe.ingredients
+                ],
+            )
+    else:
+        return render_template(
+                "editor.html",
+                recipe_uid=None,
+                name="",
+                preparation_time=30,
+                tags=[],
+                short_description="",
+                description="",
+                ingredients=[],
+            )

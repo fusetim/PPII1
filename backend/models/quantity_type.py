@@ -13,7 +13,7 @@ class QuantityType(db.Model):
 
     Attributes:
         quantity_type_uid: The quantity type unique identifier.
-        name: The quantity type name.
+        name: The quantity type name.²
         localized_key: The key used to localize the quantity type name.
         unit: The unit of the quantity type. The one that should be used
             when displaying the quantity.
@@ -37,4 +37,5 @@ class QuantityType(db.Model):
         rv["name"] = self.name
         rv["localized_key"] = self.localized_key
         rv["mass_equivalent"] = self.mass_equivalent
+        rv["unit"] = self.unit
         return rv
