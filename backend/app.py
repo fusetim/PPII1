@@ -543,7 +543,7 @@ def get_recipe(recipe_uid):
     # Looking for our recipe
     recipe = db.session.get(Recipe, recipe_uid)
     if recipe is None:
-        raise ("Recipe not found.", 404)
+        return render_template("error-page.html", status_code=404, phrase="Recette introuvable", description=["La recette que vous tentez d'accéder n'existe pas.", "Elle a peut-être été supprimée ou déplacée."]), 404
 
     # Looking for the ingredients
     links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
@@ -595,6 +595,7 @@ def get_recipe(recipe_uid):
         recipe=markdown_render(recipe.description),
         cover=get_upload_url(recipe.illustration),
         author=author,
+        is_owner=current_user.is_authenticated and current_user.user_uid == recipe.author,
     )
 
 
@@ -608,10 +609,10 @@ def editor():
         recipe_uid = request.args.get("recipe_uid")
         recipe = db.session.get(Recipe, recipe_uid)
         if recipe is None:
-            return ("Recipe not found.", 404)
+            return render_template("error-page.html", status_code=404, phrase="Recette introuvable", description=["La recette que vous tentez d'accéder n'existe pas.", "Elle a peut-être été supprimée ou déplacée."]), 404
         else:
             if recipe.author != current_user.user_uid:
-                return ("You are not the author of this recipe.", 403)
+                return render_template("error-page.html", status_code=403, phrase="Accès interdit", description=["Vous n'êtes pas autorisé à accéder à cette page.", "Seul l'auteur de la recette peut la modifier."]), 403
             return render_template(
                 "editor.html",
                 recipe_uid=recipe_uid,

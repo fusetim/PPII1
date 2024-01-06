@@ -386,7 +386,7 @@ def add_recipe():
     return jsonify({"recipe_uid": recipe.recipe_uid}), HTTPStatus.CREATED.value
 
 
-@bp.route("/edit", methods=["PATCH"])
+@bp.route("/edit", methods=["POST", "PATCH"])
 @login_required
 def edit_recipe():
     """
@@ -481,6 +481,61 @@ def edit_recipe():
     except:
         db.session.rollback()
         raise (jsonify({"error": "Error while saving the recipe to database"}), 500)
+    
+    return jsonify({"recipe_uid": recipe.recipe_uid}), HTTPStatus.ACCEPTED.value
+
+@bp.route("/delete", methods=["POST", "DELETE"])
+@login_required
+def delete_recipe():
+    """
+    Delete a recipe from the database. The author of the recipe must be the current user.
+
+    The request is expected to be a json with the following information:
+    - recipe_uid (UUID): the UUID of the recipe to delete.
+
+    The response is a json with the following information:
+    - recipe_uid (UUID): the UUID of the deleted recipe
+    
+    The response code is:
+    - 202 (ACCEPTED) if the recipe was deleted,
+    - 400 (BAD REQUEST) if the recipe_uid is invalid,
+    - 403 (FORBIDDEN) if the user is not the author of the recipe,
+    - 500 (INTERNAL_SERVER_ERROR) if an error occured while deleting the recipe.
+
+    Curl example:
+    ```
+    curl -X DELETE -H "Content-Type: application/json" -H "Cookie: session" -d '{"recipe_uid": "00000000-0000-0000-0000-000000000000"}' http://localhost:5000/api/recipes/delete
+    ```
+    """
+    author_uid = current_user.user_uid
+    
+    data = request.get_json()
+    # Check that the request is valid
+    if data is None:
+        raise (jsonify({"error": "No json data provided"}), 400)
+    if not isinstance(data, dict):
+        raise (jsonify({"error": "Invalid json data provided"}), 400)
+    if ("recipe_uid" not in data) or (not isinstance(data["recipe_uid"], str)):
+        raise (jsonify({"error": "Missing recipe_uid"}), 400)
+
+    recipe_uid = UUID(data["recipe_uid"])
+    recipe = db.session.get(Recipe, recipe_uid)
+
+    # Check that the recipe exists and that the user is the author
+    if recipe is None:
+        raise (jsonify({"error": "Invalid recipe_uid - it does not exist"}), 400)
+    if recipe.author != author_uid:
+        raise (jsonify({"error": "You are not the author of this recipe"}), 403)
+    
+    # Delete the recipe
+    try:
+        for links in recipe.ingredients:
+            db.session.delete(links)
+        db.session.delete(recipe)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise (jsonify({"error": "Error while deleting recipe from database"}), 500)
     
     return jsonify({"recipe_uid": recipe.recipe_uid}), HTTPStatus.ACCEPTED.value
 

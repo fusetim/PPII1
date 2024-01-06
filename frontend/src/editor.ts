@@ -9,7 +9,6 @@ const tags_suggestions = document.getElementById("tags-suggestions") as HTMLElem
 const tag_input = document.getElementById("tag-input") as HTMLInputElement;
 const preview_btn = document.getElementById("preview-btn") as HTMLInputElement;
 const save_btn = document.getElementById("save-btn") as HTMLInputElement;
-const publish_btn = document.getElementById("publish-btn") as HTMLInputElement;
 
 const ingredient_popover = {
     element: document.getElementById("add-ingredient-popover") as HTMLElement,
@@ -265,24 +264,6 @@ save_btn.addEventListener("click", () => {
     }, (err) => {
         console.error(err);
         let msg = createMessage("Erreur lors de la sauvegarde de la recette.", (err as Error).message, true);
-        msg_group.appendChild(msg);
-        autoTimeoutMessage(msg);
-        return null;
-    });
-});
-
-publish_btn.addEventListener("click", () => {
-    let recipe = getData();
-    saveRecipe(recipe).then((recipe_uid) => {
-        let recipe_uid_input = (document.getElementById("recipe-uid") as HTMLInputElement);
-        recipe_uid_input.value = recipe_uid;
-        let msg = createMessage("Recette publiée !", null, false);
-        msg_group.appendChild(msg);
-        autoTimeoutMessage(msg);
-        resetIllustration();
-    }, (err) => {
-        console.error(err);
-        let msg = createMessage("Erreur lors de la publication de la recette.", (err as Error).message, true);
         msg_group.appendChild(msg);
         autoTimeoutMessage(msg);
         return null;
