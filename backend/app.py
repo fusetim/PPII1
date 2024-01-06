@@ -29,8 +29,11 @@ app = Flask(__name__)
 # Register the `/api` & views routes
 app.register_blueprint(api, url_prefix="/api")
 app.register_blueprint(views, url_prefix="/")
-# Load the config file
-app.config.from_file("config.toml", load=tomllib.load, text=False)
+# Load the config
+if os.path.exists("config.toml"):
+    app.config.from_file("config.toml", load=tomllib.load, text=False)
+else:
+    app.config.from_prefixed_env()
 # Initialize the database
 db.init_app(app)
 # Initialize the migration engine (for database migrations)
