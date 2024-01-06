@@ -204,14 +204,6 @@ tag_input.addEventListener("focusout", (evt) => {
     tags_suggestions.classList.add("hidden");
 });
 
-// Enter does not add/remove ingredients
-editor_form.addEventListener("keydown", (evt) => {
-    if (evt.key === "Enter") {
-        evt.preventDefault();
-        save_btn.click();
-    }
-});
-
 // Retrieve the quantity types from the server
 retrieveQuantityTypes().then((quantity_types) => {
     ingredient_popover.unit_input.replaceChildren();
