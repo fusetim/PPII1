@@ -5,6 +5,7 @@ import uuid
 from sqlalchemy.types import Uuid
 import datetime
 
+
 class Upload(db.Model):
     """
     User Upload data model.
@@ -20,12 +21,20 @@ class Upload(db.Model):
     """
 
     __tablename__ = "user_uploads"
-    upload_uid : Mapped[Uuid] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    author_uid : Mapped[Uuid] = mapped_column(Uuid(as_uuid=True), ForeignKey("users.user_uid", ondelete="CASCADE"), nullable=False)
-    original_filename : Mapped[str] = mapped_column(Text, nullable=True)
-    content_id : Mapped[str] = mapped_column(Text, nullable=False)
-    extension : Mapped[str] = mapped_column(String(length=10), nullable=True)
-    upload_date : Mapped[DateTime] = mapped_column(DateTime, nullable=False, default=datetime.datetime.utcnow)
-    deletion_date : Mapped[DateTime] = mapped_column(DateTime, nullable=True)
+    upload_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    author_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True),
+        ForeignKey("users.user_uid", ondelete="CASCADE"),
+        nullable=False,
+    )
+    original_filename: Mapped[str] = mapped_column(Text, nullable=True)
+    content_id: Mapped[str] = mapped_column(Text, nullable=False)
+    extension: Mapped[str] = mapped_column(String(length=10), nullable=True)
+    upload_date: Mapped[DateTime] = mapped_column(
+        DateTime, nullable=False, default=datetime.datetime.utcnow
+    )
+    deletion_date: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
 
     author = relationship("User", back_populates="uploads")

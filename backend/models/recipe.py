@@ -2,6 +2,7 @@ from db import db
 from sqlalchemy import String, Float, Text, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Uuid
+from util.upload_helper import get_upload_url
 import uuid
 
 
@@ -13,13 +14,17 @@ class Recipe(db.Model):
         recipe_uid: The recipe unique identifier.
         name: The recipe name.
         normalized_name: The normalized recipe name.
-        short_description: A short description of the recipe, displayed when browsing recipes.
-        description: A longer description of the recipe, displayed when viewing the recipe. It must include
-            the actual recipe instructions.
-        type: The type of recipe. This is a string that can be used to categorize recipes.
-        author: The author of the recipe. This is a UUID that can be used to link to the author's profile.
+        short_description: A short description of the recipe, displayed when
+            browsing recipes.
+        description: A longer description of the recipe, displayed when viewing
+            the recipe. It must include the actual recipe instructions.
+        type: The type of recipe. This is a string that can be used to
+            categorize recipes.
+        author: The author of the recipe. This is a UUID that can be used to
+            link to the author's profile.
         duration: The preparation time required by this recipe in minutes.
-        illustration: A URI to an image that illustrates the recipe. The format of this one is `/assets/filename.ext`.
+        illustration: A URI to an image that illustrates the recipe. The format
+            of this one is `/assets/filename.ext`.
     """
 
     __tablename__ = "recipes"
@@ -37,7 +42,11 @@ class Recipe(db.Model):
         nullable=True,
     )
     duration: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    illustration_uid: Mapped[Uuid] = mapped_column(Uuid(as_uuid=True), ForeignKey("user_uploads.upload_uid", ondelete="SET NULL"), nullable=True)
+    illustration_uid: Mapped[Uuid] = mapped_column(
+        Uuid(as_uuid=True),
+        ForeignKey("user_uploads.upload_uid", ondelete="SET NULL"),
+        nullable=True,
+    )
 
     ingredients = relationship("IngredientLink", back_populates="recipe")
     tags: Mapped[list["RecipeTag"]] = relationship(
@@ -56,5 +65,5 @@ class Recipe(db.Model):
         rv["type"] = self.type
         rv["author"] = self.author
         rv["duration"] = self.duration
-        rv["illustration"] = self.illustration
+        rv["illustration"] = get_upload_url(self.illustration_uid)
         return rv
