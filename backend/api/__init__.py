@@ -1,5 +1,5 @@
 from flask import Blueprint
-from . import ingredients, recipes, uploads
+from . import ingredients, recipes, recipes_admin, uploads
 
 # Creates the API "router" (aka blueprint in Flask)
 api = Blueprint("api", __name__)
@@ -8,6 +8,7 @@ api = Blueprint("api", __name__)
 api.register_blueprint(ingredients.bp, url_prefix="/ingredients")
 # same thing for recipes, uploads, etc.
 api.register_blueprint(recipes.bp, url_prefix="/recipes")
+api.register_blueprint(recipes_admin.bp, url_prefix="/recipes/admin")
 api.register_blueprint(uploads.bp, url_prefix="/uploads")
 
 # This route handles the root of the API router (in our case, "[root]/api")
