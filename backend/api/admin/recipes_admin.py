@@ -9,6 +9,7 @@ from lsh import normalize_str
 from flask_login import current_user
 from uuid import uuid4
 from recipes import RecipeNotFound, not_found
+from ingredients import IngredientNotFound
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
@@ -56,10 +57,17 @@ def add():
         quantity = ing["quantity"]
         quantity_type_uid = ing["quantity_type"]
 
-        # check if ingredient misses data:
+        # check if the ingredient misses data
         for element in (ingredient_code, quantity, quantity_type_uid):
             if element is None:
                 raise MissingData(context="Missing data to add ingredient link")
+
+        # check if the ingredient really exists in the DB
+        if Ingredientquery.get(ingredient_code) is None:
+            raise IngredientNotFound(
+                context="Ingredient is not in the DB.",
+                payload={"ingredient_code": ingredient_code},
+            )
 
         link = IngredientLink(
             link_uid=uuid4(),
@@ -76,6 +84,81 @@ def add():
 
     return jsonify({"recipe_uid": new_recipe["recipe_uid"]})
 
+
+@bp.route("/edit", methods=["PATCH"])
+def edit():
+    """
+    Edit a recipe from the database.
+
+    Values that can be changed:
+    name, short_description, description,duration, illustration.
+    If the new value is set to NULL, the previous value will be kept.
+    """
+    data = request.get_json()
+
+    recipe_uid = data.get("recipe_uid")
+
+    recipe = Recipe.query.get(recipe_uid)
+    if recipe is None:
+        raise RecipeNotFound(context="Not in DB.", payload={"recipe_uid": recipe_uid})
+
+    fields_to_update = (
+        ("name", "title"),
+        ("short_description", "short_description"),
+        ("description", "description"),
+        ("preparation_time", "preparation_time"),
+        ("illustration_uid", "illustration_uid")
+        # author and type stay the same as before
+    )
+    for db_field, form_field in fields_to_update:
+        new_value = data.get(form_field)
+        if new_value is not None:
+            setattr(recipe, db_field, new_value)
+
+    recipe.normalized_name = normalize_str(recipe.name)
+
+    new_ingredients = data.get("ingredients")
+    if new_ingredients is not None:
+        # delete old ingredient links
+        old_links = IngredientLink.query.filter(
+            IngredientLink.recipe_uid == recipe_uid
+        ).all()
+        for link in old_links:
+            db.session.delete(link)
+
+        # create new links
+        for ing in new_ingredients:
+
+            ingredient_code = ing["ingr_code"]
+            quantity = ing["quantity"]
+            quantity_type_uid = ing["quantity_type"]
+
+            # check if the new ingredient misses data
+            for element in (ingredient_code, quantity, quantity_type_uid):
+                if element is None:
+                    raise MissingData(context="Missing data to add ingredient link")
+
+            # check if the new ingredient really exists in the DB
+            if Ingredientquery.get(ingredient_code) is None:
+                raise IngredientNotFound(
+                    context="Ingredient is not in the DB.",
+                    payload={"ingredient_code": ingredient_code},
+                )
+
+            link = IngredientLink(
+                link_uid=uuid4(),
+                recipe_uid=new_recipe.recipe_uid,
+                ingredient_code=ingredient_code,
+                quantity=quantity,
+                quantity_type_uid=quantity_type_uid,
+                reference_quantity=ing["reference_quantity"],
+                display_name=ing["display_name"],
+            )
+            db.session.add(link)
+
+    db.session.commit()
+
+    return jsonify({"recipe_uid": recipe_uid})
 
 @bp.route("/delete/<uuid:id>", methods=["DELETE"])
 def delete_recipe(id):
