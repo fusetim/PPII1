@@ -8,13 +8,9 @@
 </head>
 
 <body>
-  <nav>
-    <a class="logo" href="/home">CuliVert</h1>
-    <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
-    <a class="tab" href="/search_recipes?search=&page=1">Recettes</a>
-    <a class="tab" href="/accounts/me">Mon compte</a>
-    <a class="currenttab" href="/editor">+ publier</a>
-</nav>
+  <header>
+    <p>Future navigation bar</p>
+  </header>
   <main>
     <div class="card">
       <h1 class="card_title">Éditeur de recette</h1>
@@ -24,35 +20,39 @@
         </div>
       </noscript>
       <div id="msg-group">
+        <div class="message error">
+          <p>Informations manquantes...</p>
+        </div>
+        <div class="message error">
+          <p>Informations manquantes...</p>
+        </div>
       </div>
       <form id="editor-form" method="post" enctype="multipart/form-data">
-        {% if recipe_uid is none %}
         <input type="hidden" name="recipe_uid" id="recipe-uid" value="">
-        {% else %}
-        <input type="hidden" name="recipe_uid" id="recipe-uid" {{'value="{}"'.format(recipe_uid)|safe}}>
-        {% endif %}
         <label for="title">Titre</label>
-        <input type="text" name="title" id="title" placeholder="Pâte à la sauce bolognaise" maxlength="100" minlength="3" required {{'value="{}"'.format(name)|safe}}>
+        <input type="text" name="title" id="title" value="Pâte à la sauce bolognaise" maxlength="100" minlength="3" required>
         <label for="short_description">Courte Description</label>
-        <textarea name="short_description" id="short_description" cols="30" rows="3" maxlength="140" required
-          minlength="10">{{short_description}}</textarea>
+        <textarea name="short_description" id="short_description" cols="30" rows="3" maxlength="140"
+          minlength="10" required>{{recipe.short_description}}</textarea>
         <label for="illustration">Illustration</label>
         <input type="file" name="illustration" id="illustration" accept="image/*">
         <label for="ingredients">Ingrédients</label>
         <div id="ingredients" class="chip-input">
-          {% for ingr in ingredients %}
-            <p class="chip clickable-chip"
-              {{'data-display-name="{}"'.format(ingr.display_name)|safe}}
-              {{'data-name="{}"'.format(ingr.name)|safe}}
-              {{'data-ingr-code="{}"'.format(ingr.code)|safe}}
-              {{'data-quantity="{}"'.format(ingr.quantity)|safe}}
-              {{'data-quantity-type="{}"'.format(ingr.quantity_type_uid)|safe}}
-              {{'data-reference-quantity="{}"'.format(ingr.reference_quantity)|safe}}>
-              <span class="name">{{ingr.display_name}}</span>
-              <span class="quantity">{{ingr.quantity}}</span>
-              <span class="unit">{{ingr.unit}}</span>
-            </p>
-          {% endfor %}
+          <p class="chip clickable-chip" data-name="Pâtes" data-ingr-code="" data-display-name="Pâtes" data-quantity="0.5" data-quantity-type="kg" data-reference-quantity="">
+            <span class="name">Pâtes</span>
+            <span class="quantity">0.5</span>
+            <span class="unit">kg</span>
+          </p>
+          <p class="chip clickable-chip" data-name="Viande hachée" data-ingr-code="" data-display-name="Viande hachée" data-quantity="0.5" data-quantity-type="kg" data-reference-quantity="0.5">
+              <span class="name">Viande hachée</span>
+              <span class="quantity">0.5</span>
+              <span class="unit">kg</span>
+          </p>
+          <p class="chip clickable-chip" data-name="Sauce tomate" data-ingr-code="" data-display-name="Sauce tomate" data-quantity="0.3" data-quantity-type="kg" data-reference-quantity="0.3">
+              <span class="name">Sauce tomate</span>
+              <span class="quantity">0.3</span>
+              <span class="unit">kg</span>
+          </p>
           <p id="add-ingredient-chip" class="chip clickable-chip">Ajouter un ingrédient...</p>
         </div>
         <div id="add-ingredient-popover">
@@ -60,7 +60,8 @@
             <div id="ingredient-search">
               <input type="text" name="ingredient_name" id="ingredient-name" placeholder="Nom de l'ingrédient*">
               <div id="ingredient-suggestions" class="hidden" contenteditable="false">
-                <p class="suggestion">Chargement...</p>
+                <p class="suggestion">tomate</p>
+                <p class="suggestion">pomme de terre</p>
               </div>
             </div>
             <input type="text" id="ingredient-display-name" name="ingredient_display_name" placeholder="Nom d'affichage de l'ingrédient">
@@ -80,22 +81,28 @@
         </div>
         <label for="tags">Tags</label>
         <div id="tags" class="chip-input">
-          {% for tag in tags %}
-            <p class="chip">{{tag}}</p>
-          {% endfor %}
+          <p class="chip">Italien</p>
+          <p class="chip">Facile</p>
           <input id="tag-input" type="text" name="tag_input" autofocus autocomplete="no">
           <div id="tags-suggestions" class="hidden">
-            <p>Chargement...</p>
+            <p>abordable</p>
+            <p>peu couteux</p>
           </div>
         </div>
         <label for="preparation_time">Temps de préparation (en minutes)</label>
-        <input type="number" name="preparation_time" id="preparation_time" min="0" max="3600" required
-          {{'value="{}"'.format(preparation_time)|safe}}>
+        <input type="number" name="preparation_time" id="preparation_time" value="30" min="0" max="3600" required>
         <label for="instructions">Instructions</label>
         <textarea name="instructions" id="steps" cols="30" rows="10"
-          minlength="10" required>{{description}}</textarea>
+          minlength="10" required>
+          # Étape 1
+          Faire cuire les pâtes
+          
+          # Étape 2
+
+          Faire cuire la viande hachée
+        </textarea>
         <input id="preview-btn" type="submit" name="save" value="Prévisualiser">
-        <input id="save-btn" class="primary-btn" type="submit" name="save" value="Enregistrer">
+        <input id="save-btn"  class="primary-btn" type="submit" name="save" value="Enregistrer">
       </form>
     </div>
   </main>
