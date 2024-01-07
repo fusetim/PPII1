@@ -1,0 +1,133 @@
+= GETTING STARTED
+
+This page will introduce you to the basics of the project, and how to setup a development environment. If you interested in deploying this application, please see the link:./DEPLOY.adoc[Deployment page].
+
+== Little introduction
+
+This project is a web application, that allows users to create and search recipes to obtain their instructions but most importantly their carbon footprints. The application is built in two parts, the backend and the frontend.
+
+The backend is built using Flask, a python framework to develop the server part of the application, that serves the API routes and the SSR (Server Side Rendering) of the frontend.
+
+The frontend is built using Typescript, without any framework, but just plain combination of HTML, SASS and Typescrypt. The bundler, Parcel, is used to produce the final build of the frontend, that will be used as templates by the Flask application.
+
+Now, that you have a little overview of the project, let's see how to setup a development environment.
+
+=== Pre-requisites
+
+We will assume here, that you dispose of an *nix system, and that you have a basic knowledge of the command line. The guide is written on Arch Linux, but should be easily adaptable to other distributions. For Mac users, some changes might be needed, but the guide should be mostly the same.
+
+More importantly, you will need to know how to setup a PostgresQL database, and how to create a user and database with the right permissions. We won't cover this part here, but you can find a lot of tutorials on the internet to do it.
+
+==== Installing the pre-requisite packages
+
+You will need to install python3, pip, nodejs, npm, and git. On Arch Linux, you can install them with the following command :
+
+[source,shell]
+----
+$ sudo pacman -S python python-pip nodejs npm git
+----
+
+==== Cloning the repository
+
+Now, you will need to clone the repository. You can do it with the following command :
+
+[source,shell]
+----
+$ git clone git@github.com:fusetim/PPII1.git # If you have a ssh key
+$ git clone https://github.com/fusetim/PPII1.git # Otherwise, use the HTTP link
+----
+
+==== Setting up the frontend part
+
+Now, you will need to install the dependencies of the frontend part. You can do it with the following command :
+
+[source,shell]
+----
+$ cd PPII1/frontend
+$ npm install
+----
+
+This command will install all the dependencies of the frontend part, including the Parcel bundler.
+
+==== Setting up the backend part
+
+Now, you will need to install the dependencies of the backend part. You can do it with the following command :
+
+[source,shell]
+----
+$ cd ../backend
+$ python -m venv .venv # Use a virtual environment to avoid conflicts with your system
+$ source .venv/bin/activate # Activate the virtual environment
+$ pip install -r requirements.txt # Install the dependencies
+----
+
+==== Setting up the database
+
+You are now ready to develop on the project!
+You might know wonder how to launch the application.
+
+First, you will need to run a PostgresQL database, but we won't cover this part here. You can find a lot of tutorials on the internet to do it.
+From now on, we will assume that you have a PostgresQL database running on your system, and that you have created a user `ppii1` and a database `ppii1` with the right permissions.
+
+You'll first have to configure the database connection that Flask will have to use, therefore you will need to copy the template `/backend/config_dev.toml` to
+`/backend/config.toml` and edit the file to match your database configuration.
+
+You still need to bootstrap this database with the schema and some data. You can do it with the following command (in the `/backend` directory):
+
+[source,shell]
+----
+$ python -m flask db upgrade
+----
+
+This command will create the schema for all the tables needed.
+Now, you can go download the Agribalyse `Agribalyse Synthese 3.1.csv` database to import it in the database. You can find it here: https://data.ademe.fr/datasets/agribalyse-31-synthese
+
+Once you have downloaded it, you can import it in the database with the script `/scripts/Script_ingredients.py`. You will have to edit it to match your database configuration and the correct path to the csv file.
+
+Then, you can run it with the following command (in the `/scripts` directory):
+
+[source,shell]
+----
+$ pip install -r requirements.txt # Install the dependencies
+$ python Script_ingredients.py # Run the script
+----
+
+Youpi, your database included all ingredients from Agribalyse!
+You might want to add some extra recipes to the database yourself.
+
+==== Building the frontend
+
+Now, you will need to build the frontend part. You can do it with the following command (in the `/frontend` directory):
+
+[source,shell]
+----
+$ npm run build
+----
+
+[IMPORTANT]
+--
+If you want to modify the frontend, you might want to run the following command instead, to have hot-reloading and a web-server:
+
+[source,shell]
+----
+$ npm run start
+----
+--
+
+==== Running the backend
+
+Now, that's the frontend is ready to be used. You will be able to run the backend part.
+
+First, you will have to copy the frontend to the backend for use (in the `/` directory):
+
+[source,shell]
+----
+$ cp -r frontend/dist/* backend/
+----
+
+Then, you will need to run the backend part. You can do it with the following command (in the `/backend` directory):
+----
+$ python -m flask run
+----
+
+Enjoy! You can now access the application at http://localhost:5000.

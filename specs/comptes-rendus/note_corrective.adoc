@@ -1,0 +1,92 @@
+= Note corrective
+:docdate: 2024-01-03
+
+|===
+| Rédacteur| Date de dernière modification| Date de validation
+| M. BRILLAUD| 2024-01-03| 2024-01-06
+|===
+
+[abstract]
+--
+Cette note corrective a pour objectif de corriger les erreurs survenus dans les précedents comptes rendus et d'ajouter les informations pouvant manquées.
+Elle a été suggérée par M. BOUTHIER et a été rédigée par M. BRILLAUD. La note doit prendre en compte les avis des différents membres du groupe de travail,
+et sera soumis à l'appobation du groupe de travail avant d'être adoptée. Tout désaccord sera signalé sur la présente note.
+--
+
+== Compte rendu de la réunion du 08/11/2023
+
+Aucune erreur n'a été signalée.
+
+== Compte rendu de la réunion du 13/11/2023
+
+La réalisation de la tâche "BDD - Proposer une première approche pour la BDD (schéma entité-relation complet)", prévue le
+08/11/2023 pour le 13/11/2023, devant être réalisée par M. HISLEUR n'a pas été réalisée comme prévu. Il s'agirait d'un
+malentendu sur la réalisation de la tâche. Le schéma a alors été majoritairement évoqué et réfléchi lors de la réunion
+du 13/11/2023. La tâche a été reportée au 21/11/2023, et sera réalisée par M. BRILLAUD.
+
+Un premier design du site (en tant qu'images) a été présenté par M. BANAK, qui a été approuvé. Il est cependant à noter
+que ce qui était réellement attendu était une page HTML, donnant une idée vague mais une certaine direction au site.
+La tâche est donc reportée au 21/11/2023, afin de mettre en place une page HTML, plus ou moins similaire au design présenté.
+
+À partir de ce compte rendu, la TODO-list ne sera plus disponible dans le compte rendu mais sur le Github Project du projet.
+
+== Compte rendu de la réunion du 21/11/2023
+
+À propos de la tâche "BACKEND - Écriture des routes API", M. ESCUDE-COTINAT a signifié qu'il aurait besoin de plus de détails
+sur la tâche. Il a été décidé que M. BRILLAUD lui détaillerait exactement les routes à écrire avec leur signature et leur
+fonctionnement (link:https://github.com/fusetim/PPII1/issues/8[Issue#8]), ainsi qu'un exemple d'une telle route
+(link:https://github.com/fusetim/PPII1/pull/9[PR#9]) dans les 48h. La tâche a été reportée au 27/11/2023.
+
+== Compte rendu de la réunion du 27/11/2023
+
+Comme expliqué dans le compte rendu originale, certains membres n'ont pas pu avancer sur leur tâche. Il s'agit de M. HISLEUR
+pour motif personnel et de M. BANAK en raison du forum des Grandes Écoles auquel il participait.
+Les tâches "FRONTEND - Admin - Création des pages (templates)" et "FRONTEND - Proposer un premier design du site" ont été
+reportées au 04/12/2023.
+
+Par ailleurs, la tâche "BACKEND - Écriture des routes API" a été reportée au 04/12/2023, car M. ESCUDE-COTINAT a besoin de plus
+de temps pour prendre en main le projet. Cette rallonge lui est accordée aisément car la tâche etnière est évidemment plus
+longue qu'une semaine. Néanmoins un bon avancement devrait être atteint d'ici la prochaine réunion.
+
+== Compte rendu de la réunion du 04/12/2023
+
+Comme indiqué dans le compte rendu originale, Anim'Est a mobilisé beaucoup de membre du groupe, à savoir M. BRILLAUD et
+M. BANAK. De plus, M. ESCUDE-COTINAT était pris par les journées Forum des Grandes Écoles. De ce fait, un avancement faible
+était attendu et a été observé. Toutes les tâches encore en cours sont reportées au 12/12/2023. Néanmoins un avancement
+conséquent est attendu d'ici la prochaine réunion, comme expliqué.
+
+== Compte rendu de la réunion du 12/12/2023
+
+Des premières pages HTML ont été présentées par M. BANAK, qui ont été approuvées et seront merge dans la branche main au
+plus vite. Cependant le CSS est encore à faire. La tâche "FRONTEND - Admin - Création des pages (templates)" est donc
+reportée au 18/12/2023. Il est à noter que le travail présenté est accentué particulièrement sur la partie backend, et
+de la mise à disposition des templates par Flask, ce qui n'était pas attendu. Seule les templates HTML/CSS étaient
+attendus. La tâche "FRONTEND - Proposer un premier design du site" est donc reportée au 18/12/2023 afin de finaliser la
+partie client.
+
+La tâche "FRONTEND - Page recette" (link:https://github.com/fusetim/PPII1/issues/13[Issue#13]), réalisée par M. BRILLAUD,
+prévue le 04/12/2023 pour le 12/12/2023, est considéré comme terminée. En effet, la template est effectivement réalisée,
+et sera intégré aux pages de Sacha dans un second temps par la tache "FRONTEND - Intégrer la page recette à la PR de Sacha",
+attendu pour le 18/12/2023.
+
+La tâche "BACKEND - Écriture des routes API" a été reportée au 18/12/2023, car M. ESCUDE-COTINAT a un problème d'ordinateur
+et ne peut pas facilement travailler sur le projet. Il a cependant pris des initiatives afin de travailler sur les ordinateurs
+de l'Université. Malheureusement, en raison de l'utilisation de Postgresql, non disponible sur les ordinateurs de l'Université,
+il n'a pas pu travailler sur le projet. M. BRILLAUD fournira alors une base de donnée Postgresql héberger sur un serveur afin
+qu'il puisse poursuivre sa tâche.
+
+La tâche "ADMIN - Commencer le Panel Admin (template pour ajouter/editer des recettes)" a été reportée au 18/12/2023.
+M. HISLEUR a avancé sur la tâche en particulier sur la partie backend mais a besoin de plus de temps pour finaliser la
+partie frontend.
+
+À partir de ce compte rendu, la TODO-list ne sera plus disponible dans le compte rendu mais sur le Github Project du projet,
+et la feuille partagée WBS/RACI, disponible sur le Google Drive.
+
+== Compte rendu de la réunion du 18/12/2023
+
+La tâche d'écriture des routes API, partie ADMIN, est finalement reprise par M. ESCUDE-COTINAT, contrairement au changement
+énoncé le 12/12/2023. La tâche est donc reportée au 02/01/2024.
+
+== Compte rendu de la réunion du 19/12/2023
+
+Aucune erreur n'a été signalée.

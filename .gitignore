@@ -207,3 +207,12 @@ frontend/.pnp.*
 # Custom
 backend/config.toml
 backend/tmp/
+
+# pour les connards sur Apple
+**/.DS_Store
+
+backend/templates
+backend/static
+
+docker-data/
+docker-data.zip

@@ -16,30 +16,29 @@ pur Javascript. Par rapport à soon cousin, il a cependant l'avantage de pouvoir
 l'utilisation de variables fortement typés, ce qui peut simplifier grandement notre aventure
 dans le monde du web.
 
+=== SASS
+SASS est un langage de feuilles de style en cascade (CSS) qui permet d'ajouter des fonctionnalités
+utiles à la conception de pages web. Il permet notamment d'utiliser des variables, des fonctions et
+des boucles, ce qui facilite la conception de pages web. Il a l'avantage d'accepter également du code
+CSS valide, ce qui permet de l'utiliser progressivement dans le projet, ou par seulement une partie
+des membres de l'équipe.
+
+=== Parcel
+
+Parcel est un outil de build qui permet de compiler le code Typescript en Javascript, compiler les
+fichiers SASS en CSS et de gérer les dépendances du projet. Il est très simple à utiliser et ne
+nécessite pas de configuration particulière (contrairement à Webpack). Il est donc parfait pour
+ce type de projet.
+
 === Material Web Components
 
-Nous avons choisi d'utiliser les Material Web Components, une implémentation des directives Material
-Design de Google, pour la conception de l'interface utilisateur. Ces composants prédéfinis facilitent
-la création d'une interface utilisateur cohérente, esthétique et responsive, en évitant la nécessité
-de créer un style CSS personnalisé pour chaque élément. Cela accélère le développement et garantit
-une expérience utilisateur harmonieuse.
+Material Web Components est une librairie de composants web qui permet de créer des interfaces
+utilisateurs rapidement et facilement. Elle est basée sur le design Material Design de Google et
+permet de créer des interfaces modernes et agréables à l'oeil.
 
-=== Suggestions pour le Futur
-
-À l'avenir, nous envisageons d'intégrer les librairies suivantes pour améliorer la conception des pages
-de notre application :
-
-1. **SvelteKit** : SvelteKit est un framework de développement d'applications web léger et performant.
-Il offre un modèle de composants réactifs et compile le code en JavaScript pur, ce qui améliore la
-vitesse de chargement et l'efficacité de l'application. Son utilisation pourrait permettre de créer
-des pages web plus rapidement. +
-IMPORTANT: SvelteKit peut fonctionner sous différent mode, il est important de se fixer des idées
-claires sur son mode d'utilisation. Dans notre nous nous limiterons aux modes `prerender` et
-`client-side render`.
-
-2. **Lit (lit.dev)** : Lit est une bibliothèque JavaScript pour la création de composants web
-réutilisables et interopérables. Il s'intègre bien avec les Web Components, ce qui en fait un choix
-judicieux pour créer des composants d'interface utilisateur personnalisés et réutilisables.
+Malheureusement, elle n'est pas encore très mature et n'est pas très bien documentée. De plus, les
+membres du projet n'ayant pas d'expérience avec cette librairie, nous avons fait le choix de ne pas
+l'utiliser pour ce projet, bien qu'originellement prévu.
 
 == Utilisation (Développement)
 
@@ -59,4 +58,3 @@ npm install
 déployer le front).
 ** La commande `npm run check` vous permet de lancer le linter typescript qui vous permettra de corriger
 des erreurs courantes et de suivre les bonnes pratiques.
-** Finalement la commande `npm run test` vous permet de lancer les tests en utilisant `jest`.

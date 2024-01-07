@@ -1,0 +1,100 @@
+@use "_constants";
+@import "../node_modules/normalize-css/normalize.css";
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url(../assets/fonts/OpenSans-VariableFont_wdth\,wght.ttf) format('truetype');
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--var--color-background);
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: stretch;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-family: 'Open Sans';
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    border: #000 1px solid;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 10vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 480px;
+
+    @media screen and (max-width: 600px) {
+        margin: 10vh 10px 10px 10px;
+        max-width: unset;
+        width: unset;
+        padding: 24px;
+    }
+
+    h1 {
+        font-size: 72px;
+    }
+
+    h2 {
+        font-size: 32px;
+    }
+
+    .description {
+        margin-top: 16px;
+        margin-bottom: 20px;
+    }
+
+    .action {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: stretch;
+        gap: 16px;
+    }
+
+    .action a {
+        background: oklch(90% 0.05 60.47);
+        text-decoration: none;
+        flex: 1;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        color: #000;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+
+    text-align: center;
+}

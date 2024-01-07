@@ -1,0 +1,81 @@
+= Guide de déploiement
+
+Cette page vous permettra d'en savoir plus sur comment déployer effectivement ce projet sur votre machine,
+et la mettre à disposition du monde entier. (Note: ne le faite pas, c'est un projet personnel et il n'est
+sans doute pas sûr).
+
+Pour cela, nous utiliserons Docker Compose. Il vous faudra donc l'installer sur votre machine.
+
+## Prérequis
+
+* Docker
+* Docker Compose
+* Une machine Linux (ou Windows avec WSL2) ou un Mac
+* Un peu de temps
+
+## Installation
+
+Pour installer ce projet, il vous faudra cloner ce dépôt Git sur votre machine. Pour cela, vous pouvez
+utiliser la commande suivante:
+
+```bash
+git clone https://github.com/fusetim/PPII1.git
+```
+
+Une fois le projet cloné, vous allez vouloir configurer correctement l'application.
+
+Premièrement, déterminer où vous souhaitez stocker les données de l'application. Une fois fait,
+vous pouvez modifier le fichier `compose.yml` et changer les valeurs des différents de points de montage.
+
+Ce sont les suivants :
+
+* `/docker-entrypoint-initdb.d`, contient les scripts SQL à exécuter pour initialiser la base de données, il
+    ne se lance que la première fois que vous lancez l'application. Cela vous permet de créer les différentes table, importer les données de AGRYBALISE, etc.
+* `/var/lib/postgresql/data`, contient les données de la base de données. Il est important de le monter sur
+    un volume persistant, sinon vous perdrez toutes vos données à chaque redémarrage de l'application.
+* `/culivert/backend/static/media`, contient les télécchargements des utilisateurs. Il est important de le
+    monter sur un volume persistant, sinon vous perdrez toutes vos données à chaque redémarrage de l'application.
+
+Une fois que vous avez configuré les points de montage, il vous reste à définir une variable d'environnement
+particulière "FLASK_SECRET_KEY", qui est la clé secrète utilisée par Flask pour chiffrer les cookies. Vous
+pouvez la générer en utilisant la commande suivante :
+
+```bash
+python -c 'import os; print(os.urandom(16))'
+```
+
+Vous pouvez la définir dans le fichier `.env` à la racine du projet si nécessare.
+
+## Lancement
+
+Pour lancer l'application, il vous suffit de lancer la commande suivante :
+
+```bash
+docker-compose up -d
+```
+
+Cela va lancer l'application en arrière plan. Vous pouvez vérifier que tout fonctionne correctement en
+utilisant la commande suivante :
+
+```bash
+docker-compose logs -f
+```
+
+Vous pouvez maintenant accéder à l'application en vous rendant à l'adresse suivante : http://localhost:5000
+
+[NOTE]
+--
+Comme vous pouvez le constater, l'application est accessible sur le port 5000. Il est préférable d'utiliser
+un reverse proxy pour rediriger les requêtes HTTP(S) vers l'application. Cela vous permettra de mettre en place un certificat SSL/TLS et de vous assurer un peu plus de tranquilité quant à la sécurité de votre application.
+
+Pour cela, vous pouvez utiliser Nginx ou Apache. Nous vous recommandons cependant link:https://caddyserver.com[Caddy] pour sa simplicité d'utilisation et sa configuration automatique des certificats SSL/TLS.
+--
+
+##  Arrêt
+
+Pour arrêter l'application, il vous suffit de lancer la commande suivante :
+
+```bash
+docker-compose down
+```
+

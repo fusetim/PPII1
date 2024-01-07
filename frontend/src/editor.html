@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="editor.scss">
+</head>
+
+<body>
+  <nav>
+    <a class="logo" href="/home">CuliVert</h1>
+    <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
+    <a class="tab" href="/search_recipes?search=&page=1">Recettes</a>
+    <a class="tab" href="/accounts/me">Mon compte</a>
+    <a class="currenttab" href="/editor">+ publier</a>
+</nav>
+  <main>
+    <div class="card">
+      <h1 class="card_title">Éditeur de recette</h1>
+      <noscript>
+        <div class="message error">
+          <p>Cette page ne peut pas fonctionner sans Javascript. Veuillez l'activer et recharger la page.</p>
+        </div>
+      </noscript>
+      <div id="msg-group">
+      </div>
+      <form id="editor-form" method="post" enctype="multipart/form-data">
+        {% if recipe_uid is none %}
+        <input type="hidden" name="recipe_uid" id="recipe-uid" value="">
+        {% else %}
+        <input type="hidden" name="recipe_uid" id="recipe-uid" {{'value="{}"'.format(recipe_uid)|safe}}>
+        {% endif %}
+        <label for="title">Titre</label>
+        <input type="text" name="title" id="title" placeholder="Pâte à la sauce bolognaise" maxlength="100" minlength="3" required {{'value="{}"'.format(name)|safe}}>
+        <label for="short_description">Courte Description</label>
+        <textarea name="short_description" id="short_description" cols="30" rows="3" maxlength="140" required
+          minlength="10">{{short_description}}</textarea>
+        <label for="illustration">Illustration</label>
+        <input type="file" name="illustration" id="illustration" accept="image/*">
+        <label for="ingredients">Ingrédients</label>
+        <div id="ingredients" class="chip-input">
+          {% for ingr in ingredients %}
+            <p class="chip clickable-chip"
+              {{'data-display-name="{}"'.format(ingr.display_name)|safe}}
+              {{'data-name="{}"'.format(ingr.name)|safe}}
+              {{'data-ingr-code="{}"'.format(ingr.code)|safe}}
+              {{'data-quantity="{}"'.format(ingr.quantity)|safe}}
+              {{'data-quantity-type="{}"'.format(ingr.quantity_type_uid)|safe}}
+              {{'data-reference-quantity="{}"'.format(ingr.reference_quantity)|safe}}>
+              <span class="name">{{ingr.display_name}}</span>
+              <span class="quantity">{{ingr.quantity}}</span>
+              <span class="unit">{{ingr.unit}}</span>
+            </p>
+          {% endfor %}
+          <p id="add-ingredient-chip" class="chip clickable-chip">Ajouter un ingrédient...</p>
+        </div>
+        <div id="add-ingredient-popover">
+          <div class="popover-inner">
+            <div id="ingredient-search">
+              <input type="text" name="ingredient_name" id="ingredient-name" placeholder="Nom de l'ingrédient*">
+              <div id="ingredient-suggestions" class="hidden" contenteditable="false">
+                <p class="suggestion">Chargement...</p>
+              </div>
+            </div>
+            <input type="text" id="ingredient-display-name" name="ingredient_display_name" placeholder="Nom d'affichage de l'ingrédient">
+            <div class="quantity">
+              <input type="number" name="ingredient_quantity" placeholder="Quantité*">
+              <select name="ingredient_unit">
+                <option value="kg">kg</option>
+              </select>
+            </div>
+            <div class="quantity">
+              <input type="number" name="ingredient_reference_quantity" placeholder="Quantité de référence en kg" step="0.1">
+              <p>kg</p>
+            </div>
+            <input id="ingredient-add" type="submit" name="ingredient-save" value="Ajouter">
+            <input id="ingredient-cancel" type="submit" name="ingredient-save" value="Abandonner">
+          </div>
+        </div>
+        <label for="tags">Tags</label>
+        <div id="tags" class="chip-input">
+          {% for tag in tags %}
+            <p class="chip">{{tag}}</p>
+          {% endfor %}
+          <input id="tag-input" type="text" name="tag_input" autofocus autocomplete="no">
+          <div id="tags-suggestions" class="hidden">
+            <p>Chargement...</p>
+          </div>
+        </div>
+        <label for="preparation_time">Temps de préparation (en minutes)</label>
+        <input type="number" name="preparation_time" id="preparation_time" min="0" max="3600" required
+          {{'value="{}"'.format(preparation_time)|safe}}>
+        <label for="instructions">Instructions</label>
+        <textarea name="instructions" id="steps" cols="30" rows="10"
+          minlength="10" required>{{description}}</textarea>
+        <input id="preview-btn" type="submit" name="save" value="Prévisualiser">
+        <input id="save-btn" class="primary-btn" type="submit" name="save" value="Enregistrer">
+      </form>
+    </div>
+  </main>
+  <script src="./editor.ts"></script>
+</body>
+
+</html>

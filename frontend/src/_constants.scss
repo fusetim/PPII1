@@ -1,0 +1,98 @@
+:root {
+    --var--color-background: #f5efdf;
+}
+
+nav {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    margin-top: 2em;
+    margin-left: 1%;
+    width:70%;
+    position: relative;
+}
+
+.logo{
+    margin-right: 0.5em;
+    margin-bottom: 10px;
+    display: flex;
+    border-radius: 10px;
+    background-color: #fff;
+    font-family:'Franklin Gothic Medium';
+    font-size: 3em;
+    color: #2d9465;
+    padding-right: 1em;
+    padding-left: 1em;
+    height: 100%;
+    box-shadow: 0px 5px 10px #b09066;
+    align-items: center;
+
+}
+
+.logo:link{
+    color: #2d9465;
+    text-decoration: none;
+    height: 70px;
+}
+.logo:visited{
+    color: #2d9465;
+    text-decoration: none;
+    height: 70px;
+}
+.logo:active{
+    color: #2d9465;
+    text-decoration: none;
+    height: 70px;
+}
+
+.tab {
+    display: flex;
+    background-color: #fff;
+    height: 100%;
+    font-size: 1.5em;
+    border-radius: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: #4b3a24;
+    text-decoration: none;
+    box-shadow: 0px 5px 10px #b09066;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    height: 70px;
+}
+.tab:active{
+    display: flex;
+    background-color: #dcd2c8;
+    height: 100%;
+    font-size: 1.5em;
+    border-radius: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: #4b3a24;
+    text-decoration: none;
+    box-shadow: none;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    height: 70px;
+}
+.currenttab {
+    display: flex;
+    background-color: #a39687;
+    height: 100%;
+    font-size: 1.5em;
+    border-radius: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: #eee7de;
+    text-decoration: none;
+    box-shadow: none;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    height: 70px;
+}

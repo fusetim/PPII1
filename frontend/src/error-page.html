@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur {{status_code}}- CuliVert</title>
+    <link rel="stylesheet" href="error-page.scss">
+</head>
+<body>
+    <nav>
+        <a class="logo" href="/home">CuliVert</h1>
+        <a class="tab" href="/search_ingredients?search=&page=1">Ingrédients</a>
+        <a class="tab" href="/search_recipes?search=&page=1">Recettes</a>
+        <a class="tab" href="/accounts/me">Mon compte</a>
+        <a class="tab" href="/editor">+ publier</a>
+    </nav>
+    <main>
+        <div class="card">
+            <h1>{{status_code}}</h1>
+            <h2>{{phrase}}</h2>
+            <div class="description">
+                {% for line in description %}
+                <p>{{line}}</p><br>
+                {% endfor %}
+            </div>
+            <div class="action">
+                <a href="/">Retour à l'Accueil</a>
+                <a href="#" onclick="location.reload();">Réessayer</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
