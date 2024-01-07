@@ -8,11 +8,11 @@ from db import db
 from lsh import normalize_str
 from flask_login import current_user
 from uuid import uuid4
-from recipes import RecipeNotFound, not_found
-from ingredients import IngredientNotFound
+from api.recipes import RecipeNotFound, not_found
+from api.ingredients import IngredientNotFound
 
 # Creates the recipes "router" (aka blueprint in Flask)
-bp = Blueprint("recipes", __name__)
+bp = Blueprint("admin-recipes", __name__)
 
 
 @bp.route("/add", methods=["POST"])
@@ -48,7 +48,7 @@ def add():
         duration=duration,
         illustration_uid=illustration_uid,
         type="recipe",
-        author=current_user.user_uid(),
+        author=current_user.user_uid,
     )
     db.session.add(new_recipe)
 
@@ -63,7 +63,7 @@ def add():
                 raise MissingData(context="Missing data to add ingredient link")
 
         # check if the ingredient really exists in the DB
-        if Ingredientquery.get(ingredient_code) is None:
+        if Ingredient.query.get(ingredient_code) is None:
             raise IngredientNotFound(
                 context="Ingredient is not in the DB.",
                 payload={"ingredient_code": ingredient_code},
@@ -82,7 +82,7 @@ def add():
 
     db.session.commit()
 
-    return jsonify({"recipe_uid": new_recipe["recipe_uid"]})
+    return jsonify({"recipe_uid": new_recipe.recipe_uid})
 
 
 @bp.route("/edit", methods=["PATCH"])
@@ -139,7 +139,7 @@ def edit():
                     raise MissingData(context="Missing data to add ingredient link")
 
             # check if the new ingredient really exists in the DB
-            if Ingredientquery.get(ingredient_code) is None:
+            if Ingredient.query.get(ingredient_code) is None:
                 raise IngredientNotFound(
                     context="Ingredient is not in the DB.",
                     payload={"ingredient_code": ingredient_code},
@@ -147,7 +147,7 @@ def edit():
 
             link = IngredientLink(
                 link_uid=uuid4(),
-                recipe_uid=new_recipe.recipe_uid,
+                recipe_uid=recipe.recipe_uid,
                 ingredient_code=ingredient_code,
                 quantity=quantity,
                 quantity_type_uid=quantity_type_uid,
@@ -166,11 +166,18 @@ def delete_recipe(id):
     Delete recipe with uuid = id. Associated ingredient links are also deleted.
     """
     recipe_to_delete = Recipe.query.get(id)
-    if recipe is None:
+    if recipe_to_delete is None:
         raise RecipeNotFound(context="Not in DB.", payload={"code": id})
-
+    for link in recipe_to_delete.ingredients:
+        db.session.delete(link)
     db.session.delete(recipe_to_delete)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+        return jsonify({"error": "Could not delete recipe."}), 500
+
+    return jsonify({"recipe_uid": id})
 
 
 class MissingData(Exception):
@@ -194,7 +201,7 @@ class MissingData(Exception):
         return rv
 
 
-@bp.errorhandler(MissingData(context))
+@bp.errorhandler(MissingData)
 def not_found(e):
     """Route handling the MissingData exception."""
     return jsonify(e.to_dict()), e.status_code
