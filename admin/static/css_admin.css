@@ -6,7 +6,7 @@ body{
   font-family: 'Open Sans', sans-serif;
 }
 
-.search {
+#search {
   width: 200%;
   position: relative;
   display: flex;
