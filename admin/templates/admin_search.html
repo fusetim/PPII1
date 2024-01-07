@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css_admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css_admin_add.css') }}">
+  <title>Admin - Search</title>
+</head>
+
+<body>
+  <div class="topnav">
+    <a class="active" href="/">Home</a>
+    <a href="/admin">Return search</a>
+    <a href="/admin/add">Add recipe</a>
+  </div>
+  <div class="wrap">
+    <div id="search">
+      <input type="text" class="searchTerm" placeholder="Search recipe">
+      <button type="submit" class="searchButton">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='javascript_admin_add.js') }}"></script>
+</body>
+
+</html>

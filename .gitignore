@@ -115,6 +115,7 @@ __pypackages__/
 backend/__pypackages__/
 
 # Environments
+Admin/env_admin
 .env
 .venv
 env/
@@ -212,3 +213,6 @@ backend/tmp/
 
 backend/templates
 backend/static
+
+docker-data/
+docker-data.zip

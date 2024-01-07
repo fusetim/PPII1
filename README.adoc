@@ -8,6 +8,25 @@ aux utilisateurs de trouver des recettes délicieuses tout en étant conscients 
 de leurs choix culinaires.
 --
 
+[WARNING]
+--
+Ce dépôt est un dépôt miroir. Il n'est pas mis à jour régulièrement et toutes les modifications doivent
+encore toutes être validées sur le projet GitHub déjà existant. Il est inutile d'ouvrir des Issues et
+des Merge Requests ici, elles ne seront pas prises en compte.
+
+Ce dépôt a pour unique objectif d'être en accord avec les demandes (tardivement formulées) du projet PPII1.
+Il est vivement conseiller de se rendre sur le projet Github qui contient les détails
+du projet (Issues, Pull Requests, TODO-list,...).
+
+link:https://github.com/fusetim/PPII1/[Vers le projet GitHub fusetim/PPII1]
+
+Le projet restera privé jusqu'à la fin du projet, il sera ouvert au public à la date de rendue. Cela est dû entre autre
+à la nature du projet, qui est un projet scolaire, et qui ne doit donc pas être accessible à tous, et de plus à la
+présence de données sensibles (identifiants de connexion à la base de données, etc) qui auraient pu malencontreusement
+être rendues publiques. A la date de rendue, tous ces identifiants auront été modifiés. Il est donc inutile de tenter
+de se connecter à ces serveurs.
+--
+
 == Arborescence du Projet
 
 Le projet se divise en plusieurs composantes principales, chacune ayant un rôle spécifique dans le développement

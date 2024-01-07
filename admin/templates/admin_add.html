@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css_admin.css') }}">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Admin - Add recipe</title>
+</head>
+
+<body>
+   <div class="topnav">
+      <a class="active" href="/">Home</a>
+      <a href="/admin">Return search</a>
+      <a href="/admin/add">Add recipe</a>
+   </div>
+   <div style="text-align: center">
+      <form action="/test_post" method="post">
+         <div>
+            <label for="name">Nom de la recette</label>
+            <br>
+            <textarea rows="1" cols="60" name="name"></textarea>
+         </div>
+         <br>
+         <div>
+            <label for="ingredients">Ingrédients</label>
+            <br>
+            <textarea rows="5" cols="60" name="ingredients"></textarea>
+         </div>
+         <br>
+         <div>
+            <label for="tags">Tags</label>
+            <br>
+            <textarea rows="5" cols="60" name="tags"></textarea>
+         </div>
+         <br>
+         <div>
+            <label for="cooking_time">Temps de préparation</label>
+            <br>
+            <textarea rows="1" cols="60" name="cooking_time"></textarea>
+         </div>
+         <br>
+         <div>
+            <label for="short_description">Description courte</label>
+            <br>
+            <textarea rows="10" cols="60" name="short_description"></textarea>
+         </div>
+         <br>
+         <div>
+            <label for="description">Description longue</label>
+            <br>
+            <textarea rows="20" cols="60" name="description"></textarea>
+         </div>
+         <input type="submit" value="submit" />
+      </form>
+   </div>
+</body>
+
+</html>

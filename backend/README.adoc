@@ -25,8 +25,20 @@ permettant de générer un menu de semaine en optimisant divers critères.
 Le backend est construit en utilisant **Python** :
 
 * le framework **Flask**, un framework de serveur web minimaliste et flexible
-* une library qui reste à déterminer pour intéragir avec la base de données
-* une library qui reste à trouver pour gérer le templating
+* SQLAlchemy, un ORM (Object-Relational Mapping) pour Python qui permet de manipuler des objets
+Python comme s'il s'agissait de tables SQL, et par ailleurs permet d'utiliser du SQL pure si
+certains membres ne sont pas à l'aise avec l'ORM
+* Flask-Login, une extension de Flask qui permet de gérer les sessions utilisateurs, très utile.
+* Flask-Migrate, une extension de Flask qui permet de gérer les migrations de la base de données
+et permet donc de générer les tables SQL à partir des modèles Python, et vice-versa.
+
+Une tentative a été faire pour structurer le backend en suivant le modèle MVC (Modèle-Vue-Contrôleur),
+et de séparer les différentes parties/routes de l'application dans des fichiers/modules différents.
+Néanmoins, la structure n'a pas forcément été respectée à la lettre, et il est bien possible que des
+améliorations soient à faire. Cela est en partie due au fait que les membres du groupe sont peu
+familiers avec le développement web, et que la majorité a dû apprendre sur le tas. Par conséquent,
+le chef de projet a fait les meilleurs choix possibles afin que ce projet soit fini dans les temps,
+un minimum structuré et fonctionnel.
 
 == Utilisation (Développement)
 
