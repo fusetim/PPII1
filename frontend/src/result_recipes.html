@@ -24,7 +24,7 @@
                 <!-- recette like : (recipe_name, recipe_uid, author_name, author_uid) -->
                 {% for recette in data %}
                 <div class="affichage">
-                    <a class="username" {{'href="/accounts/{}"'.format(recette[3])|safe}}>@{{recette[2]}}</a>
+                    <a class="username" {{'href="/accounts/{}"'.format(recette[2])|safe}}>@{{recette[2]}}</a>
                     <a class="row_recipe" {{'href="/recipe/{}"'.format(recette[1])|safe}}>{{recette[0]}}</a> 
                 </div>
                 {%endfor%}

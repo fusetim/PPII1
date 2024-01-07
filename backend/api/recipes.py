@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from sqlalchemy import select, text
 from models.recipe import Recipe
 from models.ingredient import Ingredient
@@ -10,6 +10,9 @@ from db import db
 from search_table import get_recipe_table
 from lsh import normalize_str
 from util.upload_helper import get_upload_url
+from flask_login import login_required, current_user
+from uuid import UUID
+from http import HTTPStatus
 
 # Creates the recipes "router" (aka blueprint in Flask)
 bp = Blueprint("recipes", __name__)
@@ -286,6 +289,255 @@ def recipe_full_data(id):
     }
     return jsonify(recipe_data)
 
+@bp.route("/add", methods=["POST"])
+@login_required
+def add_recipe():
+    """
+    Add a recipe to the database.
+    
+    The request is expected to be a json with the following information:
+    - title (str): the name of the recipe
+    - short_description (str): a short description of the recipe
+    - description (str): the steps of the recipe
+    - preparation_time (int): the preparation time of the recipe in minutes
+    - illustration_uid (UUID|None): the illustration of the recipe
+    - ingredients (list): a list of ingredients, each ingredient being a dict with:
+        - ingr_code (str): the code of the ingredient
+        - display_name (str): the display name of the ingredient
+        - quantity (float): the quantity of the ingredient
+        - quantity_type (UUID): the quantity type of the ingredient
+        - reference_quantity (float|None): the reference quantity of the ingredient in kg
+    - tags (list): a list of tags (currently ignored)
+
+    The response is a json with the following information:
+    - recipe_uid (UUID): the UUID of the new recipe
+    """
+    author_uid = current_user.user_uid
+    data = request.get_json()
+    # Check that the request is valid
+    if data is None:
+        raise (jsonify({"error": "No json data provided"}), 400)
+    if not isinstance(data, dict):
+        raise (jsonify({"error": "Invalid json data provided"}), 400)
+    if ("title" not in data) or (not isinstance(data["title"], str)):
+        raise (jsonify({"error": "Missing title"}), 400)
+    if ("short_description" not in data) or (not isinstance(data["short_description"], str)):
+        raise (jsonify({"error": "Missing short_description"}), 400)
+    if ("preparation_time" not in data) or (not isinstance(data["preparation_time"], int)):
+        raise (jsonify({"error": "Missing preparation_time"}), 400)
+    if ("ingredients" not in data) or (not isinstance(data["ingredients"], list)):
+        raise (jsonify({"error": "Missing ingredients"}), 400)
+    recipe = Recipe(
+        name=data["title"],
+        normalized_name=normalize_str(data["title"]),
+        short_description=data["short_description"],
+        duration=float(data["preparation_time"]),
+        author=author_uid,
+        type = "plat",
+    )
+    # Description can be omited, set it only if it is provided
+    if "description" in data and isinstance(data["description"], str):
+        recipe.description = data["description"]
+    # Illustration can be omited, set it only if it is provided and a valid upload
+    if "illustration_uid" in data and isinstance(data["illustration_uid"], str):
+        if db.session.get(Upload, UUID(data["illustration_uid"])) is not None:
+            recipe.illustration_uid = UUID(data["illustration_uid"])
+        else:
+            raise (jsonify({"error": "Invalid illustration_uid - it does not exist"}), 400)
+    for ingr in data["ingredients"]:
+        if not isinstance(ingr, dict):
+            raise (jsonify({"error": "Invalid ingredient"}), 400)
+        if ("ingr_code" not in ingr) or (not isinstance(ingr["ingr_code"], str)):
+            raise (jsonify({"error": "Missing ingredient ingr_code"}), 400)
+        if ("display_name" not in ingr) or (not isinstance(ingr["display_name"], str)):
+            raise (jsonify({"error": "Missing ingredient display_name"}), 400)
+        if ("quantity" not in ingr) or not (isinstance(ingr["quantity"], float) or isinstance(ingr["quantity"], int)):
+            raise (jsonify({"error": "Missing ingredient quantity"}), 400)
+        if ("quantity_type" not in ingr) or (not isinstance(ingr["quantity_type"], str)):
+            raise (jsonify({"error": "Missing ingredient quantity_type"}), 400)
+        if ("reference_quantity" in ingr) and not (isinstance(ingr["reference_quantity"], float) or isinstance(ingr["reference_quantity"], int) or (ingr["reference_quantity"] is None)):
+            raise (jsonify({"error": "Invalid ingredient reference_quantity"}), 400)
+        if "preparation_time" in ingr and ingr["preparation_time"] < 0:
+            raise (jsonify({"error": "Negative preparation_time is invalid"}), 400)
+        if "quantity" in ingr and ingr["quantity"] < 0:
+            raise (jsonify({"error": "Negative quantity is invalid"}), 400)
+        if "reference_quantity" in ingr and ingr["reference_quantity"] is not None and ingr["reference_quantity"] < 0:
+            raise (jsonify({"error": "Negative reference_quantity is invalid"}), 400)
+        if db.session.get(Ingredient, ingr["ingr_code"]) is None:
+            raise (jsonify({"error": "Invalid ingredient code"}), 400)
+        if db.session.get(QuantityType, UUID(ingr["quantity_type"])) is None:
+            raise (jsonify({"error": "Invalid ingredient quantity_type"}), 400)
+        recipe.ingredients.append(
+            IngredientLink(
+                ingredient_code=ingr["ingr_code"],
+                quantity=ingr["quantity"],
+                display_name=ingr["display_name"],
+                quantity_type_uid=UUID(ingr["quantity_type"]),
+                reference_quantity=ingr["reference_quantity"] if "reference_quantity" in ingr else None,
+            )
+        )
+    try:
+        db.session.add(recipe)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise (jsonify({"error": "Error while adding recipe to database"}), 500)
+    
+    return jsonify({"recipe_uid": recipe.recipe_uid}), HTTPStatus.CREATED.value
+
+
+@bp.route("/edit", methods=["POST", "PATCH"])
+@login_required
+def edit_recipe():
+    """
+    Edit a recipe in the database. The author of the recipe must be the current user.
+    
+    The request is expected to be a json with the following information:
+    - recipe_uid (UUID): the UUID of the recipe to edit.
+    - title (str): the name of the recipe
+    - short_description (str): a short description of the recipe
+    - description (str): the steps of the recipe
+    - preparation_time (int): the preparation time of the recipe in minutes
+    - illustration_uid (UUID|None): the illustration of the recipe
+    - ingredients (list): a list of ingredients, each ingredient being a dict with:
+        - ingr_code (str): the code of the ingredient
+        - display_name (str): the display name of the ingredient
+        - quantity (float): the quantity of the ingredient
+        - quantity_type (UUID): the quantity type of the ingredient
+        - reference_quantity (float|None): the reference quantity of the ingredient in kg
+    - tags (list): a list of tags (currently ignored)
+
+    The response is a json with the following information:
+    - recipe_uid (UUID): the UUID of the new recipe
+    """
+    author_uid = current_user.user_uid
+    data = request.get_json()
+    # Check that the request is valid
+    if data is None:
+        raise (jsonify({"error": "No json data provided"}), 400)
+    if not isinstance(data, dict):
+        raise (jsonify({"error": "Invalid json data provided"}), 400)
+    if ("recipe_uid" not in data) or (not isinstance(data["recipe_uid"], str)):
+        raise (jsonify({"error": "Missing recipe_uid"}), 400)
+    recipe = db.session.get(Recipe, UUID(data["recipe_uid"]))
+
+    # Check that the recipe exists and that the user is the author
+    if recipe is None:
+        raise (jsonify({"error": "Invalid recipe_uid - it does not exist"}), 400)
+    if recipe.author != author_uid:
+        raise (jsonify({"error": "You are not the author of this recipe"}), 403)
+    
+    # Update the recipe fields
+    if ("title" in data) and isinstance(data["title"], str):
+        recipe.name = data["title"]
+        recipe.normalized_name = normalize_str(data["title"])
+    if ("short_description" in data) and isinstance(data["short_description"], str):
+        recipe.short_description = data["short_description"]
+    if ("preparation_time" in data) and (isinstance(data["preparation_time"], int) or isinstance(data["preparation_time"], float)):
+        recipe.duration = float(data["preparation_time"])
+    if ("description" in data) and isinstance(data["description"], str):
+        recipe.description = data["description"]
+    if "illustration_uid" in data and isinstance(data["illustration_uid"], str):
+        if db.session.get(Upload, UUID(data["illustration_uid"])) is not None:
+            recipe.illustration_uid = UUID(data["illustration_uid"])
+        else:
+            raise (jsonify({"error": "Invalid illustration_uid - it does not exist"}), 400)
+    for links in recipe.ingredients:
+        db.session.delete(links)
+    for ingr in data["ingredients"]:
+        if not isinstance(ingr, dict):
+            raise (jsonify({"error": "Invalid ingredient"}), 400)
+        if ("ingr_code" not in ingr) or (not isinstance(ingr["ingr_code"], str)):
+            raise (jsonify({"error": "Missing ingredient ingr_code"}), 400)
+        if ("display_name" not in ingr) or (not isinstance(ingr["display_name"], str)):
+            raise (jsonify({"error": "Missing ingredient display_name"}), 400)
+        if ("quantity" not in ingr) or not (isinstance(ingr["quantity"], float) or isinstance(ingr["quantity"], int)):
+            raise (jsonify({"error": "Missing ingredient quantity"}), 400)
+        if ("quantity_type" not in ingr) or (not isinstance(ingr["quantity_type"], str)):
+            raise (jsonify({"error": "Missing ingredient quantity_type"}), 400)
+        if ("reference_quantity" in ingr) and not (isinstance(ingr["reference_quantity"], float) or isinstance(ingr["reference_quantity"], int) or (ingr["reference_quantity"] is None)):
+            raise (jsonify({"error": "Invalid ingredient reference_quantity"}), 400)
+        if "preparation_time" in ingr and ingr["preparation_time"] < 0:
+            raise (jsonify({"error": "Negative preparation_time is invalid"}), 400)
+        if "quantity" in ingr and ingr["quantity"] < 0:
+            raise (jsonify({"error": "Negative quantity is invalid"}), 400)
+        if "reference_quantity" in ingr and ingr["reference_quantity"] is not None and ingr["reference_quantity"] < 0:
+            raise (jsonify({"error": "Negative reference_quantity is invalid"}), 400)
+        if db.session.get(Ingredient, ingr["ingr_code"]) is None:
+            raise (jsonify({"error": "Invalid ingredient code"}), 400)
+        if db.session.get(QuantityType, UUID(ingr["quantity_type"])) is None:
+            raise (jsonify({"error": "Invalid ingredient quantity_type"}), 400)
+        recipe.ingredients.append(
+            IngredientLink(
+                ingredient_code=ingr["ingr_code"],
+                quantity=ingr["quantity"],
+                display_name=ingr["display_name"],
+                quantity_type_uid=UUID(ingr["quantity_type"]),
+                reference_quantity=ingr["reference_quantity"] if "reference_quantity" in ingr else None,
+            )
+        )
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise (jsonify({"error": "Error while saving the recipe to database"}), 500)
+    
+    return jsonify({"recipe_uid": recipe.recipe_uid}), HTTPStatus.ACCEPTED.value
+
+@bp.route("/delete", methods=["POST", "DELETE"])
+@login_required
+def delete_recipe():
+    """
+    Delete a recipe from the database. The author of the recipe must be the current user.
+
+    The request is expected to be a json with the following information:
+    - recipe_uid (UUID): the UUID of the recipe to delete.
+
+    The response is a json with the following information:
+    - recipe_uid (UUID): the UUID of the deleted recipe
+    
+    The response code is:
+    - 202 (ACCEPTED) if the recipe was deleted,
+    - 400 (BAD REQUEST) if the recipe_uid is invalid,
+    - 403 (FORBIDDEN) if the user is not the author of the recipe,
+    - 500 (INTERNAL_SERVER_ERROR) if an error occured while deleting the recipe.
+
+    Curl example:
+    ```
+    curl -X DELETE -H "Content-Type: application/json" -H "Cookie: session" -d '{"recipe_uid": "00000000-0000-0000-0000-000000000000"}' http://localhost:5000/api/recipes/delete
+    ```
+    """
+    author_uid = current_user.user_uid
+    
+    data = request.get_json()
+    # Check that the request is valid
+    if data is None:
+        raise (jsonify({"error": "No json data provided"}), 400)
+    if not isinstance(data, dict):
+        raise (jsonify({"error": "Invalid json data provided"}), 400)
+    if ("recipe_uid" not in data) or (not isinstance(data["recipe_uid"], str)):
+        raise (jsonify({"error": "Missing recipe_uid"}), 400)
+
+    recipe_uid = UUID(data["recipe_uid"])
+    recipe = db.session.get(Recipe, recipe_uid)
+
+    # Check that the recipe exists and that the user is the author
+    if recipe is None:
+        raise (jsonify({"error": "Invalid recipe_uid - it does not exist"}), 400)
+    if recipe.author != author_uid:
+        raise (jsonify({"error": "You are not the author of this recipe"}), 403)
+    
+    # Delete the recipe
+    try:
+        for links in recipe.ingredients:
+            db.session.delete(links)
+        db.session.delete(recipe)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise (jsonify({"error": "Error while deleting recipe from database"}), 500)
+    
+    return jsonify({"recipe_uid": recipe.recipe_uid}), HTTPStatus.ACCEPTED.value
 
 class RecipeNotFound(Exception):
     """Exception raised when a recipe is not found in the database."""
