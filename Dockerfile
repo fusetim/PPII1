@@ -15,6 +15,8 @@ RUN npm run build
 FROM python:3.12-alpine
 WORKDIR /culivert/backend
 
+RUN apk add --no-cache build-base libffi-dev
+
 # Install python dependencies
 COPY ./backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
@@ -36,3 +38,6 @@ EXPOSE 5000
 
 # Setup the entrypoint
 ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+
+# META-DATA
+LABEL org.opencontainers.image.source = "https://github.com/fusetim/PPII1" 
