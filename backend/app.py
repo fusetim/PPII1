@@ -544,8 +544,8 @@ def get_recipe(recipe_uid):
     # Looking for the ingredients
     links = db.session.query(IngredientLink).filter_by(recipe_uid=recipe_uid).all()
 
-    # Computing the carbon score
-    carbon_score = sum(map(lambda l: ingr_mass_equivalent(l) * l.ingredient.co2, links))
+    # Computing the carbon score (+0.001 because I really do not want to handle when it is zero)
+    carbon_score = sum(map(lambda l: ingr_mass_equivalent(l) * l.ingredient.co2, links)) + 0.001
 
     # Building the ingredients list (and comuting the carbon part)
     ingr_info = [
