@@ -371,7 +371,7 @@ function getData(): Recipe {
             display_name: chip.getAttribute("data-display-name") ?? "",
             quantity: +(chip.getAttribute("data-quantity") ?? "0") as number,
             quantity_type: chip.getAttribute("data-quantity-type") ?? "",
-            reference_quantity: chip.getAttribute("data-reference-quantity") == null ? +chip.getAttribute("data-reference-quantity") : null,
+            reference_quantity: chip.getAttribute("data-reference-quantity") != null ? +chip.getAttribute("data-reference-quantity") : null,
         });
     }
     // TODO: Implement the real tag system
