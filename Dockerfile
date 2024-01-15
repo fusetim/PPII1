@@ -26,6 +26,13 @@ COPY --from=build-stage /culivert/frontend/dist ./
 # Copy backend
 COPY ./backend .
 
+# Copy the admin panel
+WORKDIR /culivert/admin
+COPY ./admin .
+
+# By default, run backend
+WORKDIR /culivert/backend
+
 # Setup environment variables
 ENV FLASK_SECRET_KEY="DEBUG_SECRET"
 ENV FLASK_ALLOWED_EXTENSIONS='["png","jpg","jpeg","webp"]'
