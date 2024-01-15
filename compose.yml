@@ -12,6 +12,12 @@ services:
       FLASK_SQLALCHEMY_DATABASE_URI: "postgresql://postgres:to_change@db/postgres"
     depends_on:
       - db
+  admin:
+    build: .
+    working_dir: "/culivert/admin"
+    ports:
+      - "5001:5000"
+    restart: always
   db:
     image: postgres:16-alpine
     restart: always
@@ -25,5 +31,3 @@ services:
       - ./docker-data/init-db:/docker-entrypoint-initdb.d
       # For persistence, uncomment the following line.
       - ./docker-data/data-db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
