@@ -1,0 +1,88 @@
+= CR Réunion - 15/01/2024
+
+|===
+|Motif |Lieu| Date
+
+|Réunion de suivi/clotûre | TELECOM Nancy 1.15 |15/01/2024 13h00-14h10
+|===
+
+
+== Participants
+
+=== Présents
+
+* Sacha BANAK
+* Timothée BRILLAUD
+* Clément ESCUDE-COTINAT (légèrement en retard car il suivait l'AG du BDE)
+* Guillaume HISLEUR 
+
+== Ordre du jour
+
+* Avancements
+
+* Soutenance
+
+* Post-mortem
+
+== Échanges
+
+=== Avancements
+
+La présentation ENACTUS a été envoyée à Anne Devret par Clément le 8 janvier après avoir été mise
+à jour comme prévu. Cependant, des informations complémentaires sur les documents pouvant être 
+ajoutés en annexe nous ont été communiquées très tardivement. Un mail complémentaire, contenant 
+une compilation des comptes-rendus, le diagramme de Gantt et la distribution des taches a été envoyé
+le 9 janvier par Timothée. Après coup, il a été remarqué que la charte de projet n'a pas été communiquée,
+ce qui aurait pu être bien, elle sera apportée le jour de la soutenance.
+
+Les dernières tâches de Clément, routes administrateurs pour l'ajout, édition et suppression d'une
+recette, et de Guillaume, le panel administrateur, ont été mergées dans la branche main. La tâche de
+Clément est considérée terminée, celle de Guillaume est à compléter (voir link:https://github.com/fusetim/PPII1/issues/36[Issue#36]). En l'état la link:https://github.com/fusetim/PPII1/pull/31[PR#31]
+ajoute simplement le panel administrateur en l'état. Il n'est pas fonctionnel, ne fait pas d'accès à
+la BDD et ne permet ni la recherche ni l'édition d'une recette. ELle est uniquement à titre de 
+démonstration du travail de Guillaume (Template + CSS + un début de Javascript).
+
+Un patch a été écrit par Timothée, link:https://github.com/fusetim/PPII1/issues/37[Issue#37], car les
+ingrédients étaient mal enregistrés s'ils contenaient une quantité de référence.
+
+Pour les besoins de démonstration, la link:https://github.com/fusetim/PPII1/pull/38[PR#38] ajoute de quoi
+construire une image Docker du projet, et une setup Docker Compose afin de lancer le projet (Flask + BDD)
+en 3 lignes. Par ailleurs le site a été déployé par Timothée sur serveur à l'adresse link:https://culivert.fusetim.tk[culivert.fusetim.tk].
+
+Des issues / tâches ont été créés pour proposer aux membres qui le souhaitent de continuer à travailler
+sur le projet, en particulier s'ils pensent qu'ils n'ont pas fait le nombre d'heures nécessaire. Sacha 
+a montré de l'intérêt pour réaliser la tâche link:https://github.com/fusetim/PPII1/issues/33[feature request: displayed the last N recipes added in DB when the search query is empty or when no recipe is found. Issue#33], une discussion sur la façon de faire a eu lieu.
+
+=== Soutenance
+
+Le format de la soutenance a été rappelé, il a été discuté le fait de faire un nouveau diaporama pour les
+5 minutes de présentation du projet. Par ailleurs des questions possibles ont été discutées, notamment
+sur les points peut-être un peu épineux du projet : pertinence de l'API, les différents mal-entendus sur 
+les tâches, la difficulté d'évaluer clairement le temps passé par les différents membres sur le projet.
+
+La date ne nous a toujours pas été communiquée : dommage !
+
+En aparté, Timothée a formé rapidement Sacha à Docker / Docker Compose afin d'avoir une solution de 
+secours lors de la soutenance et lancer rapidement le projet sur son ordinateur en cas de besoin.
+
+=== Post-mortem
+
+Les différents membres ont exprimé le fait que ce projet avait été à la fois intéressant et enrichissant
+à réaliser. Il semble encore un peu tôt pour eux pour dire clairement ce qu'ils ont appris sur la gestion
+de projet à travers Culivert. Cependant ils reconnaissent l'intérêt de ce projet dans le parcours
+éducatif du cursus, notamment car il permet la mise en application des concepts de WEB, BDD, COLD, ...
+
+Il n'y a pas eu de véritables critiques qui ont été émises.
+
+Les membres ont remercié Timothée, chef du projet, pour son rôle qui leur a permis de découvrir et 
+d'être guidé dans ce type de projet, nouveau pour eux.
+
+== TODO-List
+
+* Finalisation du diapo pour la soutenance
+
+== Pour la suite
+
+Il s'agit de la dernière réunion avant la soutenance du 17/18 janvier 2024.
+
+=== Annexes
