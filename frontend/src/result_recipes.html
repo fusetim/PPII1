@@ -19,8 +19,8 @@
                     <input type="text" {{'value="{}"'.format(search)|safe}} placeholder="recherchez une recette..." name="search" required>
                     <input type="submit" value="rechercher">
                 </form>
+                <p class="noresult_small">{{no_result}}</p>
                 <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
-                <br>
                 <!-- recette like : (recipe_name, recipe_uid, author_name, author_uid) -->
                 {% for recette in data %}
                 <div class="affichage">
