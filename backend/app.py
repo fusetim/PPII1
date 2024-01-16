@@ -272,8 +272,37 @@ def recipes():
             f"SELECT name, recipe_uid, author FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'"
         )
     ).all()
+    # if we don't have any result to show
+    # wether it's because the user didn't search anything yet
     if search == "":
-        return render_template("result_recipes.html", data=data, search=search)
+        recipes = []
+        data = db.session.execute(
+            text(
+                f"SELECT name, recipe_uid, author FROM recipes ORDER BY RANDOM () LIMIT {nbres}"
+            ))
+        # on rajoute l'username à data
+        for r in data:
+            username = db.session.execute(
+                text("SELECT username FROM users WHERE user_uid = :c"), {"c": r[2]}
+            ).all()[0][0]
+            recipes.append((r[0], r[1], username))
+        data = recipes
+        if len(data) <= nbres:
+            return render_template(
+                "result_recipes.html",
+                data=data,
+                search=search,
+                f1="<",
+                f2=">",
+                sur="sur",
+                lf1="#",
+                cf1="nolink",
+                lf2="#",
+                cf2="nolink",
+                numero="1",
+                n_total="1",
+            )
+    # wether it's because no recipe matches the query
     elif codes == [] and other == []:
         return render_template("no_result_recipes.html", search=search)
     else:
