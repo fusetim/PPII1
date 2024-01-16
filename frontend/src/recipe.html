@@ -91,9 +91,9 @@
                                 <a class="username" {{'href="/accounts/{}"'.format(author.username)|safe}}>@{{author.username}}</a>
                             </div>
                             <div class="author_description">
-                                <p>
-                                    {{author.bio}}
-                                </p>
+                                {% for line in author.bio %}
+                                    <p>{{line}}</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
