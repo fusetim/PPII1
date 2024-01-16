@@ -295,15 +295,6 @@ def recipes():
                 "result_recipes.html",
                 data=data,
                 search=search,
-                f1="<",
-                f2=">",
-                sur="sur",
-                lf1="#",
-                cf1="nolink",
-                lf2="#",
-                cf2="nolink",
-                numero="1",
-                n_total="1",
                 no_result=no_result
             )
     # wether it's because no recipe matches the query
