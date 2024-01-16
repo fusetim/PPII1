@@ -272,10 +272,32 @@ def recipes():
             f"SELECT name, recipe_uid, author FROM recipes WHERE normalized_name LIKE '%{normalized_query}%'"
         )
     ).all()
-    if search == "":
-        return render_template("result_recipes.html", data=data, search=search)
-    elif codes == [] and other == []:
-        return render_template("no_result_recipes.html", search=search)
+    # if we don't have any result to show
+    # wether it's because the user didn't search anything yet
+    # wether it's because no recipe matches the query
+    if search == "" or (codes == [] and other == []):
+        no_result=""
+        if search != "":
+            no_result = "Votre recherche ne correspond à aucune recette publiée sur CuliVert, voici quelques plats qui pourraient convenir :"
+        recipes = []
+        data = db.session.execute(
+            text(
+                f"SELECT name, recipe_uid, author FROM recipes ORDER BY RANDOM () LIMIT {nbres}"
+            ))
+        # on rajoute l'username à data
+        for r in data:
+            username = db.session.execute(
+                text("SELECT username FROM users WHERE user_uid = :c"), {"c": r[2]}
+            ).all()[0][0]
+            recipes.append((r[0], r[1], username))
+        data = recipes
+        if len(data) <= nbres:
+            return render_template(
+                "result_recipes.html",
+                data=data,
+                search=search,
+                no_result=no_result
+            )
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)
