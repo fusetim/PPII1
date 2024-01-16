@@ -19,7 +19,11 @@
                     <img class="author_avatar" {{'src="{}"'.format(avatar_url)|safe}} alt="Author avatar">
                     <p class="display_name">{{display_name}}</p>
                     <a href=# class="username">@{{username}}</a>
-                    <p class="bio">{{bio}}</p>
+                    <div class="bio">
+                        {% for line in bio %}
+                            <p>{{line}}</p>
+                        {% endfor %}
+                    </div>
                     <p class="date_text">{{date_text}}</p>
                 </div>
                 <br>

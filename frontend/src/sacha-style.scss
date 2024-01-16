@@ -332,6 +332,12 @@ nav {
 .bio{
     font-size: 1.4em;
     text-align: center;
+    margin-top: 16px;
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
 }
 
 .date_text{

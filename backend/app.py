@@ -454,7 +454,7 @@ def account(username):
             "account.html",
             username=username,
             display_name=display_name,
-            bio=bio,
+            bio=bio.splitlines(),
             date_text=date_text,
             avatar_url=get_upload_url(
                 avatar_uid, "/static/assets/user_avatar_placeholder_from_undraw.svg"
@@ -598,7 +598,7 @@ def get_recipe(recipe_uid):
         ),
         "display_name": recipe.author_account.display_name,
         "username": recipe.author_account.username,
-        "bio": recipe.author_account.bio,
+        "bio": recipe.author_account.bio.splitlines(),
         "uuid": recipe.author_account.user_uid,
     }
 
