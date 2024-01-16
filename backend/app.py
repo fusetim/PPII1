@@ -274,7 +274,10 @@ def recipes():
     ).all()
     # if we don't have any result to show
     # wether it's because the user didn't search anything yet
-    if search == "":
+    if search == "" or (codes == [] and other == []):
+        no_result=""
+        if codes == [] and other == []:
+            no_result = "Votre recherche ne correspond à aucune recette publiée sur CuliVert, voici quelques plats qui pourraient convenir :"
         recipes = []
         data = db.session.execute(
             text(
@@ -301,10 +304,9 @@ def recipes():
                 cf2="nolink",
                 numero="1",
                 n_total="1",
+                no_result=no_result
             )
     # wether it's because no recipe matches the query
-    elif codes == [] and other == []:
-        return render_template("no_result_recipes.html", search=search)
     else:
         for code in codes:
             # .all to get the list of sql outputs and [0] to get the tuple str-int (the output is a singleton)

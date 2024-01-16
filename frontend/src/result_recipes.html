@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <title>CuliVert</title>
     <head>
@@ -8,32 +9,32 @@
     <body>
         <section class="structure">
             <nav>
-                <a class="logo" href="/home">CuliVert</h1>
-                <a class="tab" {{'href="/search_ingredients?search={}&page=1"'.format(search)|safe}}>Ingrédients</a>
-                <a class="currenttab" {{'href="/search_recipes?search={}&page=11&sort_type={}"'.format(search,sort_type)|safe}}>Recettes</a>
+                <a class="logo" href="/home">CuliVert
+                <a class="tab" {{'href="/search_ingredients?search={}&page=1" '.format(search)|safe}}="">Ingrédients</a>
+                <a class="currenttab" {{'href="/search_recipes?search={}&page=11&sort_type={}" '.format(search,sort_type)|safe}}="">Recettes</a>
                 <a class="tab" href="/accounts/me">Mon compte</a>
                 <a class="tab" href="/editor">+ publier</a>
-            </nav>
+            </a></nav>
             <main>
                 <form class="search_ingredients" action="/search_recipes" method="GET">
-                    <input type="text" {{'value="{}"'.format(search)|safe}} placeholder="recherchez une recette..." name="search" required>
+                    <input type="text" {{'value="{}" '.format(search)|safe}}="" placeholder="recherchez une recette..." name="search" required="">
                     <input type="submit" value="rechercher">
                 </form>
                 <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
-                <br>
+                <p class="noresult">{{no_result}}</p>
                 <!-- recette like : (recipe_name, recipe_uid, author_name, author_uid) -->
                 {% for recette in data %}
                 <div class="affichage">
-                    <a class="username" {{'href="/accounts/{}"'.format(recette[2])|safe}}>@{{recette[2]}}</a>
-                    <a class="row_recipe" {{'href="/recipe/{}"'.format(recette[1])|safe}}>{{recette[0]}}</a> 
+                    <a class="username" {{'href="/accounts/{}" '.format(recette[2])|safe}}="">@{{recette[2]}}</a>
+                    <a class="row_recipe" {{'href="/recipe/{}" '.format(recette[1])|safe}}="">{{recette[0]}}</a> 
                 </div>
                 {%endfor%}
                 <!-- affichage des pages -->
                 <section class="arrows">
-                    <a {{'class="{}" href="{}"'.format(cf1,lf1)|safe}}>{{f1}}</a>
+                    <a {{'class="{}" href="{}" '.format(cf1,lf1)|safe}}="">{{f1}}</a>
                     <p class="numero">{{numero}} {{sur}} {{n_total}}</p>
-                    <a {{'class="{}" href="{}"'.format(cf2,lf2)|safe}}>{{f2}}</a>
+                    <a {{'class="{}" href="{}" '.format(cf2,lf2)|safe}}="">{{f2}}</a>
                 </section>
-        </section>
-    </body>
+        </main></section>
+    <script src="/static/result_recipes.c466a7b7.js"></script></body>
 </html>
