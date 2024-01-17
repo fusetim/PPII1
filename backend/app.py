@@ -89,9 +89,6 @@ def home():
     """
     home page with an "about" section and a search bar to question the "ingredients" db
     """
-    """
-    home page with an "about" section and a search bar to question the "ingredients" db
-    """
     # on chreche la recette du jour :
     r = db.session.execute(
         text(
