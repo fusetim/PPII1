@@ -24,6 +24,16 @@
                         <input type="submit" value="rechercher">
                     </form>
                 </section>
+                {% if recette %}
+                <br>
+                <h2 class="about">
+                    Voici une recette qui pourrait vous intéresser
+                </h2>
+                <div class="affichage">
+                    <a class="username" href="/accounts/{{recette[2]}}">@{{recette[2]}}</a>
+                    <a class="row_recipe" href="/recipe/{{recette[1]}}">{{recette[0]}}</a>
+                </div>
+                {% endif %}
                 <h1 class="header">
                     À propos
                 </h1>
