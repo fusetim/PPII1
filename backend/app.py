@@ -96,11 +96,15 @@ def home():
     r = db.session.execute(
         text(
             f"SELECT name, recipe_uid, author FROM recipes ORDER BY RANDOM () LIMIT 1"
-        )).all()[0]
-    username = db.session.execute(
-        text("SELECT username FROM users WHERE user_uid = :c"), {"c": r[2]}
-    ).all()[0][0]
-    recette = (r[0], r[1], username)
+        )).all()
+    if len(r) == 0 :
+        recette = False
+    else:
+        r = r[0]
+        username = db.session.execute(
+            text("SELECT username FROM users WHERE user_uid = :c"), {"c": r[2]}
+        ).all()[0][0]
+        recette = (r[0], r[1], username)
     return render_template("home.html", recette=recette)
 
 @app.route("/search_ingredients")
